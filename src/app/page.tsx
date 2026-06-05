@@ -40,7 +40,7 @@ export default function LandingPage() {
       </div>
 
       {/* ── HERO ── */}
-      <section className="relative min-h-screen flex flex-col items-center justify-start text-center px-6 pt-32 overflow-hidden">
+      <section className="relative min-h-screen flex flex-col items-center justify-start text-center px-6 pt-24 pb-0 overflow-hidden">
 
         {/* Orb 1 — top right peach */}
         <div className="absolute top-[-80px] right-[-100px] w-[480px] h-[480px] rounded-full pointer-events-none"
@@ -83,8 +83,12 @@ export default function LandingPage() {
           </span>
         </h1>
 
+        <p className="mt-5 text-[#676f7b] text-[15px] md:text-[17px] max-w-[460px] leading-relaxed text-balance">
+          Reúna todas as fotos e vídeos do seu evento em um único lugar. Seus convidados compartilham instantaneamente, sem precisar baixar aplicativos ou fazer login.
+        </p>
+
         {/* Portfolio Gallery */}
-        <div className="w-full mt-auto max-w-7xl mx-auto z-10">
+        <div className="w-full mt-auto pt-6 max-w-7xl mx-auto z-10">
           <PortfolioGallery 
             title="" 
             archiveButton={{ text: "Ver planos e preços", href: "/pricing" }}
