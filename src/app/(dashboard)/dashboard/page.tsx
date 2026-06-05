@@ -157,7 +157,7 @@ export default function DashboardPage() {
         )}
 
         {/* Event Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 w-full justify-items-center sm:justify-items-start">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 sm:gap-12 w-full justify-items-center sm:justify-items-start pb-10">
           {events.map(event => (
             <div
               key={event.id}
