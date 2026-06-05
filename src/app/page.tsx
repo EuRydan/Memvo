@@ -36,7 +36,7 @@ export default function LandingPage() {
       </nav>
 
       {/* ── HERO ── */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-16 overflow-hidden">
+      <section className="relative min-h-screen flex flex-col items-center justify-start text-center px-6 pt-32 overflow-hidden">
 
         {/* Orb 1 — top right peach */}
         <div className="absolute top-[-80px] right-[-100px] w-[480px] h-[480px] rounded-full pointer-events-none"
@@ -80,7 +80,7 @@ export default function LandingPage() {
         </h1>
 
         {/* Portfolio Gallery */}
-        <div className="w-full mt-4 max-w-7xl mx-auto z-10">
+        <div className="w-full mt-auto max-w-7xl mx-auto z-10 -mb-10">
           <PortfolioGallery 
             title="" 
             archiveButton={{ text: "Ver planos e preços", href: "/pricing" }}

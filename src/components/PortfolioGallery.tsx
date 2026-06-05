@@ -92,7 +92,7 @@ export function PortfolioGallery({
       className={`relative min-h-screen py-20 px-4 ${className}`}
       id="archives"
     >
-      <div className="max-w-7xl mx-auto bg-background/50 backdrop-blur-sm rounded-2xl overflow-hidden">
+      <div className="max-w-7xl mx-auto w-full">
         {/* Header Section */}
         <div className="relative z-10 text-center pt-16 pb-8 px-8">
           <h2 className="text-2xl md:text-4xl font-semibold text-[#0a0a0a] mb-8 text-balance">{title}</h2>
@@ -108,7 +108,7 @@ export function PortfolioGallery({
         </div>
 
         {/* Desktop 3D overlapping layout - hidden on mobile */}
-        <div className="hidden md:block relative overflow-hidden h-[400px] -mb-[200px]">
+        <div className="hidden md:block relative h-[380px] mt-10">
           <div className={`flex ${spacing} pb-8 pt-40 items-end justify-center`}>
             {images.map((image, index) => {
               // Calculate stagger height - peak in middle, descending to edges
