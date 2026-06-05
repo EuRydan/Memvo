@@ -164,13 +164,8 @@ export default function DashboardPage() {
               className="flex flex-col items-center w-full sm:w-[280px] bg-white rounded-[28px] overflow-hidden border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] hover:-translate-y-1 p-4"
             >
               {/* Image / QR Code Container */}
-              <div 
-                className="w-full aspect-square rounded-[20px] flex items-center justify-center relative overflow-hidden mb-4" 
-                style={{ background: 'linear-gradient(135deg, #f4c5a8 0%, #d4bde8 100%)' }}
-              >
-                 <div className="bg-white/95 p-4 rounded-2xl shadow-sm backdrop-blur-md transition-transform hover:scale-105 duration-300">
-                   <QRCodeGenerator slug={event.slug} />
-                 </div>
+              <div className="w-full aspect-square rounded-[20px] relative overflow-hidden mb-4 border border-gray-100 bg-white shadow-sm">
+                 <QRCodeGenerator slug={event.slug} size={400} variant="cover" />
                  {!isEventActive(event) && (
                    <div className="absolute top-3 left-3 bg-white/95 backdrop-blur text-[9px] font-bold uppercase tracking-wider px-2.5 py-1.5 rounded-full text-stone-600 shadow-sm border border-black/5">
                      Arquivado
