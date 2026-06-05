@@ -118,7 +118,7 @@ export default function DashboardPage() {
       </header>
 
       {/* ── Main Content ── */}
-      <main className="relative z-10 pt-24 pb-28 px-5 max-w-lg mx-auto">
+      <main className="relative z-10 pt-24 pb-28 px-5 max-w-2xl mx-auto">
 
         {/* Section header */}
         <div className="flex items-end justify-between mb-6">
