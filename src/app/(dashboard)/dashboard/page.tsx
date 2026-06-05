@@ -118,7 +118,7 @@ export default function DashboardPage() {
       </header>
 
       {/* ── Main Content ── */}
-      <main className="relative z-10 pt-24 pb-28 px-5 max-w-2xl mx-auto">
+      <main className="relative z-10 pt-24 pb-28 px-6 max-w-3xl mx-auto">
 
         {/* Section header */}
         <div className="flex items-end justify-between mb-6">
@@ -157,7 +157,7 @@ export default function DashboardPage() {
         )}
 
         {/* Event Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 sm:gap-12 w-full justify-items-center sm:justify-items-start pb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-16 w-full justify-items-center pb-10">
           {events.map(event => (
             <div
               key={event.id}
