@@ -72,18 +72,30 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
   )
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white flex flex-col">
+    <div className="min-h-screen bg-[#fafafa] text-gray-900 flex flex-col relative overflow-hidden">
+      
+      {/* Dynamic Background */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        <div
+          className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full opacity-50 mix-blend-multiply animate-pulse-slow"
+          style={{ background: 'linear-gradient(135deg, #f4c5a8 0%, #d4bde8 100%)', filter: 'blur(100px)' }}
+        />
+        <div
+          className="absolute top-[40%] -right-[10%] w-[40%] h-[50%] rounded-full opacity-40 mix-blend-multiply animate-pulse-slow"
+          style={{ background: 'linear-gradient(135deg, #d4bde8 0%, #f4c5a8 100%)', filter: 'blur(100px)' }}
+        />
+      </div>
 
       {/* Header */}
-      <div className="px-6 py-5 border-b border-gray-800 flex items-center gap-4">
+      <div className="px-6 py-5 border-b border-gray-200/50 flex items-center gap-4 relative z-10 bg-white/40 backdrop-blur-xl">
         <button
           onClick={() => router.push('/dashboard')}
-          className="text-gray-400 hover:text-white transition text-lg"
+          className="text-gray-500 hover:text-gray-900 transition text-lg"
         >
           ←
         </button>
         <div>
-          <h1 className="text-lg font-semibold">{event?.name}</h1>
+          <h1 className="text-lg font-semibold text-gray-900">{event?.name}</h1>
           <p className="text-xs text-gray-500">
             {event && new Date(event.date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
           </p>
@@ -91,19 +103,19 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
         <div className="ml-auto flex gap-3">
           <button
             onClick={() => router.push(`/dashboard/${eventId}/challenges`)}
-            className="text-xs text-gray-400 hover:text-white transition border border-gray-700 px-3 py-1.5 rounded-lg"
+            className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm"
           >
             Desafios
           </button>
-          <span className="text-xs text-gray-500 border border-gray-700 px-3 py-1.5 rounded-lg">
+          <span className="text-xs text-gray-600 font-medium border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm">
             {medias.length} fotos
           </span>
         </div>
       </div>
 
       {/* Tabs (TabbedHeroSection style) */}
-      <div className="w-full flex justify-center py-6">
-        <div className="flex items-center p-1.5 bg-[#0a0a0a]/50 backdrop-blur-xl border border-white/10 rounded-full max-w-full overflow-x-auto scrollbar-hide">
+      <div className="w-full flex justify-center py-6 relative z-10">
+        <div className="flex items-center p-1.5 bg-white/60 backdrop-blur-xl border border-gray-200/50 rounded-full max-w-full overflow-x-auto scrollbar-hide shadow-sm">
           {tabs.map((tab, index) => {
             const count = medias.filter(m => m.challenge_id === tab.id).length
             const isActive = activeTab === tab.id
@@ -121,15 +133,15 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-300 ${
                   isActive
-                    ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.1)]'
-                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    ? 'bg-white text-gray-900 shadow-sm border border-gray-100'
+                    : 'text-gray-500 hover:text-gray-900 hover:bg-black/5'
                 }`}
               >
-                <Icon size={16} className={isActive ? 'text-black' : 'text-gray-400'} />
+                <Icon size={16} className={isActive ? 'text-gray-900' : 'text-gray-400'} />
                 {cleanLabel}
                 {count > 0 && (
                   <span className={`text-[10px] px-2 py-0.5 rounded-full flex items-center justify-center font-bold ${
-                    isActive ? 'bg-black/10 text-black' : 'bg-white/10 text-gray-300'
+                    isActive ? 'bg-gray-100 text-gray-900' : 'bg-gray-100/50 text-gray-500'
                   }`}>
                     {count}
                   </span>
@@ -141,15 +153,15 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
       </div>
 
       {/* Grid */}
-      <div className="flex-1 p-1">
+      <div className="flex-1 p-2 md:p-4 relative z-10 max-w-6xl mx-auto w-full">
         {filteredMedias().length === 0 ? (
           <div className="flex items-center justify-center h-64">
-            <p className="text-gray-600 text-sm">Nenhuma foto ainda neste desafio</p>
+            <p className="text-gray-500 text-sm font-medium">Nenhuma foto ainda neste desafio</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             {filteredMedias().map(media => (
-              <div key={media.id} className="relative aspect-[9/16] bg-gray-900 group rounded-xl overflow-hidden shadow-sm">
+              <div key={media.id} className="relative aspect-[9/16] bg-gray-100 group rounded-2xl overflow-hidden shadow-sm border border-gray-200/50">
                 
                 {/* Download Button */}
                 <a
