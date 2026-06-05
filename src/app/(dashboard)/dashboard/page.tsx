@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { isEventActive } from '@/lib/limits'
 import { Event } from '@/types'
 import QRCodeGenerator from '@/components/QRCodeGenerator'
 
@@ -176,9 +177,16 @@ export default function DashboardPage() {
               <div className="p-5 flex items-start gap-4">
                 {/* Info */}
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-ink text-[15px] leading-snug mb-1 truncate">
-                    {event.name}
-                  </h3>
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="font-semibold text-ink text-[15px] leading-snug truncate">
+                      {event.name}
+                    </h3>
+                    {!isEventActive(event) && (
+                      <span className="text-[9px] uppercase tracking-wider font-bold bg-stone/10 text-stone px-2 py-0.5 rounded-full">
+                        Arquivado
+                      </span>
+                    )}
+                  </div>
                   <p className="text-xs text-slate mb-4">
                     {new Date(event.date).toLocaleDateString('pt-BR', {
                       day: '2-digit',

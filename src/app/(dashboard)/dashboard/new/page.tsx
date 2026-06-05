@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { canCreateEvent, countActiveEvents, PLAN_LIMITS, PlanTier } from '@/lib/limits'
+import { Event } from '@/types'
 
 function generateSlug(text: string) {
   return text
@@ -19,6 +21,9 @@ export default function NewEventPage() {
   const [date, setDate] = useState('')
   const [loading, setLoading] = useState(false)
   const [checkingPlan, setCheckingPlan] = useState(true)
+  const [userPlan, setUserPlan] = useState<PlanTier>('essential')
+  const [activeCount, setActiveCount] = useState(0)
+  const [canCreate, setCanCreate] = useState(false)
   const [error, setError] = useState('')
   const orb1Ref = useRef<HTMLDivElement>(null)
   const orb2Ref = useRef<HTMLDivElement>(null)
@@ -39,9 +44,24 @@ export default function NewEventPage() {
 
       if (error || !data || data.length === 0) {
         router.push('/pricing')
-      } else {
-        setCheckingPlan(false)
+        return
       }
+      
+      const planId = data[0].plan_id as PlanTier
+      setUserPlan(planId)
+
+      // Fetch user's existing events to check limits
+      const { data: eventsData } = await supabase
+        .from('events')
+        .select('date, active')
+        .eq('owner_id', user.id)
+
+      const events = (eventsData as Pick<Event, 'date' | 'active'>[]) || []
+      const active = countActiveEvents(events)
+      setActiveCount(active)
+      setCanCreate(canCreateEvent(planId, events))
+
+      setCheckingPlan(false)
     }
     checkPlan()
   }, [])
@@ -286,26 +306,44 @@ export default function NewEventPage() {
           borderTop: '1px solid rgba(0,0,0,0.06)',
         }}
       >
-        <button
-          type="submit"
-          form="new-event-form"
-          disabled={loading || checkingPlan}
-          className="w-full max-w-lg bg-ink text-white py-4 rounded-full text-sm font-semibold tracking-wide hover:opacity-85 active:scale-[0.98] transition-all duration-200 disabled:opacity-50 cursor-pointer"
-          style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.18)' }}
-        >
-          {loading ? (
-            <span className="flex items-center justify-center gap-2">
-              <svg className="animate-spin" width="16" height="16" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="white" strokeWidth="4"/>
-                <path className="opacity-75" fill="white" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
-              </svg>
-              Criando evento...
-            </span>
-          ) : 'Criar evento'}
-        </button>
-        <p className="text-[11px] text-stone text-center">
-          Os convidados não precisam criar conta para enviar fotos
-        </p>
+        {!checkingPlan && !canCreate ? (
+          <div className="w-full max-w-lg text-center pb-2">
+            <p className="text-sm font-semibold text-red-600 mb-2">
+              Você atingiu o limite de {PLAN_LIMITS[userPlan]} evento(s) ativo(s) do seu plano.
+            </p>
+            <button
+              type="button"
+              onClick={() => router.push('/pricing')}
+              className="w-full bg-ink text-white py-4 rounded-full text-sm font-semibold tracking-wide hover:opacity-85 active:scale-[0.98] transition-all duration-200 cursor-pointer"
+              style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.18)' }}
+            >
+              Fazer upgrade de plano
+            </button>
+          </div>
+        ) : (
+          <>
+            <button
+              type="submit"
+              form="new-event-form"
+              disabled={loading || checkingPlan}
+              className="w-full max-w-lg bg-ink text-white py-4 rounded-full text-sm font-semibold tracking-wide hover:opacity-85 active:scale-[0.98] transition-all duration-200 disabled:opacity-50 cursor-pointer"
+              style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.18)' }}
+            >
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="animate-spin" width="16" height="16" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="white" strokeWidth="4"/>
+                    <path className="opacity-75" fill="white" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                  </svg>
+                  Criando evento...
+                </span>
+              ) : 'Criar evento'}
+            </button>
+            <p className="text-[11px] text-stone text-center">
+              Os convidados não precisam criar conta para enviar fotos
+            </p>
+          </>
+        )}
       </footer>
 
     </div>

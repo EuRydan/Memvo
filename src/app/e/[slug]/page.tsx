@@ -2,6 +2,7 @@
 
 import { use, useEffect, useRef, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { isEventActive } from '@/lib/limits'
 import { Media, Challenge } from '@/types'
 
 export default function EventPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -146,6 +147,15 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
 
       <div className="max-w-lg mx-auto px-5 pb-12 flex flex-col gap-5 -mt-4 relative z-10">
 
+        {/* ── Archived Banner ── */}
+        {!isEventActive(event) && (
+          <div className="rounded-[16px] px-5 py-4 bg-orange-50 border border-orange-100 flex flex-col items-center text-center gap-2" style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
+            <span className="text-2xl">📦</span>
+            <p className="text-sm font-semibold text-orange-800">Este evento foi arquivado</p>
+            <p className="text-xs text-orange-700">Ainda é possível reviver os momentos abaixo, mas o envio de novas fotos está desativado.</p>
+          </div>
+        )}
+
         {/* ── Progress bar ── */}
         {challenges.length > 0 && (
           <div
@@ -173,21 +183,23 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
         )}
 
         {/* ── Name input ── */}
-        <div
-          className="rounded-[18px] px-5 py-4 flex items-center gap-3"
-          style={{ background: '#fff', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}
-        >
-          <svg width="16" height="16" fill="none" stroke="#939393" strokeWidth="2" viewBox="0 0 24 24">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-          </svg>
-          <input
-            type="text"
-            placeholder="Seu nome (opcional)"
-            value={uploaderName}
-            onChange={e => setUploaderName(e.target.value)}
-            className="flex-1 text-sm text-ink bg-transparent outline-none placeholder:text-stone"
-          />
-        </div>
+        {isEventActive(event) && (
+          <div
+            className="rounded-[18px] px-5 py-4 flex items-center gap-3"
+            style={{ background: '#fff', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}
+          >
+            <svg width="16" height="16" fill="none" stroke="#939393" strokeWidth="2" viewBox="0 0 24 24">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+            <input
+              type="text"
+              placeholder="Seu nome (opcional)"
+              value={uploaderName}
+              onChange={e => setUploaderName(e.target.value)}
+              className="flex-1 text-sm text-ink bg-transparent outline-none placeholder:text-stone"
+            />
+          </div>
+        )}
 
         {/* ── Challenges ── */}
         {challenges.length > 0 && (
@@ -245,22 +257,24 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
                     />
 
                     {/* Upload button */}
-                    <button
-                      onClick={() => fileRefs.current[challenge.id]?.click()}
-                      disabled={isUploading}
-                      className="text-xs px-4 py-2 rounded-full font-semibold transition cursor-pointer flex-shrink-0 disabled:opacity-50"
-                      style={done
-                        ? { background: '#f3f3f3', color: '#0a0a0a', border: '1.5px solid #e0e0e0' }
-                        : { background: '#0a0a0a', color: '#fff', boxShadow: '0 2px 12px rgba(0,0,0,0.2)' }
-                      }
-                    >
-                      {isUploading ? (
-                        <svg className="animate-spin" width="14" height="14" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
-                        </svg>
-                      ) : done ? '+ Foto' : '📷 Fotografar'}
-                    </button>
+                    {isEventActive(event) && (
+                      <button
+                        onClick={() => fileRefs.current[challenge.id]?.click()}
+                        disabled={isUploading}
+                        className="text-xs px-4 py-2 rounded-full font-semibold transition cursor-pointer flex-shrink-0 disabled:opacity-50"
+                        style={done
+                          ? { background: '#f3f3f3', color: '#0a0a0a', border: '1.5px solid #e0e0e0' }
+                          : { background: '#0a0a0a', color: '#fff', boxShadow: '0 2px 12px rgba(0,0,0,0.2)' }
+                        }
+                      >
+                        {isUploading ? (
+                          <svg className="animate-spin" width="14" height="14" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                          </svg>
+                        ) : done ? '+ Foto' : '📷 Fotografar'}
+                      </button>
+                    )}
                   </div>
 
                   {/* Photos grid */}
@@ -295,41 +309,45 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
             className="rounded-[18px] overflow-hidden"
             style={{ background: '#fff', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}
           >
-            <input
-              ref={freeUploadRef}
-              id="free-upload" type="file" accept="image/*" capture="environment" className="hidden"
-              onChange={e => handleUpload(e.target.files, '')}
-            />
-            <label
-              htmlFor="free-upload"
-              className={`flex flex-col items-center gap-3 py-10 px-5 cursor-pointer transition-colors ${
-                uploadingId === '' ? 'opacity-50 pointer-events-none' : 'hover:bg-[#fafafa]'
-              }`}
-              style={{ borderBottom: mediasWithoutChallenge().length > 0 ? '1px solid #f0f0f0' : 'none' }}
-            >
-              <div
-                className="w-14 h-14 rounded-2xl flex items-center justify-center"
-                style={{ background: 'linear-gradient(135deg, #f4c5a8 0%, #d4bde8 100%)' }}
-              >
-                {uploadingId === '' ? (
-                  <svg className="animate-spin text-white" width="22" height="22" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="white" strokeWidth="4"/>
-                    <path className="opacity-75" fill="white" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
-                  </svg>
-                ) : (
-                  <svg width="22" height="22" fill="none" stroke="white" strokeWidth="2" viewBox="0 0 24 24">
-                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-                    <circle cx="12" cy="13" r="4"/>
-                  </svg>
-                )}
-              </div>
-              <div className="text-center">
-                <p className="text-sm font-semibold text-ink">
-                  {uploadingId === '' ? 'Enviando...' : 'Toque para enviar'}
-                </p>
-                <p className="text-xs text-slate mt-0.5">Fotos e vídeos livres</p>
-              </div>
-            </label>
+            {isEventActive(event) && (
+              <>
+                <input
+                  ref={freeUploadRef}
+                  id="free-upload" type="file" accept="image/*" capture="environment" className="hidden"
+                  onChange={e => handleUpload(e.target.files, '')}
+                />
+                <label
+                  htmlFor="free-upload"
+                  className={`flex flex-col items-center gap-3 py-10 px-5 cursor-pointer transition-colors ${
+                    uploadingId === '' ? 'opacity-50 pointer-events-none' : 'hover:bg-[#fafafa]'
+                  }`}
+                  style={{ borderBottom: mediasWithoutChallenge().length > 0 ? '1px solid #f0f0f0' : 'none' }}
+                >
+                  <div
+                    className="w-14 h-14 rounded-2xl flex items-center justify-center"
+                    style={{ background: 'linear-gradient(135deg, #f4c5a8 0%, #d4bde8 100%)' }}
+                  >
+                    {uploadingId === '' ? (
+                      <svg className="animate-spin text-white" width="22" height="22" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="white" strokeWidth="4"/>
+                        <path className="opacity-75" fill="white" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                      </svg>
+                    ) : (
+                      <svg width="22" height="22" fill="none" stroke="white" strokeWidth="2" viewBox="0 0 24 24">
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                        <circle cx="12" cy="13" r="4"/>
+                      </svg>
+                    )}
+                  </div>
+                  <div className="text-center">
+                    <p className="text-sm font-semibold text-ink">
+                      {uploadingId === '' ? 'Enviando...' : 'Toque para enviar'}
+                    </p>
+                    <p className="text-xs text-slate mt-0.5">Fotos e vídeos livres</p>
+                  </div>
+                </label>
+              </>
+            )}
 
             {mediasWithoutChallenge().length > 0 && (
               <div className="grid grid-cols-3 gap-1.5 p-4">
