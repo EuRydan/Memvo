@@ -28,8 +28,8 @@ export default function QRCodeGenerator({ slug, size = 72, variant = 'default' }
   }
 
   return (
-    <div className={`relative ${variant === 'cover' ? 'w-full h-full flex items-center justify-center bg-white' : 'flex flex-col items-center gap-1.5'}`}>
-      <canvas ref={canvasRef} className={variant === 'cover' ? 'w-full h-full object-cover rounded-[20px]' : 'rounded-md'} />
+    <div className={`relative ${variant === 'cover' ? 'w-full h-full flex items-center justify-center bg-white rounded-[18px]' : 'flex flex-col items-center gap-1.5'}`}>
+      <canvas ref={canvasRef} className={variant === 'cover' ? 'w-[75%] h-[75%] object-contain' : 'rounded-md'} />
       {variant === 'default' ? (
         <button
           onClick={downloadQR}

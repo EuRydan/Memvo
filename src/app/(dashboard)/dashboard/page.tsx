@@ -157,17 +157,19 @@ export default function DashboardPage() {
         )}
 
         {/* Event Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full justify-items-center sm:justify-items-start">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 w-full justify-items-center sm:justify-items-start">
           {events.map(event => (
             <div
               key={event.id}
-              className="flex flex-col items-center w-full sm:w-[280px] bg-white rounded-[28px] overflow-hidden border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] hover:-translate-y-1 p-4"
+              className="flex flex-col items-center w-full sm:w-[280px] bg-white rounded-[32px] overflow-hidden border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] hover:-translate-y-1 p-5"
             >
-              {/* Image / QR Code Container */}
-              <div className="w-full aspect-square rounded-[20px] relative overflow-hidden mb-4 border border-gray-100 bg-white shadow-sm">
-                 <QRCodeGenerator slug={event.slug} size={400} variant="cover" />
+              {/* Image / QR Code Container (Gradient Border) */}
+              <div className="w-full aspect-square rounded-[24px] relative overflow-hidden mb-5 p-1.5 bg-gradient-to-br from-[#f4c5a8] to-[#d4bde8] shadow-sm">
+                 <div className="w-full h-full rounded-[18px] overflow-hidden transition-transform hover:scale-105 duration-300">
+                   <QRCodeGenerator slug={event.slug} size={400} variant="cover" />
+                 </div>
                  {!isEventActive(event) && (
-                   <div className="absolute top-3 left-3 bg-white/95 backdrop-blur text-[9px] font-bold uppercase tracking-wider px-2.5 py-1.5 rounded-full text-stone-600 shadow-sm border border-black/5">
+                   <div className="absolute top-4 left-4 bg-white/95 backdrop-blur text-[9px] font-bold uppercase tracking-wider px-2.5 py-1.5 rounded-full text-stone-600 shadow-sm border border-black/5">
                      Arquivado
                    </div>
                  )}
