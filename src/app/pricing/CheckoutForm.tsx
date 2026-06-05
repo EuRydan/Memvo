@@ -1,70 +1,33 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import {
-  PaymentElement,
-  useStripe,
-  useElements,
-} from '@stripe/react-stripe-js'
+import React, { useState } from 'react'
+import { PaymentElement } from '@stripe/react-stripe-js'
+import { useCheckout } from '@stripe/react-stripe-js/checkout'
 
 export default function CheckoutForm({ planId, planPrice, returnUrl }: { planId: string, planPrice: string, returnUrl: string }) {
-  const stripe = useStripe()
-  const elements = useElements()
+  const checkout: any = useCheckout()
 
   const [message, setMessage] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
-  useEffect(() => {
-    if (!stripe) {
-      return
-    }
-
-    const clientSecret = new URLSearchParams(window.location.search).get(
-      'payment_intent_client_secret'
-    )
-
-    if (!clientSecret) {
-      return
-    }
-
-    stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
-      switch (paymentIntent?.status) {
-        case 'succeeded':
-          setMessage('Pagamento bem-sucedido!')
-          break
-        case 'processing':
-          setMessage('Seu pagamento está sendo processado.')
-          break
-        case 'requires_payment_method':
-          setMessage('Pagamento não realizado. Tente novamente.')
-          break
-        default:
-          setMessage('Algo deu errado.')
-          break
-      }
-    })
-  }, [stripe])
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!stripe || !elements) {
+    if (!checkout || !checkout.confirm) {
       return
     }
 
     setIsLoading(true)
 
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: returnUrl,
-      },
-    })
+    const result = await checkout.confirm()
 
-    if (error.type === 'card_error' || error.type === 'validation_error') {
-      setMessage(error.message || 'Erro de validação')
-    } else {
-      setMessage('Ocorreu um erro inesperado.')
+    if (result && result.type === 'error') {
+      const { error } = result
+      if (error.type === 'card_error' || error.type === 'validation_error') {
+        setMessage(error.message || 'Erro de validação')
+      } else {
+        setMessage('Ocorreu um erro inesperado.')
+      }
     }
 
     setIsLoading(false)
@@ -79,7 +42,7 @@ export default function CheckoutForm({ planId, planPrice, returnUrl }: { planId:
 
       {/* Botão de pagamento */}
       <button
-        disabled={isLoading || !stripe || !elements}
+        disabled={isLoading || !checkout || !checkout.confirm}
         id="submit"
         className="mt-auto block w-full bg-[#0a0a0a] text-white text-center py-4 rounded-full text-[14px] font-semibold tracking-wide hover:opacity-85 active:scale-[0.98] transition-all disabled:opacity-50"
         style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.18)' }}
