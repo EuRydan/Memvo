@@ -34,8 +34,10 @@ function RegisterContent() {
   const orb2Ref = useRef<HTMLDivElement>(null)
 
   const sessionId = searchParams.get('session_id')
+  const invite = searchParams.get('invite')
   const plan = searchParams.get('plan') || 'essential'
   const strength = getStrength(password)
+  const canRegister = sessionId || invite === 'memvo-vip-2026'
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -51,7 +53,7 @@ function RegisterContent() {
     return () => window.removeEventListener('mousemove', handleMouseMove)
   }, [])
 
-  if (!sessionId) {
+  if (!canRegister) {
     return (
       <div className="relative min-h-screen flex flex-col items-center justify-center px-5 py-10 overflow-hidden bg-[#fafafa]">
         <div className="text-center bg-white p-8 rounded-[2rem] max-w-sm w-full border border-[#f0f0f0] shadow-[0_8px_40px_rgba(0,0,0,0.06)]">
@@ -91,11 +93,13 @@ function RegisterContent() {
     }
 
     if (authData.user) {
-      // 2. Insert into user_plans
+      // 2. Insert into user_plans (use 'classic' for invite registrations)
+      const planToSave = invite === 'memvo-vip-2026' ? 'classic' : plan
+      const paymentRef = invite === 'memvo-vip-2026' ? `invite-${authData.user.id}` : sessionId
       const { error: planError } = await supabase.from('user_plans').insert({
         user_id: authData.user.id,
-        plan_id: plan,
-        payment_id: sessionId, // Save the checkout session ID
+        plan_id: planToSave,
+        payment_id: paymentRef,
       })
 
       if (planError) {
