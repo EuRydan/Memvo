@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { motion, useTransform, useSpring, useScroll } from "framer-motion";
+import { motion, useTransform, useSpring, useScroll, useMotionValue } from "framer-motion";
 import Link from 'next/link';
 
 // --- Types ---
@@ -95,12 +95,12 @@ const IMAGES = [
     "https://images.unsplash.com/photo-1520854221256-17451cc331bf?w=300&q=80",
     "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=300&q=80",
     "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=300&q=80",
-    "https://images.unsplash.com/photo-1516997184712-48419615a132?w=300&q=80",
+    "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=300&q=80",
     "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=300&q=80",
     "https://images.unsplash.com/photo-1505236858219-8359eb29e329?w=300&q=80",
     "https://images.unsplash.com/photo-1478146059778-26028b07395a?w=300&q=80",
-    "https://images.unsplash.com/photo-1516280440502-86134b9d0382?w=300&q=80",
-    "https://images.unsplash.com/photo-1530103862676-de8892bf30b5?w=300&q=80",
+    "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=300&q=80",
+    "https://images.unsplash.com/photo-1505909182942-e2f09aee3e89?w=300&q=80",
     "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=300&q=80",
     "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=300&q=80",
     "https://images.unsplash.com/photo-1532712938310-34cb3982ef74?w=300&q=80",
