@@ -4,7 +4,7 @@ import { ZoomParallax } from '@/components/ZoomParallax'
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-[#fafafa] overflow-x-hidden">
+    <div className="min-h-screen bg-[#fafafa] overflow-clip">
 
       {/* ── Navbar ── */}
       <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 h-16"
