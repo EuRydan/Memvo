@@ -4,6 +4,7 @@ import { use, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Media, Challenge } from '@/types'
+import { Camera, Sparkles, Star, Heart } from 'lucide-react'
 
 export default function EventGalleryPage({ params }: { params: Promise<{ eventId: string }> }) {
   const { eventId } = use(params)
@@ -100,28 +101,35 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="border-b border-gray-800 overflow-x-auto scrollbar-hide">
-        <div className="flex min-w-max">
-          {tabs.map(tab => {
-            const count = tab.id === 'free'
-              ? medias.filter(m => !m.challenge_id).length
-              : medias.filter(m => m.challenge_id === tab.id).length
+      {/* Tabs (TabbedHeroSection style) */}
+      <div className="w-full flex justify-center py-6">
+        <div className="flex items-center p-1.5 bg-[#0a0a0a]/50 backdrop-blur-xl border border-white/10 rounded-full max-w-full overflow-x-auto scrollbar-hide">
+          {tabs.map((tab, index) => {
+            const count = medias.filter(m => m.challenge_id === tab.id).length
+            const isActive = activeTab === tab.id
+            
+            // Cycle through some generic icons
+            const icons = [Camera, Sparkles, Star, Heart]
+            const Icon = icons[index % icons.length]
+
+            // Remove emojis from the label using a simple regex
+            const cleanLabel = tab.label.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '').trim()
 
             return (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-5 py-3.5 text-sm whitespace-nowrap border-b-2 transition flex items-center gap-2 ${
-                  activeTab === tab.id
-                    ? 'border-white text-white'
-                    : 'border-transparent text-gray-500 hover:text-gray-300'
+                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-300 ${
+                  isActive
+                    ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.1)]'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
                 }`}
               >
-                {tab.label}
+                <Icon size={16} className={isActive ? 'text-black' : 'text-gray-400'} />
+                {cleanLabel}
                 {count > 0 && (
-                  <span className={`text-xs px-1.5 py-0.5 rounded-full ${
-                    activeTab === tab.id ? 'bg-white text-gray-900' : 'bg-gray-800 text-gray-400'
+                  <span className={`text-[10px] px-2 py-0.5 rounded-full flex items-center justify-center font-bold ${
+                    isActive ? 'bg-black/10 text-black' : 'bg-white/10 text-gray-300'
                   }`}>
                     {count}
                   </span>
