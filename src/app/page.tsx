@@ -7,34 +7,37 @@ export default function LandingPage() {
     <div className="min-h-screen bg-[#fafafa] overflow-clip">
 
       {/* ── Navbar ── */}
-      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 h-16"
-        style={{
-          background: 'rgba(250,250,250,0.85)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          borderBottom: '1px solid rgba(0,0,0,0.05)',
-        }}
-      >
-        <span style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
-          className="text-xl font-bold tracking-[-0.02em] text-[#0a0a0a]">
-          Memvo
-        </span>
-        <div className="flex items-center gap-3">
-          <Link href="/pricing"
-            className="text-sm font-medium text-[#676f7b] hover:text-[#0a0a0a] transition-colors">
-            Planos
-          </Link>
-          <Link href="/login"
-            className="text-sm font-medium text-[#676f7b] hover:text-[#0a0a0a] transition-colors">
-            Entrar
-          </Link>
-          <Link href="/register"
-            className="bg-[#0a0a0a] text-white text-sm font-semibold px-5 py-2 rounded-full hover:opacity-85 transition-all active:scale-95"
-            style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.18)' }}>
-            Começar
-          </Link>
-        </div>
-      </nav>
+      <div className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
+        <nav className="pointer-events-auto flex items-center justify-between px-6 h-14 rounded-full w-full max-w-3xl"
+          style={{
+            background: 'rgba(255, 255, 255, 0.4)',
+            backdropFilter: 'blur(24px)',
+            WebkitBackdropFilter: 'blur(24px)',
+            border: '1px solid rgba(255, 255, 255, 0.4)',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.2)',
+          }}
+        >
+          <span style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
+            className="text-xl font-bold tracking-[-0.02em] text-[#0a0a0a]">
+            Memvo
+          </span>
+          <div className="flex items-center gap-4">
+            <Link href="/pricing"
+              className="text-sm font-semibold text-[#0a0a0a]/70 hover:text-[#0a0a0a] transition-colors">
+              Planos
+            </Link>
+            <Link href="/login"
+              className="text-sm font-semibold text-[#0a0a0a]/70 hover:text-[#0a0a0a] transition-colors">
+              Entrar
+            </Link>
+            <Link href="/register"
+              className="bg-[#0a0a0a] text-white text-xs font-bold px-4 py-2 rounded-full hover:bg-black/80 transition-all active:scale-95"
+              style={{ boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>
+              Começar
+            </Link>
+          </div>
+        </nav>
+      </div>
 
       {/* ── HERO ── */}
       <section className="relative min-h-screen flex flex-col items-center justify-start text-center px-6 pt-32 overflow-hidden">
