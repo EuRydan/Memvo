@@ -1,77 +1,220 @@
 "use client";
 
-import Link from "next/link";
-import { motion } from "framer-motion";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { motion } from "motion/react";
 
-export function WordmarkFooter() {
+/**
+ * Wordmark Footer — Rauno Freiberg craft, Ruixen UI edition.
+ *
+ * Centered giant wordmark on a full-width dark surface with a subtle
+ * bottom clip. Move your cursor and the metallic shine follows —
+ * a radial gradient spotlight tracks the pointer with lerped
+ * smoothing at 60fps via direct DOM writes, zero re-renders.
+ * A vertical mask handles the half-cut fade independently.
+ * cursor: pointer. The light IS the interaction.
+ */
+
+/* ── Types ── */
+
+interface WordmarkFooterProps {
+  brandName?: string;
+}
+
+/* ── Scoped CSS ── */
+
+const STYLE = `
+.wf{
+  --wf-bg:#0a0a0a;
+  --wf-line:rgba(255,255,255,.07)
+}
+.dark .wf,[data-theme="dark"] .wf{
+  --wf-bg:#0a0a0a;
+  --wf-line:rgba(255,255,255,.08)
+}
+`.replace(/\n/g, "");
+
+/* ── Radial shine gradient — follows cursor ── */
+
+function makeShine(x: number, y: number): string {
+  return `radial-gradient(ellipse 100% 100% at ${x.toFixed(1)}% ${y.toFixed(1)}%, rgba(255,255,255,.88) 0%, rgba(255,255,255,.62) 24%, rgba(255,255,255,.34) 50%, rgba(255,255,255,.16) 100%)`;
+}
+
+/* ── Vertical mask — dims bottom for the half-cut, independent of shine ── */
+
+const VMASK =
+  "linear-gradient(to bottom, black 0%, black 38%, rgba(0,0,0,.55) 76%, rgba(0,0,0,.30) 100%)";
+
+/* ── Main component ── */
+
+export function WordmarkFooter({
+  brandName = "Memvo",
+}: WordmarkFooterProps) {
+  const [inView, setInView] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const textRef = useRef<HTMLSpanElement>(null);
+
+  /* ── Cursor-tracking state — refs only, zero re-renders ── */
+
+  const hovering = useRef(false);
+  const curX = useRef(50);
+  const curY = useRef(30);
+  const tgtX = useRef(50);
+  const tgtY = useRef(30);
+  const raf = useRef(0);
+
+  /* ── Per-frame lerp loop — direct DOM writes ── */
+
+  const paint = useCallback(() => {
+    curX.current += (tgtX.current - curX.current) * 0.1;
+    curY.current += (tgtY.current - curY.current) * 0.1;
+
+    const grad = makeShine(curX.current, curY.current);
+
+    if (textRef.current) {
+      textRef.current.style.backgroundImage = grad;
+    }
+
+    const dx = Math.abs(tgtX.current - curX.current);
+    const dy = Math.abs(tgtY.current - curY.current);
+
+    if (hovering.current || dx > 0.05 || dy > 0.05) {
+      raf.current = requestAnimationFrame(paint);
+    }
+  }, []);
+
+  const onMove = useCallback(
+    (e: React.MouseEvent) => {
+      const r = sectionRef.current?.getBoundingClientRect();
+      if (!r) return;
+      tgtX.current = ((e.clientX - r.left) / r.width) * 100;
+      tgtY.current = ((e.clientY - r.top) / r.height) * 100;
+
+      if (!hovering.current) {
+        hovering.current = true;
+        raf.current = requestAnimationFrame(paint);
+      }
+    },
+    [paint],
+  );
+
+  const onLeave = useCallback(() => {
+    hovering.current = false;
+    tgtX.current = 50;
+    tgtY.current = 30;
+    raf.current = requestAnimationFrame(paint);
+  }, [paint]);
+
+  /* ── Cleanup ── */
+
+  useEffect(() => () => cancelAnimationFrame(raf.current), []);
+
+  /* ── IntersectionObserver ── */
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") {
+      setInView(true);
+      return;
+    }
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.1 },
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
   return (
-    <footer className="relative bg-[#0a0a0a] pt-20 pb-10 overflow-hidden text-[#fafafa] flex flex-col items-center">
-      {/* Background Orbs to match identity, but darker */}
-      <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full pointer-events-none opacity-20"
-        style={{
-          background: 'radial-gradient(circle, #f4c5a8 0%, transparent 70%)',
-          filter: 'blur(80px)',
-        }} />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full pointer-events-none opacity-20"
-        style={{
-          background: 'radial-gradient(circle, #c8b8e0 0%, transparent 70%)',
-          filter: 'blur(80px)',
-        }} />
-
-      <div className="w-full max-w-7xl px-6 relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end mb-20 gap-10">
-        
-        {/* Left Side: Links */}
-        <div className="flex flex-col gap-6">
-          <p className="text-sm text-white/50 font-semibold tracking-widest uppercase">Navegação</p>
-          <div className="flex flex-col gap-3">
-            <Link href="/" className="text-xl font-medium hover:text-[#f4c5a8] transition-colors">Início</Link>
-            <Link href="/pricing" className="text-xl font-medium hover:text-[#f4c5a8] transition-colors">Planos e Preços</Link>
-            <Link href="/login" className="text-xl font-medium hover:text-[#f4c5a8] transition-colors">Entrar na Conta</Link>
-          </div>
-        </div>
-
-        {/* Right Side: Contact / Socials */}
-        <div className="flex flex-col gap-6 md:text-right">
-          <p className="text-sm text-white/50 font-semibold tracking-widest uppercase">Contato</p>
-          <div className="flex flex-col gap-3">
-            <a href="mailto:contato@memvo.com" className="text-xl font-medium hover:text-[#c8b8e0] transition-colors">contato@memvo.com</a>
-            <div className="flex items-center md:justify-end gap-6 mt-2">
-              <a href="#" className="text-white/70 hover:text-white transition-colors">Instagram</a>
-              <a href="#" className="text-white/70 hover:text-white transition-colors">Twitter</a>
-            </div>
-          </div>
+    <footer className="w-full bg-[#0a0a0a] pt-16">
+      {/* Footer Links Container (Optional addition for utility) */}
+      <div className="max-w-7xl mx-auto px-6 pb-16 flex flex-col md:flex-row justify-between items-center gap-6">
+        <p className="text-white/40 text-sm">© {new Date().getFullYear()} Memvo. Todos os direitos reservados.</p>
+        <div className="flex gap-6 text-sm">
+          <a href="/" className="text-white/60 hover:text-white transition-colors">Início</a>
+          <a href="/pricing" className="text-white/60 hover:text-white transition-colors">Planos e Preços</a>
         </div>
       </div>
 
-      {/* Huge Wordmark */}
-      <div className="w-full px-4 relative z-10 flex justify-center overflow-hidden">
-        <motion.h2 
-          initial={{ y: 100, opacity: 0 }}
-          whileInView={{ y: 0, opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          className="text-[20vw] font-bold leading-[0.75] tracking-[-0.04em] select-none text-transparent"
+      {/* The Interactive Wordmark */}
+      <section
+        ref={sectionRef}
+        className="wf"
+        onMouseMove={onMove}
+        onMouseLeave={onLeave}
+        style={{
+          position: "relative",
+          width: "100%",
+          overflow: "hidden",
+          background: "var(--wf-bg)",
+          height: "clamp(100px, 15.5vw, 215px)",
+          fontFamily:
+            '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+          cursor: "pointer",
+        }}
+      >
+        <style dangerouslySetInnerHTML={{ __html: STYLE }} />
+
+        {/* ── Wordmark — absolute, centered, pointer-events off ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ type: "spring", stiffness: 260, damping: 28 }}
           style={{
-            fontFamily: 'var(--font-playfair), Georgia, serif',
-            WebkitTextStroke: '2px rgba(255,255,255,0.1)',
-            backgroundImage: 'linear-gradient(135deg, #f4c5a8 0%, #c8b8e0 50%, #b8d4f0 100%)',
-            WebkitBackgroundClip: 'text',
-            backgroundClip: 'text',
-            color: 'transparent'
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "clamp(10px, 2vw, 24px)",
+            padding: "clamp(20px, 3vw, 40px) clamp(24px, 4vw, 56px)",
+            pointerEvents: "none",
           }}
         >
-          Memvo
-        </motion.h2>
-      </div>
+          {/* Brand text */}
+          <span
+            ref={textRef}
+            style={{
+              fontFamily: 'var(--font-playfair), Georgia, serif',
+              fontSize: "clamp(64px, 17vw, 240px)",
+              fontWeight: 700,
+              letterSpacing: "-0.05em",
+              lineHeight: 1,
+              backgroundImage: makeShine(50, 30),
+              WebkitBackgroundClip: "text",
+              backgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              maskImage: VMASK,
+              WebkitMaskImage: VMASK,
+              userSelect: "none",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {brandName}
+          </span>
+        </motion.div>
 
-      {/* Bottom Bar */}
-      <div className="w-full max-w-7xl px-6 mt-16 relative z-10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-white/40 font-medium">
-        <p>© {new Date().getFullYear()} Memvo. Todos os direitos reservados.</p>
-        <div className="flex gap-6">
-          <Link href="#" className="hover:text-white transition-colors">Privacidade</Link>
-          <Link href="#" className="hover:text-white transition-colors">Termos de Uso</Link>
-        </div>
-      </div>
+        {/* ── Hairline — just above the clip edge ── */}
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            bottom: "clamp(10px, 1.5vw, 22px)",
+            height: 0.5,
+            background: "var(--wf-line)",
+            pointerEvents: "none",
+          }}
+        />
+      </section>
     </footer>
   );
 }
+
+export default WordmarkFooter;
