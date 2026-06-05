@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { PortfolioGallery } from '@/components/PortfolioGallery'
 import { ZoomParallax } from '@/components/ZoomParallax'
+import { IntroAnimation } from '@/components/IntroAnimation'
 
 export default function LandingPage() {
   return (
@@ -40,79 +41,8 @@ export default function LandingPage() {
         </nav>
       </div>
 
-      {/* ── HERO ── */}
-      <section className="relative min-h-screen flex flex-col items-center justify-start text-center px-6 pt-32 pb-0 overflow-hidden">
-
-        {/* Orb 1 — top right peach */}
-        <div className="absolute top-[-80px] right-[-100px] w-[480px] h-[480px] rounded-full pointer-events-none"
-          style={{
-            background: 'radial-gradient(circle, rgba(244,197,168,0.65) 0%, rgba(200,184,224,0.4) 60%, transparent 80%)',
-            filter: 'blur(80px)',
-            animation: 'drift 20s ease-in-out infinite alternate',
-          }} />
-        {/* Orb 2 — bottom left lavender */}
-        <div className="absolute bottom-[-60px] left-[-80px] w-[380px] h-[380px] rounded-full pointer-events-none"
-          style={{
-            background: 'radial-gradient(circle, rgba(186,210,255,0.5) 0%, rgba(200,184,224,0.35) 60%, transparent 80%)',
-            filter: 'blur(70px)',
-            animation: 'drift2 16s ease-in-out infinite alternate',
-          }} />
-
-        {/* Eyebrow */}
-        <div className="relative flex items-center gap-2 mb-6">
-          <div className="w-5 h-px bg-[#939393]" />
-          <span className="text-[11px] font-semibold tracking-[0.2em] text-[#939393] uppercase">
-            Álbuns de celebração
-          </span>
-          <div className="w-5 h-px bg-[#939393]" />
-        </div>
-
-        {/* Headline */}
-        <h1 className="relative max-w-[340px] sm:max-w-xl"
-          style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}>
-          <span className="block text-[3rem] sm:text-[4rem] font-bold leading-[1.05] tracking-[-0.03em] text-[#0a0a0a]">
-            Cada momento,
-          </span>
-          <span className="block text-[3rem] sm:text-[4rem] font-bold leading-[1.05] tracking-[-0.03em]"
-            style={{
-              background: 'linear-gradient(135deg, #c8956a 0%, #9b7fc0 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}>
-            compartilhado.
-          </span>
-        </h1>
-
-        <p className="mt-5 text-[#676f7b] text-[15px] md:text-[17px] max-w-[460px] leading-relaxed text-balance">
-          Reúna todas as fotos e vídeos do seu evento em um único lugar. Seus convidados compartilham instantaneamente, sem precisar baixar aplicativos ou fazer login.
-        </p>
-
-        <Link
-          href="/pricing"
-          className="mt-8 inline-flex items-center gap-3 bg-[#0a0a0a] text-white px-8 py-4 rounded-full font-semibold hover:opacity-85 transition-all active:scale-95 group z-20 relative"
-          style={{ boxShadow: '0 6px 24px rgba(0,0,0,0.22)' }}
-        >
-          <span>Ver planos e preços</span>
-          <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-        </Link>
-
-        {/* Portfolio Gallery */}
-        <div className="w-full mt-auto pt-8 max-w-7xl mx-auto z-10">
-          <PortfolioGallery 
-            title="" 
-            archiveButton={null}
-            className="min-h-0 py-0"
-            maxHeight={140}
-          />
-        </div>
-
-        {/* Scroll indicator */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 opacity-40">
-          <div className="w-px h-10 bg-[#939393]" style={{ animation: 'fadeInUp 2s ease infinite' }} />
-          <div className="w-1 h-1 rounded-full bg-[#939393]" />
-        </div>
-      </section>
+      {/* ── NEW HERO ── */}
+      <IntroAnimation />
 
       {/* ── HOW IT WORKS ── */}
       <section className="relative w-full py-20">
