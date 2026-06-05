@@ -231,7 +231,7 @@ export function IntroAnimation() {
                     }} />
 
                 {/* Intro Text (Fades out) */}
-                <div className="absolute z-0 flex flex-col items-center justify-center text-center pointer-events-none top-1/2 -translate-y-1/2">
+                <div className="absolute z-20 flex flex-col items-center justify-center text-center pointer-events-none top-1/2 -translate-y-1/2 w-full px-4">
                     <motion.div
                         initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
                         animate={introPhase === "circle" && morphValue < 0.5 ? { opacity: 1 - morphValue * 2, y: 0, filter: "blur(0px)" } : { opacity: 0, filter: "blur(10px)" }}
@@ -248,10 +248,10 @@ export function IntroAnimation() {
 
                         <h1 className="max-w-[340px] sm:max-w-xl"
                             style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}>
-                            <span className="block text-[3rem] sm:text-[4rem] font-bold leading-[1.05] tracking-[-0.03em] text-[#0a0a0a]">
+                            <span className="block text-[2.4rem] sm:text-[4rem] font-bold leading-[1.05] tracking-[-0.03em] text-[#0a0a0a]">
                                 Cada momento,
                             </span>
-                            <span className="block text-[3rem] sm:text-[4rem] font-bold leading-[1.05] tracking-[-0.03em]"
+                            <span className="block text-[2.4rem] sm:text-[4rem] font-bold leading-[1.05] tracking-[-0.03em]"
                                 style={{
                                     background: 'linear-gradient(135deg, #c8956a 0%, #9b7fc0 100%)',
                                     WebkitBackgroundClip: 'text',
@@ -315,7 +315,12 @@ export function IntroAnimation() {
                             const isMobile = containerSize.width < 768;
                             const minDimension = Math.min(containerSize.width, containerSize.height);
 
-                            const circleRadius = Math.min(minDimension * 0.35, 350);
+                            const circleRadius = isMobile 
+                                ? Math.min(minDimension * 0.45, 220) 
+                                : Math.min(minDimension * 0.35, 350);
+                            
+                            const baseScale = isMobile ? 0.7 : 1;
+
                             const circleAngle = (i / TOTAL_IMAGES) * 360;
                             const circleRad = (circleAngle * Math.PI) / 180;
                             const circlePos = {
@@ -345,14 +350,14 @@ export function IntroAnimation() {
                                 x: Math.cos(arcRad) * arcRadius + parallaxValue,
                                 y: Math.sin(arcRad) * arcRadius + arcCenterY,
                                 rotation: currentArcAngle + 90,
-                                scale: isMobile ? 1.4 : 1.8,
+                                scale: isMobile ? 1.0 : 1.8,
                             };
 
                             target = {
                                 x: lerp(circlePos.x, arcPos.x, morphValue),
                                 y: lerp(circlePos.y, arcPos.y, morphValue),
                                 rotation: lerp(circlePos.rotation, arcPos.rotation, morphValue),
-                                scale: lerp(1, arcPos.scale, morphValue),
+                                scale: lerp(baseScale, arcPos.scale, morphValue),
                                 opacity: 1,
                             };
                         }
