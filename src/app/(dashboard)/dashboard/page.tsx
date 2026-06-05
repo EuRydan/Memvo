@@ -157,11 +157,11 @@ export default function DashboardPage() {
         )}
 
         {/* Event Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-16 w-full justify-items-center pb-10">
+        <div className="flex flex-wrap justify-center" style={{ gap: '48px' }}>
           {events.map(event => (
             <div
               key={event.id}
-              className="flex flex-col items-center w-full sm:w-[280px] bg-white rounded-[32px] overflow-hidden border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] hover:-translate-y-1 p-5"
+              className="flex flex-col items-center w-[280px] bg-white rounded-[32px] overflow-hidden border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] hover:-translate-y-1 p-5"
             >
               {/* Image / QR Code Container (Gradient Border) */}
               <div className="w-full aspect-square rounded-[24px] relative overflow-hidden mb-5 p-1.5 bg-gradient-to-br from-[#f4c5a8] to-[#d4bde8] shadow-sm">
