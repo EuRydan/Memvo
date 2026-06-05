@@ -189,7 +189,7 @@ export default function DashboardPage() {
 
                   <div className="flex items-center gap-4">
                     <a
-                      href={`/e/${event.slug}`}
+                      href={`/dashboard/${event.id}`}
                       target="_blank"
                       className="text-[13px] font-semibold text-ink border-b border-[#fdceb0] pb-0.5 hover:border-ink transition-colors"
                     >
