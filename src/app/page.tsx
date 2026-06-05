@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
 import { PortfolioGallery } from '@/components/PortfolioGallery'
 import { ZoomParallax } from '@/components/ZoomParallax'
 
@@ -40,7 +41,7 @@ export default function LandingPage() {
       </div>
 
       {/* ── HERO ── */}
-      <section className="relative min-h-screen flex flex-col items-center justify-start text-center px-6 pt-24 pb-0 overflow-hidden">
+      <section className="relative min-h-screen flex flex-col items-center justify-start text-center px-6 pt-32 pb-0 overflow-hidden">
 
         {/* Orb 1 — top right peach */}
         <div className="absolute top-[-80px] right-[-100px] w-[480px] h-[480px] rounded-full pointer-events-none"
@@ -87,11 +88,20 @@ export default function LandingPage() {
           Reúna todas as fotos e vídeos do seu evento em um único lugar. Seus convidados compartilham instantaneamente, sem precisar baixar aplicativos ou fazer login.
         </p>
 
+        <Link
+          href="/pricing"
+          className="mt-8 inline-flex items-center gap-3 bg-[#0a0a0a] text-white px-8 py-4 rounded-full font-semibold hover:opacity-85 transition-all active:scale-95 group z-20 relative"
+          style={{ boxShadow: '0 6px 24px rgba(0,0,0,0.22)' }}
+        >
+          <span>Ver planos e preços</span>
+          <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+        </Link>
+
         {/* Portfolio Gallery */}
-        <div className="w-full mt-auto pt-6 max-w-7xl mx-auto z-10">
+        <div className="w-full mt-auto pt-8 max-w-7xl mx-auto z-10">
           <PortfolioGallery 
             title="" 
-            archiveButton={{ text: "Ver planos e preços", href: "/pricing" }}
+            archiveButton={null}
             className="min-h-0 py-0"
             maxHeight={140}
           />

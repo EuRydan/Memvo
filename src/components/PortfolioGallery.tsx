@@ -11,7 +11,7 @@ interface PortfolioGalleryProps {
   archiveButton?: {
     text: string;
     href: string;
-  };
+  } | null;
   images?: Array<{
     src: string;
     alt: string;
@@ -27,10 +27,7 @@ interface PortfolioGalleryProps {
 
 export function PortfolioGallery({
   title = "Browse my library",
-  archiveButton = {
-    text: "View gallery",
-    href: "/work"
-  },
+  archiveButton,
   images: customImages,
   className = "",
   maxHeight = 120,
@@ -97,14 +94,16 @@ export function PortfolioGallery({
         <div className={cn("relative z-10 text-center px-8", title ? "pt-16 pb-8" : "pt-0 pb-0")}>
           {title && <h2 className="text-2xl md:text-4xl font-semibold text-[#0a0a0a] mb-8 text-balance">{title}</h2>}
 
-          <Link
-            href={archiveButton.href}
-            className="inline-flex items-center gap-3 bg-[#0a0a0a] text-white px-8 py-4 rounded-full font-semibold hover:opacity-85 transition-all active:scale-95 group mb-8"
-            style={{ boxShadow: '0 6px 24px rgba(0,0,0,0.22)' }}
-          >
-            <span>{archiveButton.text}</span>
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </Link>
+          {archiveButton && (
+            <Link
+              href={archiveButton.href}
+              className="inline-flex items-center gap-3 bg-[#0a0a0a] text-white px-8 py-4 rounded-full font-semibold hover:opacity-85 transition-all active:scale-95 group mb-8"
+              style={{ boxShadow: '0 6px 24px rgba(0,0,0,0.22)' }}
+            >
+              <span>{archiveButton.text}</span>
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          )}
         </div>
 
         {/* Desktop 3D overlapping layout - hidden on mobile */}
