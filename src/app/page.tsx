@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { PortfolioGallery } from '@/components/PortfolioGallery'
+import { ZoomParallax } from '@/components/ZoomParallax'
 
 export default function LandingPage() {
   return (
@@ -97,8 +98,8 @@ export default function LandingPage() {
       </section>
 
       {/* ── HOW IT WORKS ── */}
-      <section className="relative px-6 py-20 max-w-lg mx-auto">
-        <div className="text-center mb-12">
+      <section className="relative w-full py-20">
+        <div className="text-center mb-12 px-6 max-w-lg mx-auto">
           <p className="text-[11px] font-semibold tracking-[0.2em] text-[#939393] uppercase mb-3">Como funciona</p>
           <h2 style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
             className="text-[1.9rem] font-bold tracking-[-0.02em] text-[#0a0a0a] leading-tight">
@@ -106,7 +107,19 @@ export default function LandingPage() {
           </h2>
         </div>
 
-        <div className="flex flex-col gap-4">
+        <ZoomParallax 
+          images={[
+            { src: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=800&h=600&fit=crop&q=80" },
+            { src: "https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=600&fit=crop&q=80" },
+            { src: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&h=600&fit=crop&q=80" },
+            { src: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&h=600&fit=crop&q=80" },
+            { src: "https://images.unsplash.com/photo-1520854221256-17451cc331bf?w=800&h=600&fit=crop&q=80" },
+            { src: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=800&h=600&fit=crop&q=80" },
+            { src: "https://images.unsplash.com/photo-1516997184712-48419615a132?w=800&h=600&fit=crop&q=80" }
+          ]} 
+        />
+
+        <div className="flex flex-col gap-4 mt-20 px-6 max-w-lg mx-auto">
           {[
             {
               step: '01',
