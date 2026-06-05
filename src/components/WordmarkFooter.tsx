@@ -24,19 +24,19 @@ interface WordmarkFooterProps {
 
 const STYLE = `
 .wf{
-  --wf-bg:#0a0a0a;
-  --wf-line:rgba(255,255,255,.07)
+  --wf-bg:#ffffff;
+  --wf-line:rgba(0,0,0,.1)
 }
 .dark .wf,[data-theme="dark"] .wf{
-  --wf-bg:#0a0a0a;
-  --wf-line:rgba(255,255,255,.08)
+  --wf-bg:#ffffff;
+  --wf-line:rgba(0,0,0,.1)
 }
 `.replace(/\n/g, "");
 
 /* ── Radial shine gradient — follows cursor ── */
 
 function makeShine(x: number, y: number): string {
-  return `radial-gradient(ellipse 100% 100% at ${x.toFixed(1)}% ${y.toFixed(1)}%, rgba(255,255,255,.88) 0%, rgba(255,255,255,.62) 24%, rgba(255,255,255,.34) 50%, rgba(255,255,255,.16) 100%)`;
+  return `radial-gradient(ellipse 100% 100% at ${x.toFixed(1)}% ${y.toFixed(1)}%, rgba(0,0,0,.88) 0%, rgba(0,0,0,.62) 24%, rgba(0,0,0,.34) 50%, rgba(0,0,0,.16) 100%)`;
 }
 
 /* ── Vertical mask — dims bottom for the half-cut, independent of shine ── */
@@ -130,13 +130,13 @@ export function WordmarkFooter({
   }, []);
 
   return (
-    <footer className="w-full bg-[#0a0a0a] pt-16">
+    <footer className="w-full bg-white pt-16">
       {/* Footer Links Container (Optional addition for utility) */}
       <div className="max-w-7xl mx-auto px-6 pb-16 flex flex-col md:flex-row justify-between items-center gap-6">
-        <p className="text-white/40 text-sm">© {new Date().getFullYear()} Memvo. Todos os direitos reservados.</p>
+        <p className="text-black/60 text-sm">© {new Date().getFullYear()} Memvo. Todos os direitos reservados.</p>
         <div className="flex gap-6 text-sm">
-          <a href="/" className="text-white/60 hover:text-white transition-colors">Início</a>
-          <a href="/pricing" className="text-white/60 hover:text-white transition-colors">Planos e Preços</a>
+          <a href="/" className="text-black/60 hover:text-black transition-colors">Início</a>
+          <a href="/pricing" className="text-black/60 hover:text-black transition-colors">Planos e Preços</a>
         </div>
       </div>
 
