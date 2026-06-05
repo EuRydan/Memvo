@@ -3,6 +3,7 @@ import { ArrowRight } from 'lucide-react'
 import { PortfolioGallery } from '@/components/PortfolioGallery'
 import { ZoomParallax } from '@/components/ZoomParallax'
 import { IntroAnimation } from '@/components/IntroAnimation'
+import { WordmarkFooter } from '@/components/WordmarkFooter'
 
 export default function LandingPage() {
   return (
@@ -215,15 +216,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── FOOTER ── */}
-      <footer className="py-10 px-6 text-center">
-        <p style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
-          className="text-lg font-bold text-[#0a0a0a] mb-2">
-          Memvo
-        </p>
-        <p className="text-xs text-[#939393]">
-          © 2024 Memvo. Preservando suas histórias mais preciosas.
-        </p>
-      </footer>
+      <WordmarkFooter />
 
     </div>
   )

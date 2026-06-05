@@ -3,8 +3,9 @@
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
-import { Elements } from '@stripe/react-stripe-js'
+import { CheckoutElementsProvider } from '@stripe/react-stripe-js/checkout'
 import CheckoutForm from './CheckoutForm'
+import { WordmarkFooter } from '@/components/WordmarkFooter'
 
 // Assegure-se de colocar essa chave no arquivo .env.local
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_mock')
@@ -91,7 +92,7 @@ export default function PricingPage() {
   useEffect(() => {
     if (selectedPlan) {
       setClientSecret('') // Reseta o segredo anterior
-      fetch('/api/create-payment-intent', {
+      fetch('/api/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ plan: selectedPlan.id }),
@@ -345,13 +346,13 @@ export default function PricingPage() {
               <p className="text-[11px] font-semibold text-[#939393] uppercase tracking-widest mb-6">Ambiente protegido</p>
 
               {clientSecret ? (
-                <Elements options={{ clientSecret, appearance: { theme: 'stripe', variables: { colorPrimary: '#0a0a0a', borderRadius: '12px' } } }} stripe={stripePromise}>
+                <CheckoutElementsProvider options={{ clientSecret }} stripe={stripePromise}>
                   <CheckoutForm 
                     planId={selectedPlan.id} 
                     planPrice={selectedPlan.price} 
                     returnUrl={`${typeof window !== 'undefined' ? window.location.origin : ''}/register?plan=${selectedPlan.id}`} 
                   />
-                </Elements>
+                </CheckoutElementsProvider>
               ) : (
                 <div className="flex-1 flex flex-col items-center justify-center">
                   <div className="w-8 h-8 border-4 border-stone-200 border-t-[#0a0a0a] rounded-full animate-spin mb-4"></div>
@@ -508,11 +509,7 @@ export default function PricingPage() {
       </main>
 
       {/* Footer */}
-      <footer className="py-8 px-6 text-center">
-        <p style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
-          className="text-base font-bold text-[#0a0a0a] mb-1">Memvo</p>
-        <p className="text-xs text-[#939393]">© 2024 Memvo. Preservando suas histórias mais preciosas.</p>
-      </footer>
+      <WordmarkFooter />
 
     </div>
   )
