@@ -1,7 +1,13 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { loadStripe } from '@stripe/stripe-js'
+import { Elements } from '@stripe/react-stripe-js'
+import CheckoutForm from './CheckoutForm'
+
+// Assegure-se de colocar essa chave no arquivo .env.local
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_mock')
 
 const PLANS = [
   {
@@ -79,6 +85,22 @@ const FAQS = [
 export default function PricingPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [selectedPlan, setSelectedPlan] = useState<typeof PLANS[0] | null>(null)
+  const [clientSecret, setClientSecret] = useState<string>('')
+
+  // Quando um plano é selecionado, gerar o PaymentIntent no backend
+  useEffect(() => {
+    if (selectedPlan) {
+      setClientSecret('') // Reseta o segredo anterior
+      fetch('/api/create-payment-intent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan: selectedPlan.id }),
+      })
+        .then((res) => res.json())
+        .then((data) => setClientSecret(data.clientSecret))
+        .catch((err) => console.error('Erro ao gerar pagamento:', err))
+    }
+  }, [selectedPlan])
 
   return (
     <div className="min-h-screen bg-[#fafafa] overflow-x-hidden">
@@ -311,9 +333,9 @@ export default function PricingPage() {
               </div>
             </div>
 
-            {/* Right: Payment Gateway Mock */}
-            <div className="rounded-[22px] overflow-hidden bg-white p-7 md:p-8"
-              style={{ boxShadow: '0 8px 40px rgba(0,0,0,0.08)', border: '1px solid rgba(0,0,0,0.04)' }}>
+            {/* Right: Payment Gateway via Stripe Elements */}
+            <div className="rounded-[22px] overflow-hidden bg-white p-7 md:p-8 flex flex-col"
+              style={{ boxShadow: '0 8px 40px rgba(0,0,0,0.08)', border: '1px solid rgba(0,0,0,0.04)', minHeight: '400px' }}>
               <div className="flex items-center justify-between mb-1">
                 <h3 className="text-[1.3rem] font-bold text-[#0a0a0a]" style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}>
                   Pagamento Seguro
@@ -322,52 +344,20 @@ export default function PricingPage() {
               </div>
               <p className="text-[11px] font-semibold text-[#939393] uppercase tracking-widest mb-6">Ambiente protegido</p>
 
-              {/* Tabs */}
-              <div className="flex p-1 bg-[#f3f3f3] rounded-xl mb-6">
-                <button className="flex-1 py-2.5 text-[13px] font-semibold bg-white rounded-lg shadow-sm text-[#0a0a0a]">
-                  Cartão
-                </button>
-                <button className="flex-1 py-2.5 text-[13px] font-semibold text-[#676f7b] hover:text-[#0a0a0a] transition-colors">
-                  Pix
-                </button>
-              </div>
-
-              {/* Form Mocks */}
-              <div className="flex flex-col gap-4">
-                <div className="floating-group">
-                  <input type="text" placeholder=" " className="input-field w-full px-4 py-3.5 rounded-xl text-sm text-[#0a0a0a]" />
-                  <label>Número do cartão</label>
+              {clientSecret ? (
+                <Elements options={{ clientSecret, appearance: { theme: 'stripe', variables: { colorPrimary: '#0a0a0a', borderRadius: '12px' } } }} stripe={stripePromise}>
+                  <CheckoutForm 
+                    planId={selectedPlan.id} 
+                    planPrice={selectedPlan.price} 
+                    returnUrl={`${typeof window !== 'undefined' ? window.location.origin : ''}/register?plan=${selectedPlan.id}`} 
+                  />
+                </Elements>
+              ) : (
+                <div className="flex-1 flex flex-col items-center justify-center">
+                  <div className="w-8 h-8 border-4 border-stone-200 border-t-[#0a0a0a] rounded-full animate-spin mb-4"></div>
+                  <p className="text-sm font-semibold text-[#676f7b]">Iniciando ambiente seguro...</p>
                 </div>
-                <div className="floating-group">
-                  <input type="text" placeholder=" " className="input-field w-full px-4 py-3.5 rounded-xl text-sm text-[#0a0a0a]" />
-                  <label>Nome impresso no cartão</label>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="floating-group">
-                    <input type="text" placeholder=" " className="input-field w-full px-4 py-3.5 rounded-xl text-sm text-[#0a0a0a]" />
-                    <label>Validade (MM/AA)</label>
-                  </div>
-                  <div className="floating-group">
-                    <input type="text" placeholder=" " className="input-field w-full px-4 py-3.5 rounded-xl text-sm text-[#0a0a0a]" />
-                    <label>CVV</label>
-                  </div>
-                </div>
-              </div>
-
-              {/* Action */}
-              <Link href={`/api/checkout?plan=${selectedPlan.id}`}
-                className="mt-8 block w-full bg-[#0a0a0a] text-white text-center py-4 rounded-full text-[14px] font-semibold tracking-wide hover:opacity-85 active:scale-[0.98] transition-all"
-                style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.18)' }}>
-                Pagar {selectedPlan.price} e Continuar
-              </Link>
-              
-              <div className="flex items-center justify-center gap-2 mt-5 text-[#939393]">
-                <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                </svg>
-                <p className="text-[10px] font-medium">Pagamento protegido por criptografia de ponta a ponta.</p>
-              </div>
+              )}
             </div>
           </div>
         )}
