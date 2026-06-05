@@ -51,7 +51,7 @@ export function PortfolioGallery({
       alt: "Festa de noivado",
     },
     {
-      src: "https://images.unsplash.com/photo-1530103862676-de8892bc952f?w=800&h=600&fit=crop&q=80",
+      src: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&h=600&fit=crop&q=80",
       alt: "Aniversário",
     },
     {
