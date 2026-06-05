@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { PortfolioGallery } from '@/components/PortfolioGallery'
 
 export default function LandingPage() {
   return (
@@ -78,28 +79,15 @@ export default function LandingPage() {
           </span>
         </h1>
 
-        {/* Subtext */}
-        <p className="relative mt-6 max-w-sm text-[1rem] leading-relaxed text-[#676f7b]">
-          Crie um álbum compartilhado para sua celebração. Seus convidados escaneiam, fotografam e compartilham — instantaneamente.
-        </p>
-
-        {/* CTAs */}
-        <div className="relative flex flex-col sm:flex-row items-center gap-3 mt-10">
-          <Link href="/pricing"
-            className="bg-[#0a0a0a] text-white text-sm font-semibold px-8 py-4 rounded-full hover:opacity-85 transition-all active:scale-95 w-full sm:w-auto text-center"
-            style={{ boxShadow: '0 6px 24px rgba(0,0,0,0.22)' }}>
-            Ver planos e preços
-          </Link>
-          <Link href="/login"
-            className="text-sm font-semibold text-[#676f7b] hover:text-[#0a0a0a] transition-colors px-2 py-4">
-            Já tenho uma conta →
-          </Link>
+        {/* Portfolio Gallery */}
+        <div className="w-full mt-4 max-w-7xl mx-auto z-10">
+          <PortfolioGallery 
+            title="" 
+            archiveButton={{ text: "Ver planos e preços", href: "/pricing" }}
+            className="min-h-0 py-0"
+            maxHeight={140}
+          />
         </div>
-
-        {/* Social proof */}
-        <p className="relative mt-8 text-xs text-[#939393]">
-          Sem necessidade de conta para os convidados · Fotos em tempo real
-        </p>
 
         {/* Scroll indicator */}
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 opacity-40">
