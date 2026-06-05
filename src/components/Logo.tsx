@@ -3,12 +3,11 @@ import React from 'react'
 export function Logo({ className = "h-8 w-auto" }: { className?: string }) {
   return (
     <svg 
-      viewBox="0 0 100 80" 
+      viewBox="0 14 120 66" 
       fill="currentColor" 
       className={className} 
       xmlns="http://www.w3.org/2000/svg"
     >
-      {/* Aproximação do logo em formato de coração/M estilizado da imagem enviada */}
       <path d="M 0 50 
                A 25 25 0 0 1 50 50 
                A 35 35 0 0 1 120 50 
