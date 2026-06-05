@@ -89,17 +89,17 @@ export function PortfolioGallery({
   return (
     <section
       aria-label={title}
-      className={`relative min-h-screen py-20 px-4 ${className}`}
+      className={cn("relative min-h-screen py-20 px-4", className)}
       id="archives"
     >
       <div className="max-w-7xl mx-auto w-full">
         {/* Header Section */}
-        <div className="relative z-10 text-center pt-16 pb-8 px-8">
-          <h2 className="text-2xl md:text-4xl font-semibold text-[#0a0a0a] mb-8 text-balance">{title}</h2>
+        <div className={cn("relative z-10 text-center px-8", title ? "pt-16 pb-8" : "pt-0 pb-0")}>
+          {title && <h2 className="text-2xl md:text-4xl font-semibold text-[#0a0a0a] mb-8 text-balance">{title}</h2>}
 
           <Link
             href={archiveButton.href}
-            className="inline-flex items-center gap-3 bg-[#0a0a0a] text-white px-8 py-4 rounded-full font-semibold hover:opacity-85 transition-all active:scale-95 group mb-20"
+            className="inline-flex items-center gap-3 bg-[#0a0a0a] text-white px-8 py-4 rounded-full font-semibold hover:opacity-85 transition-all active:scale-95 group mb-8"
             style={{ boxShadow: '0 6px 24px rgba(0,0,0,0.22)' }}
           >
             <span>{archiveButton.text}</span>
@@ -108,8 +108,8 @@ export function PortfolioGallery({
         </div>
 
         {/* Desktop 3D overlapping layout - hidden on mobile */}
-        <div className="hidden md:block relative h-[380px] mt-10">
-          <div className={`flex ${spacing} pb-8 pt-40 items-end justify-center`}>
+        <div className="hidden md:block relative h-[380px] mt-2">
+          <div className={`flex ${spacing} pb-0 pt-32 items-end justify-center`}>
             {images.map((image, index) => {
               // Calculate stagger height - peak in middle, descending to edges
               const totalImages = images.length
