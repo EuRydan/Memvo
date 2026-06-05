@@ -157,68 +157,53 @@ export default function DashboardPage() {
         )}
 
         {/* Event Cards */}
-        <div className="flex flex-col gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full justify-items-center sm:justify-items-start">
           {events.map(event => (
             <div
               key={event.id}
-              className="rounded-[18px] overflow-hidden active:scale-[0.985] transition-transform duration-200"
-              style={{
-                background: 'rgba(255,255,255,0.93)',
-                backdropFilter: 'blur(10px)',
-                boxShadow: '0 4px 24px rgba(0,0,0,0.06)',
-              }}
+              className="flex flex-col items-center w-full sm:w-[280px] bg-white rounded-[28px] overflow-hidden border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] hover:-translate-y-1 p-4"
             >
-              {/* Gradient accent band */}
-              <div
-                className="h-[3.5px] w-full"
-                style={{ background: 'linear-gradient(90deg, #fdceb0 0%, #d0c0e8 100%)' }}
-              />
+              {/* Image / QR Code Container */}
+              <div 
+                className="w-full aspect-square rounded-[20px] flex items-center justify-center relative overflow-hidden mb-4" 
+                style={{ background: 'linear-gradient(135deg, #f4c5a8 0%, #d4bde8 100%)' }}
+              >
+                 <div className="bg-white/95 p-4 rounded-2xl shadow-sm backdrop-blur-md transition-transform hover:scale-105 duration-300">
+                   <QRCodeGenerator slug={event.slug} />
+                 </div>
+                 {!isEventActive(event) && (
+                   <div className="absolute top-3 left-3 bg-white/95 backdrop-blur text-[9px] font-bold uppercase tracking-wider px-2.5 py-1.5 rounded-full text-stone-600 shadow-sm border border-black/5">
+                     Arquivado
+                   </div>
+                 )}
+              </div>
 
-              <div className="p-5 flex items-start gap-4">
-                {/* Info */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-semibold text-ink text-[15px] leading-snug truncate">
-                      {event.name}
-                    </h3>
-                    {!isEventActive(event) && (
-                      <span className="text-[9px] uppercase tracking-wider font-bold bg-stone/10 text-stone px-2 py-0.5 rounded-full">
-                        Arquivado
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-xs text-slate mb-4">
-                    {new Date(event.date).toLocaleDateString('pt-BR', {
-                      day: '2-digit',
-                      month: 'long',
-                      year: 'numeric',
-                    })}
-                  </p>
+              {/* Text Info */}
+              <div className="flex flex-col items-center text-center px-2 w-full mb-4">
+                 <h3 className="text-[17px] font-bold text-gray-900 leading-snug line-clamp-1 w-full truncate">
+                   {event.name}
+                 </h3>
+                 <p className="text-[13px] text-gray-500 mt-1 font-medium">
+                   {new Date(event.date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
+                 </p>
+              </div>
 
-                  <div className="flex items-center gap-4">
-                    <a
-                      href={`/dashboard/${event.id}`}
-                      target="_blank"
-                      className="text-[13px] font-semibold text-ink border-b border-[#fdceb0] pb-0.5 hover:border-ink transition-colors"
-                    >
-                      Ver álbum
-                    </a>
-                    <button
-                      onClick={() => router.push(`/dashboard/${event.id}/challenges`)}
-                      className="text-[13px] font-semibold text-ink border-b border-[#d0c0e8] pb-0.5 hover:border-ink transition-colors cursor-pointer"
-                    >
-                      Desafios
-                    </button>
-                  </div>
-                </div>
-
-                {/* QR Code */}
-                <div
-                  className="flex-shrink-0 rounded-xl p-1.5"
-                  style={{ background: '#f3f3f3' }}
-                >
-                  <QRCodeGenerator slug={event.slug} />
-                </div>
+              {/* Stats & Actions */}
+              <div className="w-full grid grid-cols-2 gap-1 pt-3 border-t border-gray-100/80">
+                 <button
+                   onClick={() => window.open(`/dashboard/${event.id}`, '_blank')}
+                   className="flex flex-col items-center justify-center p-2.5 rounded-[14px] hover:bg-gray-50 transition-colors group cursor-pointer"
+                 >
+                   <span className="text-[16px] font-bold text-gray-900 group-hover:text-black">Álbum</span>
+                   <span className="text-[11px] text-gray-500 font-medium tracking-wide">Visualizar</span>
+                 </button>
+                 <button
+                   onClick={() => router.push(`/dashboard/${event.id}/challenges`)}
+                   className="flex flex-col items-center justify-center p-2.5 rounded-[14px] hover:bg-gray-50 transition-colors group cursor-pointer"
+                 >
+                   <span className="text-[16px] font-bold text-gray-900 group-hover:text-black">Desafios</span>
+                   <span className="text-[11px] text-gray-500 font-medium tracking-wide">Configurar</span>
+                 </button>
               </div>
             </div>
           ))}
