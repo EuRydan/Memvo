@@ -1,6 +1,7 @@
 'use client'
 
 import { Logo } from '@/components/Logo'
+import { TiltedDock } from '@/components/TiltedDock'
 
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -205,53 +206,8 @@ export default function DashboardPage() {
       </main>
 
       {/* ── Bottom Nav Bar ── */}
-      <nav
-        className="fixed bottom-0 left-0 right-0 z-50 flex justify-around items-center px-4 pt-3 pb-5"
-        style={{
-          background: 'rgba(250,250,250,0.9)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          borderTop: '1px solid rgba(0,0,0,0.06)',
-          boxShadow: '0 -4px 20px rgba(0,0,0,0.04)',
-        }}
-      >
-        {/* Eventos (active) */}
-        <button
-          onClick={() => router.push('/dashboard')}
-          className="flex flex-col items-center gap-1 text-ink active:scale-90 transition-transform duration-200"
-        >
-          <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/>
-          </svg>
-          <span className="text-[10px] font-semibold tracking-wide">Eventos</span>
-        </button>
-
-        {/* Novo evento (FAB center) */}
-        <button
-          onClick={() => router.push('/dashboard/new')}
-          className="w-12 h-12 rounded-full bg-ink text-white flex items-center justify-center -mt-5 shadow-lg hover:opacity-85 active:scale-95 transition-all duration-200 cursor-pointer"
-          style={{ boxShadow: '0 6px 20px rgba(0,0,0,0.22)' }}
-          title="Novo Evento"
-        >
-          <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-            <line x1="12" y1="5" x2="12" y2="19"/>
-            <line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
-        </button>
-
-        {/* Sair */}
-        <button
-          onClick={async () => { await supabase.auth.signOut(); router.push('/login') }}
-          className="flex flex-col items-center gap-1 text-slate hover:text-ink transition-colors active:scale-90 duration-200 cursor-pointer"
-        >
-          <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-            <polyline points="16 17 21 12 16 7"/>
-            <line x1="21" y1="12" x2="9" y2="12"/>
-          </svg>
-          <span className="text-[10px] font-semibold tracking-wide">Sair</span>
-        </button>
-      </nav>
+      {/* ── Floating 3D Bottom Nav ── */}
+      <TiltedDock />
 
     </div>
   )
