@@ -80,7 +80,7 @@ export default function LandingPage() {
         </h1>
 
         {/* Portfolio Gallery */}
-        <div className="w-full mt-auto max-w-7xl mx-auto z-10 -mb-10">
+        <div className="w-full mt-auto max-w-7xl mx-auto z-10">
           <PortfolioGallery 
             title="" 
             archiveButton={{ text: "Ver planos e preços", href: "/pricing" }}

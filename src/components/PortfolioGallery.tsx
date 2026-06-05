@@ -108,8 +108,8 @@ export function PortfolioGallery({
         </div>
 
         {/* Desktop 3D overlapping layout - hidden on mobile */}
-        <div className="hidden md:block relative h-[380px] mt-2">
-          <div className={`flex ${spacing} pb-0 pt-32 items-end justify-center`}>
+        <div className="hidden md:block relative overflow-hidden h-[220px] mt-8">
+          <div className={`flex ${spacing} h-[400px] pb-8 items-end justify-center`}>
             {images.map((image, index) => {
               // Calculate stagger height - peak in middle, descending to edges
               const totalImages = images.length
