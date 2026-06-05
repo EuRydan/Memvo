@@ -115,7 +115,7 @@ export default function LandingPage() {
             { src: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&h=600&fit=crop&q=80" },
             { src: "https://images.unsplash.com/photo-1520854221256-17451cc331bf?w=800&h=600&fit=crop&q=80" },
             { src: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=800&h=600&fit=crop&q=80" },
-            { src: "https://images.unsplash.com/photo-1516997184712-48419615a132?w=800&h=600&fit=crop&q=80" }
+            { src: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=800&h=600&fit=crop&q=80" }
           ]} 
         />
 
