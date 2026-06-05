@@ -78,6 +78,7 @@ const FAQS = [
 
 export default function PricingPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null)
+  const [selectedPlan, setSelectedPlan] = useState<typeof PLANS[0] | null>(null)
 
   return (
     <div className="min-h-screen bg-[#fafafa] overflow-x-hidden">
@@ -121,7 +122,7 @@ export default function PricingPage() {
         </Link>
       </header>
 
-      <main className="relative z-10 pt-24 pb-20 px-5 max-w-lg mx-auto">
+      <main className={`relative z-10 pt-24 pb-20 px-5 mx-auto transition-all duration-500 ${selectedPlan ? 'max-w-4xl' : 'max-w-lg'}`}>
 
         {/* Hero */}
         <div className="text-center mb-10">
@@ -133,69 +134,157 @@ export default function PricingPage() {
           <p className="text-sm text-[#676f7b]">Pagamento único. Sem assinatura.</p>
         </div>
 
-        {/* ── Pricing Cards ── */}
-        <div className="flex flex-col gap-4 mb-14">
-          {PLANS.map(plan => (
-            <div key={plan.id}
-              className="rounded-[22px] overflow-hidden relative"
+        {/* ── Pricing Cards / Gateway ── */}
+        {!selectedPlan ? (
+          <div className="flex flex-col gap-4 mb-14">
+            {PLANS.map(plan => (
+              <div key={plan.id}
+                className="rounded-[22px] overflow-hidden relative"
+                style={{
+                  background: plan.popular ? '#0a0a0a' : 'rgba(255,255,255,0.95)',
+                  boxShadow: plan.popular
+                    ? '0 12px 40px rgba(0,0,0,0.22)'
+                    : '0 4px 24px rgba(0,0,0,0.06)',
+                  border: plan.popular ? 'none' : '1.5px solid rgba(0,0,0,0.06)',
+                }}>
+
+                {/* Gradient band — only on non-popular */}
+                {!plan.popular && (
+                  <div className="h-[3.5px] w-full"
+                    style={{ background: 'linear-gradient(90deg, #fdceb0 0%, #d0c0e8 100%)' }} />
+                )}
+                {/* Gradient band for popular */}
+                {plan.popular && (
+                  <div className="h-[3.5px] w-full"
+                    style={{ background: 'linear-gradient(90deg, #f4c5a8 0%, #c8b8e0 50%, #b8d4f0 100%)' }} />
+                )}
+
+                <div className="p-6">
+                  {/* Badge */}
+                  {plan.popular && (
+                    <div className="inline-flex items-center gap-1.5 mb-4 px-3 py-1 rounded-full"
+                      style={{ background: 'rgba(255,255,255,0.15)' }}>
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#f4c5a8]" />
+                      <span className="text-[11px] font-semibold text-white/90 tracking-wide">Mais popular</span>
+                    </div>
+                  )}
+
+                  {/* Name & price */}
+                  <div className="flex items-start justify-between mb-5">
+                    <div>
+                      <h2 className={`text-xl font-bold tracking-[-0.01em] ${plan.popular ? 'text-white' : 'text-[#0a0a0a]'}`}
+                        style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}>
+                        {plan.name}
+                      </h2>
+                      <p className={`text-xs mt-0.5 ${plan.popular ? 'text-white/60' : 'text-[#939393]'}`}>
+                        {plan.desc}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className={`text-2xl font-bold tracking-[-0.02em] ${plan.popular ? 'text-white' : 'text-[#0a0a0a]'}`}>
+                        {plan.price}
+                      </p>
+                      <p className={`text-[10px] ${plan.popular ? 'text-white/50' : 'text-[#939393]'}`}>
+                        pagamento único
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Features */}
+                  <ul className="flex flex-col gap-2.5 mb-6">
+                    {plan.features.map(f => (
+                      <li key={f.text} className="flex items-center gap-3">
+                        {f.included ? (
+                          <div className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0"
+                            style={{ background: plan.popular ? 'rgba(255,255,255,0.2)' : 'rgba(74,197,80,0.12)' }}>
+                            <svg width="9" height="9" fill="none" stroke={plan.popular ? 'white' : '#4ac550'} strokeWidth="2.5" viewBox="0 0 24 24">
+                              <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                          </div>
+                        ) : (
+                          <div className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0"
+                            style={{ background: 'rgba(0,0,0,0.05)' }}>
+                            <svg width="8" height="8" fill="none" stroke="#c0c0c0" strokeWidth="2.5" viewBox="0 0 24 24">
+                              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                            </svg>
+                          </div>
+                        )}
+                        <span className={`text-sm ${f.included
+                          ? plan.popular ? 'text-white/90' : 'text-[#0a0a0a]'
+                          : plan.popular ? 'text-white/30' : 'text-[#c0c0c0]'}`}>
+                          {f.text}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* CTA */}
+                  <button onClick={() => setSelectedPlan(plan)}
+                    className="block w-full text-center py-3.5 rounded-full text-sm font-semibold transition-all active:scale-[0.98]"
+                    style={plan.popular
+                      ? {
+                          background: 'white',
+                          color: '#0a0a0a',
+                          boxShadow: '0 4px 16px rgba(255,255,255,0.2)',
+                        }
+                      : {
+                          background: 'transparent',
+                          color: '#0a0a0a',
+                          border: '2px solid rgba(0,0,0,0.12)',
+                        }
+                    }>
+                    Escolher {plan.name}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-14 items-start animate-fade-in">
+            {/* Left: Selected Plan */}
+            <div className="rounded-[22px] overflow-hidden relative w-full max-w-sm mx-auto md:max-w-none"
               style={{
-                background: plan.popular ? '#0a0a0a' : 'rgba(255,255,255,0.95)',
-                boxShadow: plan.popular
+                background: selectedPlan.popular ? '#0a0a0a' : 'rgba(255,255,255,0.95)',
+                boxShadow: selectedPlan.popular
                   ? '0 12px 40px rgba(0,0,0,0.22)'
                   : '0 4px 24px rgba(0,0,0,0.06)',
-                border: plan.popular ? 'none' : '1.5px solid rgba(0,0,0,0.06)',
+                border: selectedPlan.popular ? 'none' : '1.5px solid rgba(0,0,0,0.06)',
               }}>
-
-              {/* Gradient band — only on non-popular */}
-              {!plan.popular && (
+              {!selectedPlan.popular && (
                 <div className="h-[3.5px] w-full"
                   style={{ background: 'linear-gradient(90deg, #fdceb0 0%, #d0c0e8 100%)' }} />
               )}
-              {/* Gradient band for popular */}
-              {plan.popular && (
+              {selectedPlan.popular && (
                 <div className="h-[3.5px] w-full"
                   style={{ background: 'linear-gradient(90deg, #f4c5a8 0%, #c8b8e0 50%, #b8d4f0 100%)' }} />
               )}
-
               <div className="p-6">
-                {/* Badge */}
-                {plan.popular && (
-                  <div className="inline-flex items-center gap-1.5 mb-4 px-3 py-1 rounded-full"
-                    style={{ background: 'rgba(255,255,255,0.15)' }}>
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#f4c5a8]" />
-                    <span className="text-[11px] font-semibold text-white/90 tracking-wide">Mais popular</span>
-                  </div>
-                )}
-
-                {/* Name & price */}
                 <div className="flex items-start justify-between mb-5">
                   <div>
-                    <h2 className={`text-xl font-bold tracking-[-0.01em] ${plan.popular ? 'text-white' : 'text-[#0a0a0a]'}`}
+                    <h2 className={`text-xl font-bold tracking-[-0.01em] ${selectedPlan.popular ? 'text-white' : 'text-[#0a0a0a]'}`}
                       style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}>
-                      {plan.name}
+                      {selectedPlan.name}
                     </h2>
-                    <p className={`text-xs mt-0.5 ${plan.popular ? 'text-white/60' : 'text-[#939393]'}`}>
-                      {plan.desc}
+                    <p className={`text-xs mt-0.5 ${selectedPlan.popular ? 'text-white/60' : 'text-[#939393]'}`}>
+                      {selectedPlan.desc}
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className={`text-2xl font-bold tracking-[-0.02em] ${plan.popular ? 'text-white' : 'text-[#0a0a0a]'}`}>
-                      {plan.price}
+                    <p className={`text-2xl font-bold tracking-[-0.02em] ${selectedPlan.popular ? 'text-white' : 'text-[#0a0a0a]'}`}>
+                      {selectedPlan.price}
                     </p>
-                    <p className={`text-[10px] ${plan.popular ? 'text-white/50' : 'text-[#939393]'}`}>
+                    <p className={`text-[10px] ${selectedPlan.popular ? 'text-white/50' : 'text-[#939393]'}`}>
                       pagamento único
                     </p>
                   </div>
                 </div>
-
-                {/* Features */}
                 <ul className="flex flex-col gap-2.5 mb-6">
-                  {plan.features.map(f => (
+                  {selectedPlan.features.map(f => (
                     <li key={f.text} className="flex items-center gap-3">
                       {f.included ? (
                         <div className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0"
-                          style={{ background: plan.popular ? 'rgba(255,255,255,0.2)' : 'rgba(74,197,80,0.12)' }}>
-                          <svg width="9" height="9" fill="none" stroke={plan.popular ? 'white' : '#4ac550'} strokeWidth="2.5" viewBox="0 0 24 24">
+                          style={{ background: selectedPlan.popular ? 'rgba(255,255,255,0.2)' : 'rgba(74,197,80,0.12)' }}>
+                          <svg width="9" height="9" fill="none" stroke={selectedPlan.popular ? 'white' : '#4ac550'} strokeWidth="2.5" viewBox="0 0 24 24">
                             <polyline points="20 6 9 17 4 12"/>
                           </svg>
                         </div>
@@ -208,35 +297,80 @@ export default function PricingPage() {
                         </div>
                       )}
                       <span className={`text-sm ${f.included
-                        ? plan.popular ? 'text-white/90' : 'text-[#0a0a0a]'
-                        : plan.popular ? 'text-white/30' : 'text-[#c0c0c0]'}`}>
+                        ? selectedPlan.popular ? 'text-white/90' : 'text-[#0a0a0a]'
+                        : selectedPlan.popular ? 'text-white/30' : 'text-[#c0c0c0]'}`}>
                         {f.text}
                       </span>
                     </li>
                   ))}
                 </ul>
-
-                {/* CTA */}
-                <Link href="/register"
-                  className="block w-full text-center py-3.5 rounded-full text-sm font-semibold transition-all active:scale-[0.98]"
-                  style={plan.popular
-                    ? {
-                        background: 'white',
-                        color: '#0a0a0a',
-                        boxShadow: '0 4px 16px rgba(255,255,255,0.2)',
-                      }
-                    : {
-                        background: 'transparent',
-                        color: '#0a0a0a',
-                        border: '2px solid rgba(0,0,0,0.12)',
-                      }
-                  }>
-                  Escolher {plan.name}
-                </Link>
+                <button onClick={() => setSelectedPlan(null)}
+                  className={`block w-full text-center py-3.5 rounded-full text-sm font-semibold transition-all active:scale-[0.98] ${selectedPlan.popular ? 'text-white/80 hover:text-white bg-white/10 hover:bg-white/20' : 'text-[#676f7b] hover:text-[#0a0a0a] bg-stone-100 hover:bg-stone-200'}`}>
+                  Mudar de plano
+                </button>
               </div>
             </div>
-          ))}
-        </div>
+
+            {/* Right: Payment Gateway Mock */}
+            <div className="rounded-[22px] overflow-hidden bg-white p-7 md:p-8"
+              style={{ boxShadow: '0 8px 40px rgba(0,0,0,0.08)', border: '1px solid rgba(0,0,0,0.04)' }}>
+              <div className="flex items-center justify-between mb-1">
+                <h3 className="text-[1.3rem] font-bold text-[#0a0a0a]" style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}>
+                  Pagamento Seguro
+                </h3>
+                <span className="text-xl font-bold text-[#0a0a0a] tracking-tight">{selectedPlan.price}</span>
+              </div>
+              <p className="text-[11px] font-semibold text-[#939393] uppercase tracking-widest mb-6">Ambiente protegido</p>
+
+              {/* Tabs */}
+              <div className="flex p-1 bg-[#f3f3f3] rounded-xl mb-6">
+                <button className="flex-1 py-2.5 text-[13px] font-semibold bg-white rounded-lg shadow-sm text-[#0a0a0a]">
+                  Cartão
+                </button>
+                <button className="flex-1 py-2.5 text-[13px] font-semibold text-[#676f7b] hover:text-[#0a0a0a] transition-colors">
+                  Pix
+                </button>
+              </div>
+
+              {/* Form Mocks */}
+              <div className="flex flex-col gap-4">
+                <div className="floating-group">
+                  <input type="text" placeholder=" " className="input-field w-full px-4 py-3.5 rounded-xl text-sm text-[#0a0a0a]" />
+                  <label>Número do cartão</label>
+                </div>
+                <div className="floating-group">
+                  <input type="text" placeholder=" " className="input-field w-full px-4 py-3.5 rounded-xl text-sm text-[#0a0a0a]" />
+                  <label>Nome impresso no cartão</label>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="floating-group">
+                    <input type="text" placeholder=" " className="input-field w-full px-4 py-3.5 rounded-xl text-sm text-[#0a0a0a]" />
+                    <label>Validade (MM/AA)</label>
+                  </div>
+                  <div className="floating-group">
+                    <input type="text" placeholder=" " className="input-field w-full px-4 py-3.5 rounded-xl text-sm text-[#0a0a0a]" />
+                    <label>CVV</label>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action */}
+              <Link href={`/api/checkout?plan=${selectedPlan.id}`}
+                className="mt-8 block w-full bg-[#0a0a0a] text-white text-center py-4 rounded-full text-[14px] font-semibold tracking-wide hover:opacity-85 active:scale-[0.98] transition-all"
+                style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.18)' }}>
+                Pagar {selectedPlan.price} e Continuar
+              </Link>
+              
+              <div className="flex items-center justify-center gap-2 mt-5 text-[#939393]">
+                <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <p className="text-[10px] font-medium">Pagamento protegido por criptografia de ponta a ponta.</p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* ── Trust strip ── */}
         <div className="text-center mb-14">

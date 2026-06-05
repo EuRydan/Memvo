@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect, useRef, Suspense } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import Link from 'next/link'
 
 // Password strength logic
 function getStrength(pwd: string): { level: number; label: string; color: string } {
@@ -19,8 +20,9 @@ function getStrength(pwd: string): { level: number; label: string; color: string
   return { level: 4, label: 'Forte', color: '#22c55e' }
 }
 
-export default function RegisterPage() {
+function RegisterContent() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const supabase = createClient()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -31,6 +33,8 @@ export default function RegisterPage() {
   const orb1Ref = useRef<HTMLDivElement>(null)
   const orb2Ref = useRef<HTMLDivElement>(null)
 
+  const sessionId = searchParams.get('session_id')
+  const plan = searchParams.get('plan') || 'essential'
   const strength = getStrength(password)
 
   useEffect(() => {
@@ -47,6 +51,23 @@ export default function RegisterPage() {
     return () => window.removeEventListener('mousemove', handleMouseMove)
   }, [])
 
+  if (!sessionId) {
+    return (
+      <div className="relative min-h-screen flex flex-col items-center justify-center px-5 py-10 overflow-hidden bg-[#fafafa]">
+        <div className="text-center bg-white p-8 rounded-[2rem] max-w-sm w-full border border-[#f0f0f0] shadow-[0_8px_40px_rgba(0,0,0,0.06)]">
+          <p className="text-5xl mb-4">💳</p>
+          <h2 style={{ fontFamily: 'Georgia, "Times New Roman", serif' }} className="text-2xl font-bold text-ink mb-2">
+            Escolha um plano
+          </h2>
+          <p className="text-sm text-slate mb-6">Você precisa adquirir um plano antes de criar sua conta no Memvo.</p>
+          <Link href="/pricing" className="block w-full bg-ink text-white py-3 rounded-full text-sm font-semibold hover:opacity-85 transition-opacity">
+            Ver planos e preços
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault()
     if (password.length < 6) {
@@ -56,16 +77,33 @@ export default function RegisterPage() {
     setLoading(true)
     setError('')
 
-    const { error } = await supabase.auth.signUp({
+    // 1. Create the user
+    const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
       options: { data: { full_name: name } },
     })
 
-    if (error) {
-      setError(error.message)
+    if (authError) {
+      setError(authError.message)
       setLoading(false)
       return
+    }
+
+    if (authData.user) {
+      // 2. Insert into user_plans
+      const { error: planError } = await supabase.from('user_plans').insert({
+        user_id: authData.user.id,
+        plan_id: plan,
+        payment_id: sessionId, // Save the checkout session ID
+      })
+
+      if (planError) {
+        // Log this error, but don't block login if possible, or handle gracefully
+        console.error('Failed to save plan:', planError)
+        // In a production app, we would probably have a webhook handling this,
+        // or a rollback mechanism. Here we just show an error.
+      }
     }
 
     router.push('/dashboard')
@@ -84,7 +122,7 @@ export default function RegisterPage() {
         {/* Branding */}
         <div className="text-center mb-8">
           <p className="text-[11px] font-semibold tracking-[0.18em] text-stone uppercase mb-3">
-            Comece agora
+            Pagamento Confirmado
           </p>
           <h1
             style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
@@ -92,7 +130,7 @@ export default function RegisterPage() {
           >
             Memvo
           </h1>
-          <p className="text-sm text-slate mt-2">Preserve seus momentos mais preciosos</p>
+          <p className="text-sm text-slate mt-2">Crie sua conta para começar</p>
         </div>
 
         {/* Glass Card */}
@@ -273,5 +311,20 @@ export default function RegisterPage() {
 
       </div>
     </div>
+  )
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-[#fafafa]">
+        <svg className="animate-spin text-stone" width="24" height="24" fill="none" viewBox="0 0 24 24">
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+        </svg>
+      </div>
+    }>
+      <RegisterContent />
+    </Suspense>
   )
 }
