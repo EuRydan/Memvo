@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { motion, useTransform, useSpring, useScroll, useMotionValue } from "framer-motion";
+import Image from 'next/image';
+import { Logo } from '@/components/Logo';
 import Link from 'next/link';
 
 // --- Types ---
@@ -74,7 +76,9 @@ function FlipCard({
                     style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
                 >
                     <div className="text-center">
-                        <p className="text-[8px] font-bold text-[#f4c5a8] uppercase tracking-widest mb-1">Memvo</p>
+                        <div className="flex justify-center mb-1">
+                          <Logo className="h-4 w-auto text-[#f4c5a8]" />
+                        </div>
                     </div>
                 </div>
             </motion.div>

@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
+import { Logo } from '@/components/Logo'
 
 // Password strength logic
 function getStrength(pwd: string): { level: number; label: string; color: string } {
@@ -128,12 +129,9 @@ function RegisterContent() {
           <p className="text-[11px] font-semibold tracking-[0.18em] text-stone uppercase mb-3">
             Pagamento Confirmado
           </p>
-          <h1
-            style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
-            className="text-[2.6rem] font-bold tracking-[-0.03em] text-ink leading-none"
-          >
-            Memvo
-          </h1>
+          <div className="flex justify-center mb-2">
+            <Logo className="h-10 w-auto text-ink" />
+          </div>
           <p className="text-sm text-slate mt-2">Crie sua conta para começar</p>
         </div>
 

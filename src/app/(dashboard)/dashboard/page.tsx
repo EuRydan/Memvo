@@ -1,5 +1,7 @@
 'use client'
 
+import { Logo } from '@/components/Logo'
+
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
@@ -96,12 +98,7 @@ export default function DashboardPage() {
         <div className="w-8" />
 
         {/* Logo */}
-        <h1
-          style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
-          className="text-[1.4rem] font-bold tracking-[-0.02em] text-ink"
-        >
-          Memvo
-        </h1>
+        <Logo className="h-6 w-auto text-ink" />
 
         {/* Right: sign out */}
         <button

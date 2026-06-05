@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { Logo } from '@/components/Logo'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -58,12 +59,9 @@ export default function LoginPage() {
           <p className="text-[11px] font-semibold tracking-[0.18em] text-stone uppercase mb-3">
             Bem-vindo de volta
           </p>
-          <h1
-            style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
-            className="text-[2.6rem] font-bold tracking-[-0.03em] text-ink leading-none"
-          >
-            Memvo
-          </h1>
+          <div className="flex justify-center mb-2">
+            <Logo className="h-10 w-auto text-ink" />
+          </div>
           <p className="text-sm text-slate mt-2">Acesse seu cofre de memórias digitais</p>
         </div>
 

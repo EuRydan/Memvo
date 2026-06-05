@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { Logo } from '@/components/Logo'
 import { ArrowRight } from 'lucide-react'
 import { PortfolioGallery } from '@/components/PortfolioGallery'
 import { ZoomParallax } from '@/components/ZoomParallax'
@@ -20,10 +21,10 @@ export default function LandingPage() {
             boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.2)',
           }}
         >
-          <span style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
-            className="text-xl font-bold tracking-[-0.02em] text-[#0a0a0a]">
-            Memvo
-          </span>
+          <Link href="/" className="flex items-center gap-2" aria-label="Memvo Home">
+            <Logo className="h-6 w-auto text-black" />
+            <span className="sr-only">Memvo</span>
+          </Link>
           <div className="flex items-center gap-4">
             <Link href="/pricing"
               className="text-sm font-semibold text-[#0a0a0a]/70 hover:text-[#0a0a0a] transition-colors">

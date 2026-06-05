@@ -6,6 +6,7 @@ import { loadStripe } from '@stripe/stripe-js'
 import { CheckoutElementsProvider } from '@stripe/react-stripe-js/checkout'
 import CheckoutForm from './CheckoutForm'
 import { WordmarkFooter } from '@/components/WordmarkFooter'
+import { Logo } from '@/components/Logo'
 
 // Assegure-se de colocar essa chave no arquivo .env.local
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_mock')
@@ -134,10 +135,7 @@ export default function PricingPage() {
             <polyline points="15 18 9 12 15 6"/>
           </svg>
         </Link>
-        <span style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
-          className="text-xl font-bold tracking-[-0.02em] text-[#0a0a0a]">
-          Memvo
-        </span>
+        <Logo className="h-6 w-auto text-[#0a0a0a]" />
         <Link href="/register"
           className="bg-[#0a0a0a] text-white text-xs font-semibold px-4 py-2 rounded-full hover:opacity-85 transition-all"
           style={{ boxShadow: '0 4px 12px rgba(0,0,0,0.18)' }}>
