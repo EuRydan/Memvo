@@ -61,8 +61,7 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
   }
 
   const tabs = [
-    ...challenges.map(c => ({ id: c.id, label: c.title })),
-    { id: 'free', label: '📷 Álbum livre' }
+    ...challenges.map(c => ({ id: c.id, label: c.title }))
   ]
 
   if (loading) return (
@@ -140,13 +139,30 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
             <p className="text-gray-600 text-sm">Nenhuma foto ainda neste desafio</p>
           </div>
         ) : (
-          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
             {filteredMedias().map(media => (
-              <div key={media.id} className="relative aspect-square bg-gray-900 group cursor-pointer">
+              <div key={media.id} className="relative aspect-[9/16] bg-gray-900 group rounded-xl overflow-hidden shadow-sm">
+                
+                {/* Download Button */}
+                <a
+                  href={getPublicUrl(media.storage_path) + "?download="}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="absolute top-3 right-3 bg-black/50 hover:bg-black/80 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition z-10 backdrop-blur-sm"
+                  title="Baixar arquivo"
+                >
+                  <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                  </svg>
+                </a>
+
                 {media.type === 'video' ? (
                   <video
                     src={getPublicUrl(media.storage_path)}
                     className="w-full h-full object-cover"
+                    controls
                   />
                 ) : (
                   <img
@@ -156,8 +172,8 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
                   />
                 )}
                 {media.uploader_name && (
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 opacity-0 group-hover:opacity-100 transition">
-                    <p className="text-white text-xs truncate">{media.uploader_name}</p>
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 opacity-0 group-hover:opacity-100 transition">
+                    <p className="text-white text-sm font-medium truncate">{media.uploader_name}</p>
                   </div>
                 )}
               </div>
