@@ -27,3 +27,96 @@ body {
   color: var(--color-ink);
   font-family: var(--font-sans);
 }
+
+@keyframes drift {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(-20px, 30px) scale(1.08); }
+  100% { transform: translate(10px, -20px) scale(0.95); }
+}
+
+@keyframes drift2 {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(25px, -15px) scale(1.05); }
+  100% { transform: translate(-10px, 25px) scale(0.98); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.orb-1 {
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, rgba(255,209,186,0.55) 0%, rgba(212,193,236,0.35) 100%);
+  top: -140px;
+  right: -120px;
+  animation: drift 22s ease-in-out infinite alternate;
+}
+
+.orb-2 {
+  width: 360px;
+  height: 360px;
+  background: radial-gradient(circle, rgba(186,225,255,0.4) 0%, rgba(186,255,220,0.25) 100%);
+  bottom: -100px;
+  left: -80px;
+  animation: drift2 18s ease-in-out infinite alternate;
+}
+
+.auth-card {
+  animation: fadeInUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.input-field {
+  background: rgba(248, 248, 248, 0.9);
+  border: 1.5px solid #ebebeb;
+  transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.input-field:focus {
+  border-color: #0a0a0a;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.06);
+  outline: none;
+}
+
+.floating-group {
+  position: relative;
+}
+
+.floating-group input:focus + label,
+.floating-group input:not(:placeholder-shown) + label {
+  top: -0.55rem;
+  left: 1.1rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  background: white;
+  padding: 0 0.35rem;
+  color: #0a0a0a;
+  font-weight: 600;
+}
+
+.floating-group label {
+  position: absolute;
+  top: 1rem;
+  left: 1.25rem;
+  font-size: 0.875rem;
+  color: #939393;
+  font-weight: 500;
+  pointer-events: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  background: transparent;
+}
