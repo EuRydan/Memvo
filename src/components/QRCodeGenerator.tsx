@@ -3,7 +3,19 @@
 import { useEffect, useRef } from 'react'
 import QRCode from 'qrcode'
 
-export default function QRCodeGenerator({ slug, size = 72, variant = 'default' }: { slug: string; size?: number; variant?: 'default' | 'cover' }) {
+export default function QRCodeGenerator({ 
+  slug, 
+  eventName,
+  eventDate,
+  size = 72, 
+  variant = 'default' 
+}: { 
+  slug: string; 
+  eventName?: string;
+  eventDate?: string | Date;
+  size?: number; 
+  variant?: 'default' | 'cover' 
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const url = typeof window !== 'undefined' ? `${window.location.origin}/e/${slug}` : ''
 
@@ -14,17 +26,110 @@ export default function QRCodeGenerator({ slug, size = 72, variant = 'default' }
   }, [url, size])
 
   const downloadQR = () => {
-    // Render a higher-res version for download
-    const offscreen = document.createElement('canvas')
-    QRCode.toCanvas(offscreen, url, { width: 400, margin: 2 }, () => {
-      const pngUrl = offscreen.toDataURL('image/png')
-      const link = document.createElement('a')
-      link.href = pngUrl
-      link.download = `qrcode-${slug}.png`
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-    })
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+    
+    // Set dimensions for high-quality print/story (1080x1920)
+    canvas.width = 1080
+    canvas.height = 1920
+    
+    // Draw background
+    ctx.fillStyle = '#FAFAFA'
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    
+    // Draw a gradient or some shapes for decoration
+    const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height)
+    gradient.addColorStop(0, 'rgba(244, 197, 168, 0.25)') // #f4c5a8 with opacity
+    gradient.addColorStop(1, 'rgba(212, 189, 232, 0.25)') // #d4bde8 with opacity
+    ctx.fillStyle = gradient
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+    // Draw card background
+    ctx.shadowColor = 'rgba(0,0,0,0.06)'
+    ctx.shadowBlur = 60
+    ctx.shadowOffsetY = 30
+    ctx.fillStyle = '#FFFFFF'
+    const cardMargin = 80
+    
+    // Fallback for roundRect
+    if (ctx.roundRect) {
+      ctx.beginPath()
+      ctx.roundRect(cardMargin, cardMargin, canvas.width - cardMargin * 2, canvas.height - cardMargin * 2, 60)
+      ctx.fill()
+    } else {
+      ctx.fillRect(cardMargin, cardMargin, canvas.width - cardMargin * 2, canvas.height - cardMargin * 2)
+    }
+    
+    ctx.shadowColor = 'transparent' // reset
+
+    // Draw text: Event Name
+    ctx.fillStyle = '#0a0a0a'
+    ctx.font = 'bold 76px "Helvetica Neue", Helvetica, Arial, sans-serif'
+    ctx.textAlign = 'center'
+    const nameStr = eventName || "Compartilhe Memórias"
+    // Handle long text
+    if (nameStr.length > 20) {
+      ctx.font = 'bold 64px "Helvetica Neue", Helvetica, Arial, sans-serif'
+    }
+    ctx.fillText(nameStr, canvas.width / 2, 320)
+
+    // Draw Date
+    if (eventDate) {
+      ctx.fillStyle = '#666666'
+      ctx.font = '500 40px "Helvetica Neue", Helvetica, Arial, sans-serif'
+      const dateObj = new Date(eventDate)
+      // Ajuste de fuso horário fixo pra evitar um dia a menos, caso seja necessário, ou usar UTC
+      const dateStr = dateObj.toLocaleDateString('pt-BR', { timeZone: 'UTC', day: '2-digit', month: 'long', year: 'numeric' })
+      ctx.fillText(dateStr, canvas.width / 2, 400)
+    }
+
+    // Load logo
+    const logoImg = new Image()
+    logoImg.crossOrigin = "anonymous"
+    logoImg.src = '/logo.png'
+    
+    // Draw QR code function
+    const drawQRAndFinish = () => {
+      const qrCanvas = document.createElement('canvas')
+      QRCode.toCanvas(qrCanvas, url, { width: 660, margin: 1, color: { dark: '#000000', light: '#ffffff' } }, () => {
+        // Draw QR code onto main canvas
+        ctx.drawImage(qrCanvas, canvas.width / 2 - 330, 560, 660, 660)
+        
+        // Draw CTA text under QR
+        ctx.fillStyle = '#0a0a0a'
+        ctx.font = 'bold 52px "Helvetica Neue", Helvetica, Arial, sans-serif'
+        ctx.fillText("Escaneie para acessar o álbum", canvas.width / 2, 1340)
+        
+        ctx.fillStyle = '#666666'
+        ctx.font = 'normal 36px "Helvetica Neue", Helvetica, Arial, sans-serif'
+        
+        const shortUrl = window.location.host + '/e/' + slug
+        ctx.fillText(`Ou acesse: ${shortUrl}`, canvas.width / 2, 1420)
+
+        // Download
+        const pngUrl = canvas.toDataURL('image/png')
+        const link = document.createElement('a')
+        link.href = pngUrl
+        link.download = `Cartao-QR-${slug}.png`
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      })
+    }
+
+    logoImg.onload = () => {
+      // Draw logo at bottom
+      const logoWidth = 140
+      const logoHeight = (logoImg.height / logoImg.width) * logoWidth || 77
+      ctx.drawImage(logoImg, canvas.width / 2 - logoWidth / 2, 1640, logoWidth, logoHeight)
+      drawQRAndFinish()
+    }
+    
+    // Fallback if logo fails to load (dev environment issues sometimes)
+    logoImg.onerror = () => {
+      drawQRAndFinish()
+    }
   }
 
   return (
