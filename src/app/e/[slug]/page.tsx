@@ -8,7 +8,7 @@ import { Media, Challenge } from '@/types'
 export default function EventPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params)
   const supabase = createClient()
-  const [event, setEvent] = useState<{ id: string; name: string; date: string } | null>(null)
+  const [event, setEvent] = useState<{ id: string; name: string; date: string; active: boolean } | null>(null)
   const [medias, setMedias] = useState<Media[]>([])
   const [challenges, setChallenges] = useState<Challenge[]>([])
   const [uploaderName, setUploaderName] = useState('')
@@ -20,7 +20,7 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
   useEffect(() => {
     async function loadEvent() {
       const { data, error } = await supabase
-        .from('events').select('id, name, date').eq('slug', slug).eq('active', true).single()
+        .from('events').select('id, name, date, active').eq('slug', slug).eq('active', true).single()
       if (error || !data) { setNotFound(true); return }
       setEvent(data)
       loadMedias(data.id)
