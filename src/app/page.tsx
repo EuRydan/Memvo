@@ -18,6 +18,10 @@ export default function LandingPage() {
           Memvo
         </span>
         <div className="flex items-center gap-3">
+          <Link href="/pricing"
+            className="text-sm font-medium text-[#676f7b] hover:text-[#0a0a0a] transition-colors">
+            Planos
+          </Link>
           <Link href="/login"
             className="text-sm font-medium text-[#676f7b] hover:text-[#0a0a0a] transition-colors">
             Entrar
@@ -81,10 +85,10 @@ export default function LandingPage() {
 
         {/* CTAs */}
         <div className="relative flex flex-col sm:flex-row items-center gap-3 mt-10">
-          <Link href="/register"
+          <Link href="/pricing"
             className="bg-[#0a0a0a] text-white text-sm font-semibold px-8 py-4 rounded-full hover:opacity-85 transition-all active:scale-95 w-full sm:w-auto text-center"
             style={{ boxShadow: '0 6px 24px rgba(0,0,0,0.22)' }}>
-            Criar meu álbum grátis
+            Ver planos e preços
           </Link>
           <Link href="/login"
             className="text-sm font-semibold text-[#676f7b] hover:text-[#0a0a0a] transition-colors px-2 py-4">
@@ -252,12 +256,12 @@ export default function LandingPage() {
             Preserve cada memória preciosa
           </h2>
           <p className="text-sm text-white/80 mb-8 leading-relaxed">
-            Crie seu primeiro álbum em menos de 2 minutos. Gratuito para começar.
+            Crie seu álbum em menos de 2 minutos. Pagamento único, sem assinatura.
           </p>
-          <Link href="/register"
+          <Link href="/pricing"
             className="inline-block bg-white text-[#0a0a0a] text-sm font-bold px-8 py-4 rounded-full hover:bg-[#fafafa] transition-all active:scale-95"
             style={{ boxShadow: '0 6px 24px rgba(0,0,0,0.15)' }}>
-            Criar meu álbum grátis
+            Ver planos e preços
           </Link>
         </div>
       </section>
