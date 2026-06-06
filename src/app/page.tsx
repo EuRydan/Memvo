@@ -8,10 +8,12 @@ import { IntroAnimation } from '@/components/IntroAnimation'
 import { WordmarkFooter } from '@/components/WordmarkFooter'
 import { FeaturesSection } from '@/components/FeaturesSection'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
+import { LoadingScreen } from '@/components/LoadingScreen'
 
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#fafafa] overflow-clip">
+      <LoadingScreen />
 
       {/* ── Navbar ── */}
       <div className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
