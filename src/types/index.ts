@@ -5,6 +5,7 @@ export type Event = {
   name: string
   date: string
   end_date?: string
+  cover_url?: string
   slug: string
   active: boolean
 }

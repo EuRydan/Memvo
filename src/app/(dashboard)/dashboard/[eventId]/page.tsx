@@ -12,7 +12,7 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
   const { eventId } = use(params)
   const router = useRouter()
   const supabase = createClient()
-  const [event, setEvent] = useState<{ id: string; name: string; date: string; slug: string; google_refresh_token?: string } | null>(null)
+  const [event, setEvent] = useState<{ id: string; name: string; date: string; slug: string; google_refresh_token?: string; cover_url?: string } | null>(null)
   const [challenges, setChallenges] = useState<Challenge[]>([])
   const [medias, setMedias] = useState<Media[]>([])
   const [activeTab, setActiveTab] = useState<string>('free')
@@ -22,7 +22,7 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
     async function load() {
       const { data: eventData } = await supabase
         .from('events')
-        .select('id, name, date, slug, google_refresh_token')
+        .select('id, name, date, slug, google_refresh_token, cover_url')
         .eq('id', eventId)
         .single()
 
@@ -191,6 +191,7 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
             guestCount={new Set(medias.map(m => m.uploader_name).filter(Boolean)).size}
             photoCount={medias.length}
             slug={event.slug}
+            coverUrl={event.cover_url}
           />
         </div>
       )}

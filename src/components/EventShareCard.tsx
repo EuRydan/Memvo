@@ -8,9 +8,9 @@ interface EventShareCardProps {
   eventName: string
   eventDate: string
   inviteLink: string
-  guestCount: number
   photoCount: number
   slug: string
+  coverUrl?: string
 }
 
 export function EventShareCard({
@@ -20,6 +20,7 @@ export function EventShareCard({
   guestCount,
   photoCount,
   slug,
+  coverUrl,
 }: EventShareCardProps) {
   const [hasCopied, setHasCopied] = React.useState(false)
 
@@ -146,28 +147,41 @@ export function EventShareCard({
           {/* Divider */}
           <div className="h-px bg-[#e7eaf0]" />
 
-          {/* QR Code hint */}
-          <motion.div variants={itemVariants} className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div
-                className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-                style={{ background: '#f4f4f4' }}
+          {/* Cover Image or QR Code hint */}
+          <motion.div variants={itemVariants} className="w-full">
+            {coverUrl ? (
+              <div 
+                className="w-full h-32 rounded-xl overflow-hidden relative"
+                style={{
+                  background: '#f4f4f4'
+                }}
               >
-                <QrCode size={17} className="text-[#676f7b]" />
+                <img src={coverUrl} alt="Capa do Evento" className="w-full h-full object-cover" />
               </div>
-              <div>
-                <p className="text-xs font-semibold text-[#030303]">QR Code do evento</p>
-                <p className="text-[11px] text-[#939393]">Ideal para imprimir e colocar na mesa</p>
+            ) : (
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div
+                    className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={{ background: '#f4f4f4' }}
+                  >
+                    <QrCode size={17} className="text-[#676f7b]" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold text-[#030303]">QR Code do evento</p>
+                    <p className="text-[11px] text-[#939393]">Ideal para imprimir e colocar na mesa</p>
+                  </div>
+                </div>
+                <a
+                  href={`/e/${slug}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs font-semibold text-[#030303] underline underline-offset-2 hover:opacity-60 transition-opacity"
+                >
+                  Ver página
+                </a>
               </div>
-            </div>
-            <a
-              href={`/e/${slug}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs font-semibold text-[#030303] underline underline-offset-2 hover:opacity-60 transition-opacity"
-            >
-              Ver página
-            </a>
+            )}
           </motion.div>
 
         </div>

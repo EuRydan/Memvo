@@ -21,8 +21,11 @@ export default function NewEventPage() {
   const [name, setName] = useState('')
   const [date, setDate] = useState<string>('')
   const [endDate, setEndDate] = useState<string | null>(null)
+  const [coverFile, setCoverFile] = useState<File | null>(null)
+  const [coverPreviewUrl, setCoverPreviewUrl] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [checkingPlan, setCheckingPlan] = useState(true)
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const [userPlan, setUserPlan] = useState<PlanTier>('essential')
   const [activeCount, setActiveCount] = useState(0)
   const [canCreate, setCanCreate] = useState(false)
@@ -96,6 +99,18 @@ export default function NewEventPage() {
     if (!user) { router.push('/login'); return }
 
     const slug = generateSlug(name)
+    
+    let coverUrl = null
+    if (coverFile) {
+      const ext = coverFile.name.split('.').pop()
+      const fileName = `covers/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+      const { error: storageError, data: storageData } = await supabase.storage
+        .from('media').upload(fileName, coverFile, { cacheControl: '3600', upsert: false })
+      
+      if (!storageError && storageData) {
+        coverUrl = supabase.storage.from('media').getPublicUrl(storageData.path).data.publicUrl
+      }
+    }
 
     const payload: any = {
       name,
@@ -107,6 +122,10 @@ export default function NewEventPage() {
     
     if (endDate) {
       payload.end_date = endDate
+    }
+    
+    if (coverUrl) {
+      payload.cover_url = coverUrl
     }
 
     const { error } = await supabase.from('events').insert([payload])
@@ -239,7 +258,7 @@ export default function NewEventPage() {
                 </div>
               </div>
 
-              {/* Decorative card — atmosphere preview */}
+              {/* Decorative card — atmosphere preview and cover upload */}
               <div
                 className="rounded-[18px] overflow-hidden"
                 style={{
@@ -254,37 +273,80 @@ export default function NewEventPage() {
                   style={{ background: 'linear-gradient(90deg, #fdceb0 0%, #d0c0e8 100%)' }}
                 />
                 <div className="p-5 flex flex-col gap-3">
+                  
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    className="hidden" 
+                    ref={fileInputRef}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0]
+                      if (file) {
+                        setCoverFile(file)
+                        setCoverPreviewUrl(URL.createObjectURL(file))
+                      }
+                    }}
+                  />
+
                   <div
-                    className="w-full rounded-xl overflow-hidden"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="w-full rounded-xl overflow-hidden cursor-pointer group relative"
                     style={{ aspectRatio: '16/7' }}
                   >
-                    <div
-                      className="w-full h-full"
-                      style={{
-                        background: 'linear-gradient(135deg, #fdf4ec 0%, #ede9f6 50%, #edf2fd 100%)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <div className="text-center">
-                        <p className="text-4xl mb-2">🎉</p>
-                        <p className="text-[11px] font-semibold text-stone uppercase tracking-widest">
-                          {name || 'Seu evento'}
-                        </p>
-                        {date && (
-                          <p className="text-[11px] text-slate mt-1">
-                            {new Date(date + 'T12:00:00').toLocaleDateString('pt-BR', {
-                              day: '2-digit', month: 'long', year: 'numeric'
-                            })}
-                          </p>
-                        )}
-                      </div>
+                    {/* Hover overlay */}
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity z-10 flex flex-col items-center justify-center text-white">
+                      <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" className="mb-1">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                      </svg>
+                      <span className="text-xs font-semibold">{coverPreviewUrl ? 'Trocar capa' : 'Adicionar capa do evento'}</span>
                     </div>
+
+                    {coverPreviewUrl ? (
+                      <img src={coverPreviewUrl} alt="Capa" className="w-full h-full object-cover" />
+                    ) : (
+                      <div
+                        className="w-full h-full"
+                        style={{
+                          background: 'linear-gradient(135deg, #fdf4ec 0%, #ede9f6 50%, #edf2fd 100%)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        <div className="text-center">
+                          <p className="text-4xl mb-2">🎉</p>
+                          <p className="text-[11px] font-semibold text-stone uppercase tracking-widest">
+                            {name || 'Seu evento'}
+                          </p>
+                          {date && (
+                            <p className="text-[11px] text-slate mt-1">
+                              {new Date(date + 'T12:00:00').toLocaleDateString('pt-BR', {
+                                day: '2-digit', month: 'long', year: 'numeric'
+                              })}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
-                  <p className="text-[10px] font-semibold uppercase tracking-widest text-stone">
-                    Prévia do álbum
-                  </p>
+                  <div className="flex justify-between items-center px-1">
+                    <p className="text-[10px] font-semibold uppercase tracking-widest text-stone">
+                      Prévia do álbum
+                    </p>
+                    {coverFile && (
+                      <button 
+                        type="button" 
+                        className="text-[10px] font-semibold text-red-500 hover:text-red-700 uppercase"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setCoverFile(null);
+                          setCoverPreviewUrl(null);
+                        }}
+                      >
+                        Remover
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
 

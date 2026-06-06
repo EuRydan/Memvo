@@ -28,7 +28,7 @@ export interface CalendarCrestProps {
 /* ── Constants ── */
 
 const CELL = 36;
-const DOW = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+const DOW = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
 
 /* ── Helpers ── */
 
@@ -47,7 +47,7 @@ function parseKey(key: string): [number, number, number] {
 
 function formatDate(key: string): string {
   const [y, m, d] = parseKey(key);
-  return new Date(y, m, d).toLocaleDateString("en-US", {
+  return new Date(y, m, d).toLocaleDateString("pt-BR", {
     month: "short",
     day: "numeric",
   });
@@ -209,9 +209,12 @@ export function CalendarCrest({
   function renderMonth(y: number, m: number) {
     const daysInMonth = new Date(y, m + 1, 0).getDate();
     const firstOffset = (new Date(y, m, 1).getDay() + 6) % 7;
-    const monthLabel = new Date(y, m).toLocaleDateString("en-US", {
+    const monthLabel = new Date(y, m).toLocaleDateString("pt-BR", {
       month: "long",
     });
+
+    // Capitalize first letter of month
+    const formattedMonthLabel = monthLabel.charAt(0).toUpperCase() + monthLabel.slice(1);
 
     return (
       <div>
@@ -226,7 +229,7 @@ export function CalendarCrest({
             letterSpacing: "-0.01em",
           }}
         >
-          {monthLabel}
+          {formattedMonthLabel}
         </div>
 
         {/* DOW headers */}
@@ -404,12 +407,12 @@ export function CalendarCrest({
   const rangeLabel = (() => {
     if (effStart && effEnd && effStart !== effEnd) {
       const count = daysBetween(effStart, effEnd);
-      return `${formatDate(effStart)} – ${formatDate(effEnd)}  ·  ${count} day${count !== 1 ? "s" : ""}`;
+      return `${formatDate(effStart)} – ${formatDate(effEnd)}  ·  ${count} dia${count !== 1 ? "s" : ""}`;
     }
     if (effStart) {
       return isConfirmed
         ? formatDate(effStart)
-        : `${formatDate(effStart)} — select end`;
+        : `${formatDate(effStart)} — fim da viagem`;
     }
     return null;
   })();
