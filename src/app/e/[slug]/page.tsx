@@ -2,8 +2,8 @@
 
 import { use, useEffect, useRef, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { isEventActive } from '@/lib/limits'
 import { Media, Challenge } from '@/types'
+import StoryCamera from '@/components/StoryCamera'
 
 export default function EventPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params)
@@ -13,6 +13,8 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
   const [challenges, setChallenges] = useState<Challenge[]>([])
   const [uploaderName, setUploaderName] = useState('')
   const [uploadingId, setUploadingId] = useState<string | null>(null)
+  const [isCameraOpen, setIsCameraOpen] = useState(false)
+  const [activeChallengeId, setActiveChallengeId] = useState<string>('')
   const [notFound, setNotFound] = useState(false)
   const fileRefs = useRef<Record<string, HTMLInputElement | null>>({})
   const freeUploadRef = useRef<HTMLInputElement | null>(null)
@@ -79,6 +81,13 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
       }
     }
     setUploadingId(null)
+  }
+
+  function handleCameraCapture(file: File) {
+    // Create a FileList-like object
+    const dataTransfer = new DataTransfer()
+    dataTransfer.items.add(file)
+    handleUpload(dataTransfer.files, activeChallengeId)
   }
 
   function getPublicUrl(path: string) {
@@ -265,24 +274,52 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
                       onChange={e => handleUpload(e.target.files, challenge.id)}
                     />
 
-                    {/* Upload button */}
+                    {/* Upload Buttons */}
                     {isEventActive(event) && (
-                      <button
-                        onClick={() => fileRefs.current[challenge.id]?.click()}
-                        disabled={isUploading}
-                        className="text-xs px-4 py-2 rounded-full font-semibold transition cursor-pointer flex-shrink-0 disabled:opacity-50"
-                        style={done
-                          ? { background: '#f3f3f3', color: '#0a0a0a', border: '1.5px solid #e0e0e0' }
-                          : { background: '#0a0a0a', color: '#fff', boxShadow: '0 2px 12px rgba(0,0,0,0.2)' }
-                        }
-                      >
-                        {isUploading ? (
-                          <svg className="animate-spin" width="14" height="14" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                      <div className="flex gap-2 flex-shrink-0">
+                        {/* Gallery Button */}
+                        <button
+                          onClick={() => fileRefs.current[challenge.id]?.click()}
+                          disabled={isUploading}
+                          title="Enviar da galeria"
+                          className="w-10 h-10 rounded-full flex items-center justify-center transition disabled:opacity-50"
+                          style={{ background: '#f3f3f3', color: '#0a0a0a' }}
+                        >
+                          <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                            <polyline points="21 15 16 10 5 21"/>
                           </svg>
-                        ) : done ? '+ Foto' : '📷 Fotografar'}
-                      </button>
+                        </button>
+                        
+                        {/* Camera Button */}
+                        <button
+                          onClick={() => {
+                            setActiveChallengeId(challenge.id)
+                            setIsCameraOpen(true)
+                          }}
+                          disabled={isUploading}
+                          className="text-xs px-4 py-2 h-10 rounded-full font-semibold transition flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                          style={done
+                            ? { background: '#f3f3f3', color: '#0a0a0a', border: '1.5px solid #e0e0e0' }
+                            : { background: '#0a0a0a', color: '#fff', boxShadow: '0 2px 12px rgba(0,0,0,0.2)' }
+                          }
+                        >
+                          {isUploading ? (
+                            <svg className="animate-spin" width="14" height="14" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                            </svg>
+                          ) : (
+                            <>
+                              <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 7h3l2-2h8l2 2h3v12H3V7zm5 6a4 4 0 108 0 4 4 0 00-8 0z" />
+                              </svg>
+                              {done ? 'Nova' : 'Câmera'}
+                            </>
+                          )}
+                        </button>
+                      </div>
                     )}
                   </div>
 
@@ -306,6 +343,13 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
         )}
 
       </div>
+
+      {isCameraOpen && (
+        <StoryCamera 
+          onClose={() => setIsCameraOpen(false)} 
+          onCapture={handleCameraCapture} 
+        />
+      )}
     </div>
   )
 }
