@@ -2,18 +2,17 @@
 
 import * as React from "react";
 import { motion, useInView } from "framer-motion";
-import { ArrowRight, Code, Palette, Search } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils"; // Assuming you have a `cn` utility from shadcn/ui
 
 // Shadcn UI Carousel Imports
 import useEmblaCarousel, {
-  type EmblaCarouselType,
-  type EmblaOptionsType,
+  type UseEmblaCarouselType,
 } from "embla-carousel-react";
 import { Button } from "@/components/ui/button"; // Assuming you have a Button component
 
 // --- Carousel Context ---
-type CarouselApi = EmblaCarouselType | undefined;
+type CarouselApi = UseEmblaCarouselType[1] | undefined;
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
 type CarouselOptions = UseCarouselParameters[0];
 type CarouselPlugin = UseCarouselParameters[1];
@@ -103,6 +102,7 @@ const Carousel = React.forwardRef<
 
     React.useEffect(() => {
       if (!api) return;
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       onSelect(api);
       api.on("reInit", onSelect);
       api.on("select", onSelect);

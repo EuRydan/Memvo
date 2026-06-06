@@ -7,7 +7,8 @@ export interface TimelineContentProps {
   className?: string;
   animationNum?: number;
   timelineRef?: React.RefObject<Element | null>;
-  customVariants?: Variants | any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  customVariants?: any;
   as?: React.ElementType;
   style?: React.CSSProperties;
 }
@@ -24,6 +25,7 @@ export function TimelineContent({
   const backupRef = React.useRef(null)
   const actualRef = timelineRef || backupRef
   const isInView = useInView(actualRef, { once: true, margin: "-100px" })
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, react-hooks/static-components
   const MotionComponent = motion(Component as any)
 
   return (
