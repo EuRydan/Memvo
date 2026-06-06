@@ -105,7 +105,7 @@ function ClientFeedback() {
               </p>
               <div className="flex justify-between items-end pt-5">
                 <div>
-                  <h2 className="font-semibold lg:text-lg text-base">João & Maria</h2>
+                  <h2 className="font-semibold lg:text-lg text-base">Marcello & Vanessa</h2>
                   <p className="lg:text-xs text-xs text-ink/70">Casamento na Praia</p>
                 </div>
                 <Image
