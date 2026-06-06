@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 import { Media, Challenge } from '@/types'
 import { Camera, Sparkles, Star, Heart } from 'lucide-react'
 import { StoryGenerator } from '@/components/StoryGenerator'
+import { EventShareCard } from '@/components/EventShareCard'
 
 export default function EventGalleryPage({ params }: { params: Promise<{ eventId: string }> }) {
   const { eventId } = use(params)
@@ -174,6 +175,24 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
       {/* Story Viral Generator */}
       {event && medias.length > 0 && (
         <StoryGenerator event={event} medias={medias} />
+      )}
+
+      {/* Event Share Card */}
+      {event && (
+        <div className="px-4 pb-2 max-w-lg mx-auto w-full relative z-10">
+          <EventShareCard
+            eventName={event.name}
+            eventDate={new Date(event.date + 'T12:00:00').toLocaleDateString('pt-BR', {
+              day: '2-digit',
+              month: 'long',
+              year: 'numeric',
+            })}
+            inviteLink={`${typeof window !== 'undefined' ? window.location.origin : 'https://memvor.netlify.app'}/e/${event.id}`}
+            guestCount={new Set(medias.map(m => m.uploader_name).filter(Boolean)).size}
+            photoCount={medias.length}
+            slug={event.id}
+          />
+        </div>
       )}
 
       {/* Grid */}

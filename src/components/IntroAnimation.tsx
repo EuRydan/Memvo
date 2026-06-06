@@ -220,6 +220,19 @@ export function IntroAnimation() {
             {/* Sticky Container */}
             <div ref={stickyRef} className="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden perspective-1000">
 
+            {/* ── Grid Background ── */}
+                <div
+                    className="absolute inset-0 w-full h-full pointer-events-none"
+                    style={{
+                        backgroundImage: 'linear-gradient(to right, #e8e8e8 1px, transparent 1px), linear-gradient(to bottom, #e8e8e8 1px, transparent 1px)',
+                        backgroundSize: '6rem 4rem',
+                    }}
+                >
+                    <div className="absolute inset-0" style={{
+                        background: 'radial-gradient(circle 800px at 100% 200px, rgba(213,197,255,0.45), transparent)',
+                    }} />
+                </div>
+
                 {/* Orbs */}
                 <div className="absolute top-[-80px] right-[-100px] w-[480px] h-[480px] rounded-full pointer-events-none"
                     style={{
@@ -233,6 +246,7 @@ export function IntroAnimation() {
                         filter: 'blur(70px)',
                         animation: 'drift2 16s ease-in-out infinite alternate',
                     }} />
+
 
                 {/* Intro Text (Fades out) */}
                 <div className="absolute z-20 flex flex-col items-center justify-center text-center pointer-events-none top-1/2 -translate-y-1/2 w-full px-4">
