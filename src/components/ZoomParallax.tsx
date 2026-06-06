@@ -29,8 +29,9 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
 	const scales = [scale4, scale5, scale6, scale5, scale6, scale8, scale9];
 
 	return (
-		<div ref={container} className="relative h-[300vh]">
-			<div className="sticky top-0 h-screen overflow-hidden">
+		<div ref={container} className="relative h-auto md:h-[300vh]">
+			{/* Desktop Parallax Effect */}
+			<div className="hidden md:block sticky top-0 h-screen overflow-hidden">
 				{images.map(({ src, alt }, index) => {
 					const scale = scales[index % scales.length];
 
@@ -44,12 +45,28 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
 								<img
 									src={src || '/placeholder.svg'}
 									alt={alt || `Parallax image ${index + 1}`}
-									className="h-full w-full object-cover rounded-lg"
+									className="h-full w-full object-cover rounded-lg shadow-lg"
 								/>
 							</div>
 						</motion.div>
 					);
 				})}
+			</div>
+
+			{/* Mobile Static Grid */}
+			<div className="md:hidden grid grid-cols-2 gap-3 px-6 py-4">
+				{images.slice(0, 4).map(({ src, alt }, index) => (
+					<div 
+						key={`mobile-${index}`}
+						className={`relative w-full overflow-hidden rounded-2xl shadow-sm ${index === 0 ? 'col-span-2 aspect-[2/1]' : 'aspect-square'}`}
+					>
+						<img
+							src={src || '/placeholder.svg'}
+							alt={alt || `Mobile image ${index + 1}`}
+							className="h-full w-full object-cover hover:scale-105 transition-transform duration-500"
+						/>
+					</div>
+				))}
 			</div>
 		</div>
 	);
