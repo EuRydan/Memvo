@@ -134,10 +134,12 @@ export function WordmarkFooter({
     <footer className="w-full bg-white pt-16">
       {/* Footer Links Container (Optional addition for utility) */}
       <div className="max-w-7xl mx-auto px-6 pb-16 flex flex-col md:flex-row justify-between items-center gap-6">
-        <p className="text-black/60 text-sm">© {new Date().getFullYear()} Memvo. Todos os direitos reservados.</p>
+        <p className="text-black/60 text-sm">© {new Date().getFullYear()} Memvor. Todos os direitos reservados.</p>
         <div className="flex gap-6 text-sm">
           <a href="/" className="text-black/60 hover:text-black transition-colors">Início</a>
           <a href="/pricing" className="text-black/60 hover:text-black transition-colors">Planos e Preços</a>
+          <a href="/privacy" className="text-black/60 hover:text-black transition-colors">Política de Privacidade</a>
+          <a href="/terms" className="text-black/60 hover:text-black transition-colors">Termos de Uso</a>
         </div>
       </div>
 
@@ -214,26 +216,7 @@ export function WordmarkFooter({
           }}
         />
 
-        {/* ── Links ── */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: "clamp(4px, 0.8vw, 12px)",
-            left: 0,
-            right: 0,
-            display: "flex",
-            justifyContent: "center",
-            gap: "24px",
-            zIndex: 10,
-          }}
-        >
-          <Link href="/privacy" className="text-xs text-black/40 hover:text-black/80 transition-colors">
-            Política de Privacidade
-          </Link>
-          <Link href="/terms" className="text-xs text-black/40 hover:text-black/80 transition-colors">
-            Termos de Uso
-          </Link>
-        </div>
+
       </section>
     </footer>
   );
