@@ -216,9 +216,29 @@ export function IntroAnimation() {
     const contentY = useTransform(smoothMorph, [0.8, 1], [20, 0]);
 
     return (
-        <div ref={containerRef} className="relative w-full h-[300vh] bg-[#FAFAFA]">
-            {/* Sticky Container */}
-            <div ref={stickyRef} className="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden perspective-1000">
+        <div ref={containerRef} className="relative h-[300vh] w-full bg-[#fafafa]">
+            <div id="intro-animation-export" ref={stickyRef} className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center bg-[#fafafa]">
+                
+                {/* Export Button (Temporary) */}
+                <button
+                    onClick={() => {
+                        const node = document.getElementById('intro-animation-export');
+                        if (node) {
+                            import('html-to-image').then((htmlToImage) => {
+                                htmlToImage.toPng(node, { pixelRatio: 2, backgroundColor: 'transparent' }).then((dataUrl) => {
+                                    const link = document.createElement('a');
+                                    link.download = 'memvo-cards-transparent.png';
+                                    link.href = dataUrl;
+                                    link.click();
+                                });
+                            });
+                        }
+                    }}
+                    className="absolute top-4 left-4 z-50 bg-black/80 hover:bg-black text-white px-4 py-2 rounded-full text-xs font-semibold backdrop-blur-md transition-all shadow-lg flex items-center gap-2 cursor-pointer"
+                >
+                    <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Baixar PNG Transparente
+                </button>
 
             {/* ── Grid Background ── */}
                 <div
