@@ -19,7 +19,7 @@ export default function TermsOfUse() {
 
       <header className="px-6 py-5 border-b border-gray-200/50 flex items-center relative z-10 bg-white/40 backdrop-blur-xl">
         <Link href="/" className="hover:opacity-80 transition-opacity">
-          <Logo width={100} height={32} />
+          <Logo className="w-[100px] h-auto" />
         </Link>
       </header>
 
