@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Logo } from '@/components/Logo'
@@ -13,23 +13,6 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const orb1Ref = useRef<HTMLDivElement>(null)
-  const orb2Ref = useRef<HTMLDivElement>(null)
-
-  // Subtle mouse parallax on desktop
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (window.innerWidth <= 768) return
-      const cx = window.innerWidth / 2
-      const cy = window.innerHeight / 2
-      const dx = (e.clientX - cx) * 0.012
-      const dy = (e.clientY - cy) * 0.012
-      if (orb1Ref.current) orb1Ref.current.style.transform = `translate(${dx}px, ${dy}px)`
-      if (orb2Ref.current) orb2Ref.current.style.transform = `translate(${-dx * 0.7}px, ${-dy * 0.7}px)`
-    }
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [])
 
   async function handleLogin(e?: React.FormEvent) {
     e?.preventDefault()
@@ -47,9 +30,32 @@ export default function LoginPage() {
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center px-5 overflow-hidden bg-[#fafafa]">
 
-      {/* Decorative Orbs */}
-      <div ref={orb1Ref} className="orb orb-1" />
-      <div ref={orb2Ref} className="orb orb-2" />
+      {/* Grid Background */}
+      <div
+          className="absolute inset-0 w-full h-full pointer-events-none"
+          style={{
+              backgroundImage: 'linear-gradient(to right, #e8e8e8 1px, transparent 1px), linear-gradient(to bottom, #e8e8e8 1px, transparent 1px)',
+              backgroundSize: '6rem 4rem',
+          }}
+      >
+          <div className="absolute inset-0" style={{
+              background: 'radial-gradient(circle 800px at 50% 50%, rgba(213,197,255,0.3), transparent)',
+          }} />
+      </div>
+
+      {/* Orbs */}
+      <div className="absolute top-[10%] left-[-100px] w-[500px] h-[500px] rounded-full pointer-events-none"
+          style={{
+              background: 'radial-gradient(circle, rgba(244,197,168,0.4) 0%, rgba(200,184,224,0.3) 60%, transparent 80%)',
+              filter: 'blur(80px)',
+              animation: 'drift 20s ease-in-out infinite alternate',
+          }} />
+      <div className="absolute bottom-[10%] right-[-80px] w-[400px] h-[400px] rounded-full pointer-events-none"
+          style={{
+              background: 'radial-gradient(circle, rgba(186,210,255,0.4) 0%, rgba(200,184,224,0.25) 60%, transparent 80%)',
+              filter: 'blur(70px)',
+              animation: 'drift2 16s ease-in-out infinite alternate',
+          }} />
 
       {/* Card */}
       <div className="auth-card relative z-10 w-full max-w-[420px]">
