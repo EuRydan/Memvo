@@ -33,8 +33,8 @@ function ClientFeedback() {
           Veja o que as pessoas estão dizendo sobre a experiência Memvo em seus eventos.
         </TimelineContent>
       </article>
-      <div className="lg:grid lg:grid-cols-3 gap-2 flex flex-col w-full lg:py-10 pt-10 pb-4 lg:px-10 px-4">
-        <div className="md:flex lg:flex-col lg:space-y-2 h-full lg:gap-0 gap-2 ">
+      <div className="lg:grid lg:grid-cols-3 gap-3 flex flex-col w-full lg:py-10 pt-10 pb-4 lg:px-10 px-4">
+        <div className="flex flex-col gap-3 h-full">
           <TimelineContent animationNum={0} customVariants={revealVariants} timelineRef={testimonialRef} className="lg:flex-[7] flex-[6] flex flex-col justify-between relative bg-white text-ink overflow-hidden rounded-lg border border-slate/10 p-5 shadow-sm">
             <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#4f4f4f0a_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f0a_1px,transparent_1px)] bg-[size:50px_56px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]"></div>
             <article className="mt-auto relative z-10">
@@ -77,7 +77,7 @@ function ClientFeedback() {
             </article>
           </TimelineContent>
         </div>
-        <div className="lg:h-full md:flex lg:flex-col h-fit lg:space-y-2 lg:gap-0 gap-2">
+        <div className="flex flex-col gap-3 h-fit lg:h-full">
           <TimelineContent animationNum={2} customVariants={revealVariants} timelineRef={testimonialRef} className="flex flex-col justify-between relative bg-white text-ink overflow-hidden rounded-lg border border-slate/10 p-5 shadow-sm">
             <article className="mt-auto">
               <p className="2xl:text-sm text-sm leading-relaxed">
@@ -139,7 +139,7 @@ function ClientFeedback() {
             </article>
           </TimelineContent>
         </div>
-        <div className="h-full md:flex lg:flex-col lg:space-y-2 lg:gap-0 gap-2">
+        <div className="flex flex-col gap-3 h-full">
           <TimelineContent animationNum={5} customVariants={revealVariants} timelineRef={testimonialRef} className="lg:flex-[3] flex-[4] flex flex-col justify-between relative bg-[#c8b8e0] text-ink overflow-hidden rounded-lg border border-slate/10 p-5 shadow-sm">
             <article className="mt-auto">
               <p className="text-sm leading-relaxed">
