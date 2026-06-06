@@ -8,6 +8,7 @@ interface EventShareCardProps {
   eventName: string
   eventDate: string
   inviteLink: string
+  guestCount: number
   photoCount: number
   slug: string
   coverUrl?: string
