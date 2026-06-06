@@ -346,6 +346,7 @@ export function CalendarCrest({
             return (
               <motion.button
                 key={d}
+                type="button"
                 onClick={() => handleDayClick(dateKey)}
                 onMouseEnter={() => setHoverDate(dateKey)}
                 onMouseLeave={() => setHoverDate(null)}
@@ -425,6 +426,7 @@ export function CalendarCrest({
         }}
       >
         <motion.button
+          type="button"
           whileTap={{ scale: 0.85 }}
           onClick={() => goMonth(-1)}
           className="text-stone transition-colors duration-150 hover:bg-gray-50 hover:text-ink"
@@ -453,6 +455,7 @@ export function CalendarCrest({
         </span>
 
         <motion.button
+          type="button"
           whileTap={{ scale: 0.85 }}
           onClick={() => goMonth(1)}
           className="text-stone transition-colors duration-150 hover:bg-gray-50 hover:text-ink"
