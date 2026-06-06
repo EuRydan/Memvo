@@ -59,10 +59,10 @@ function RegisterContent() {
       return
     }
 
-    if (authData.user && (sessionId || invite === 'memvo-vip-2026')) {
+    if (authData.user && (sessionId || invite === 'memvor-vip-2026')) {
       // 2. Insert into user_plans (use 'classic' for invite registrations)
-      const planToSave = invite === 'memvo-vip-2026' ? 'classic' : plan
-      const paymentRef = invite === 'memvo-vip-2026' ? `invite-${authData.user.id}` : sessionId
+      const planToSave = invite === 'memvor-vip-2026' ? 'classic' : plan
+      const paymentRef = invite === 'memvor-vip-2026' ? `invite-${authData.user.id}` : sessionId
       const { error: planError } = await supabase.from('user_plans').insert({
         user_id: authData.user.id,
         plan_id: planToSave,

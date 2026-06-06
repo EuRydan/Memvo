@@ -46,7 +46,7 @@ export async function POST(request: Request) {
 
     // Create folder if it doesn't exist
     if (!folderId) {
-      const folderName = `Memvo - ${event.name}`
+      const folderName = `Memvor - ${event.name}`
       const folderMetadata = {
         name: folderName,
         mimeType: 'application/vnd.google-apps.folder',

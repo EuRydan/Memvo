@@ -14,7 +14,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Memvo — Cada momento, compartilhado.",
+  title: "Memvor — Cada momento, compartilhado.",
   description: "Crie um álbum compartilhado para sua celebração. Seus convidados escaneiam, fotografam e compartilham — instantaneamente.",
 };
 

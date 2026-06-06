@@ -26,9 +26,9 @@ export default function LandingPage() {
             boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.2)',
           }}
         >
-          <Link href="/" className="flex items-center gap-2" aria-label="Memvo Home">
+          <Link href="/" className="flex items-center gap-2" aria-label="Memvor Home">
             <Logo className="h-6 w-auto text-black" />
-            <span className="sr-only">Memvo</span>
+            <span className="sr-only">Memvor</span>
           </Link>
           <div className="flex items-center gap-4">
             <Link href="/pricing"

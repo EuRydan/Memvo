@@ -48,7 +48,7 @@ const VMASK =
 /* ── Main component ── */
 
 export function WordmarkFooter({
-  brandName = "Memvo",
+  brandName = "Memvor",
 }: WordmarkFooterProps) {
   const [inView, setInView] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);

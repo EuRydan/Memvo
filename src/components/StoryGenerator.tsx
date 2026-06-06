@@ -139,7 +139,7 @@ export function StoryGenerator({ event, medias }: { event: { name: string, date:
       ctx.fillStyle = '#0a0a0a'
       ctx.textAlign = 'center'
       ctx.font = 'bold 44px "Helvetica Neue", Helvetica, Arial, sans-serif'
-      ctx.fillText("Missões concluídas no Memvo", canvas.width / 2, 1800)
+      ctx.fillText("Missões concluídas no Memvor", canvas.width / 2, 1800)
 
       // 4. Generate Blob and Share
       canvas.toBlob(async (blob) => {
@@ -147,13 +147,13 @@ export function StoryGenerator({ event, medias }: { event: { name: string, date:
           setGenerating(false)
           return
         }
-        const file = new File([blob], `Memvo-${event.name.replace(/\s+/g, '-')}-Story.png`, { type: 'image/png' })
+        const file = new File([blob], `Memvor-${event.name.replace(/\s+/g, '-')}-Story.png`, { type: 'image/png' })
         
         if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
           try {
             await navigator.share({
               files: [file],
-              title: `${event.name} - Memvo`,
+              title: `${event.name} - Memvor`,
               text: 'Nossos melhores momentos!'
             })
           } catch (err) {

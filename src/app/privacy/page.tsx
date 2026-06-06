@@ -34,7 +34,7 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">1. Coleta de Informações</h2>
             <p>
-              Coletamos informações que você nos fornece diretamente ao usar a Memvo, como quando você cria uma conta, 
+              Coletamos informações que você nos fornece diretamente ao usar a Memvor, como quando você cria uma conta, 
               faz upload de fotos para um evento ou conecta sua conta do Google Drive. Isso pode incluir seu nome, 
               endereço de e-mail e os arquivos de mídia (fotos e vídeos) que você envia para os álbuns colaborativos.
             </p>
@@ -43,11 +43,11 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">2. Uso do Google Drive (Integração)</h2>
             <p>
-              A Memvo oferece uma integração opcional com o Google Drive para permitir que anfitriões façam backup 
+              A Memvor oferece uma integração opcional com o Google Drive para permitir que anfitriões façam backup 
               automático das fotos de seus eventos. 
             </p>
             <ul className="list-disc pl-5 mt-2 space-y-2">
-              <li><strong>Permissões:</strong> Solicitamos acesso apenas para criar pastas e fazer upload de arquivos que pertencem aos eventos gerenciados por você na Memvo. Não lemos, modificamos ou excluímos arquivos preexistentes no seu Drive pessoal.</li>
+              <li><strong>Permissões:</strong> Solicitamos acesso apenas para criar pastas e fazer upload de arquivos que pertencem aos eventos gerenciados por você na Memvor. Não lemos, modificamos ou excluímos arquivos preexistentes no seu Drive pessoal.</li>
               <li><strong>Uso dos Dados:</strong> Os tokens de acesso (OAuth) concedidos são armazenados de forma segura e utilizados estritamente para o processo automatizado de envio das fotos para sua própria conta do Google Drive.</li>
               <li><strong>Retenção:</strong> Após 30 dias da data do evento, os arquivos pesados são deletados dos nossos servidores para preservar o armazenamento, mas permanecem intactos na sua conta do Google Drive se a integração estiver ativa.</li>
             </ul>
@@ -83,7 +83,7 @@ export default function PrivacyPolicy() {
         </div>
       </main>
 
-      <WordmarkFooter brandName="Memvo" />
+      <WordmarkFooter brandName="Memvor" />
     </div>
   )
 }

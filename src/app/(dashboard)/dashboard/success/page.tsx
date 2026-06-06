@@ -140,7 +140,7 @@ function SuccessContent() {
                  Assinatura Confirmada!
                </h2>
                <p className="text-sm text-slate mb-8 leading-relaxed">
-                 Sua compra foi processada com sucesso. Todos os recursos do Memvo foram desbloqueados.
+                 Sua compra foi processada com sucesso. Todos os recursos do Memvor foram desbloqueados.
                </p>
              </>
           )}

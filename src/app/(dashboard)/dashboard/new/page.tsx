@@ -233,7 +233,7 @@ export default function NewEventPage() {
 
                 {/* Slug preview */}
                 <div className="flex items-center gap-1 px-5">
-                  <span className="text-[11px] font-mono text-stone">memvo.app/e/</span>
+                  <span className="text-[11px] font-mono text-stone">memvor.app/e/</span>
                   <span
                     className="text-[11px] font-mono font-semibold text-slate truncate max-w-[200px]"
                     style={{ transition: 'color 0.2s' }}

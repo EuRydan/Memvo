@@ -30,7 +30,7 @@ function ClientFeedback() {
           Confiado por centenas de anfitriões
         </TimelineContent>
         <TimelineContent as="p" className={"mx-auto text-slate text-sm"} animationNum={1} customVariants={revealVariants} timelineRef={testimonialRef}>
-          Veja o que as pessoas estão dizendo sobre a experiência Memvo em seus eventos.
+          Veja o que as pessoas estão dizendo sobre a experiência Memvor em seus eventos.
         </TimelineContent>
       </article>
       <div className="lg:grid lg:grid-cols-3 gap-3 flex flex-col w-full lg:py-10 pt-10 pb-4 lg:px-10 px-4">
@@ -39,7 +39,7 @@ function ClientFeedback() {
             <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#4f4f4f0a_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f0a_1px,transparent_1px)] bg-[size:50px_56px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]"></div>
             <article className="mt-auto relative z-10">
               <p className="text-sm leading-relaxed">
-                &quot;A Memvo foi um divisor de águas no nosso casamento. O serviço é excepcional e foi a atração principal da festa para os convidados!&quot;
+                &quot;A Memvor foi um divisor de águas no nosso casamento. O serviço é excepcional e foi a atração principal da festa para os convidados!&quot;
               </p>
               <div className="flex justify-between pt-5 items-end">
                 <div>
@@ -81,7 +81,7 @@ function ClientFeedback() {
           <TimelineContent animationNum={2} customVariants={revealVariants} timelineRef={testimonialRef} className="flex flex-col justify-between relative bg-white text-ink overflow-hidden rounded-lg border border-slate/10 p-5 shadow-sm">
             <article className="mt-auto">
               <p className="2xl:text-sm text-sm leading-relaxed">
-                &quot;Uma equipe altamente profissional, as soluções inovadoras da Memvo transformaram a maneira como entregamos as fotos.&quot;
+                &quot;Uma equipe altamente profissional, as soluções inovadoras da Memvor transformaram a maneira como entregamos as fotos.&quot;
               </p>
               <div className="flex justify-between items-end pt-5">
                 <div>
@@ -143,7 +143,7 @@ function ClientFeedback() {
           <TimelineContent animationNum={5} customVariants={revealVariants} timelineRef={testimonialRef} className="lg:flex-[3] flex-[4] flex flex-col justify-between relative bg-[#c8b8e0] text-ink overflow-hidden rounded-lg border border-slate/10 p-5 shadow-sm">
             <article className="mt-auto">
               <p className="text-sm leading-relaxed">
-                &quot;A Memvo tem sido uma parceira fundamental para as festas da nossa agência.&quot;
+                &quot;A Memvor tem sido uma parceira fundamental para as festas da nossa agência.&quot;
               </p>
               <div className="flex justify-between pt-5 items-end">
                 <div>

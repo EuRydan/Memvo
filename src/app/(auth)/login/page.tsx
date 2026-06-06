@@ -202,7 +202,7 @@ export default function LoginPage() {
 
         {/* Footer */}
         <p className="text-center text-[11px] text-stone mt-8">
-          © 2024 Memvo. Preservando suas histórias mais preciosas.
+          © 2024 Memvor. Preservando suas histórias mais preciosas.
         </p>
       </div>
     </div>

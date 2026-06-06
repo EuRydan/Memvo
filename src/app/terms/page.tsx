@@ -34,7 +34,7 @@ export default function TermsOfUse() {
           <section>
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">1. Aceitação dos Termos</h2>
             <p>
-              Ao acessar ou usar a Memvo, você concorda em ficar vinculado a estes Termos de Uso. 
+              Ao acessar ou usar a Memvor, você concorda em ficar vinculado a estes Termos de Uso. 
               Se você não concordar com qualquer parte destes termos, não deverá utilizar nossos serviços.
             </p>
           </section>
@@ -42,7 +42,7 @@ export default function TermsOfUse() {
           <section>
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">2. Descrição do Serviço</h2>
             <p>
-              A Memvo é uma plataforma para criação de álbuns de fotos colaborativos para eventos. 
+              A Memvor é uma plataforma para criação de álbuns de fotos colaborativos para eventos. 
               Permitimos que anfitriões criem eventos, estabeleçam "missões/desafios" fotográficos e 
               recebam mídias de seus convidados através de um álbum compartilhado.
             </p>
@@ -52,8 +52,8 @@ export default function TermsOfUse() {
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">3. Responsabilidades do Usuário</h2>
             <p>
               Você é o único responsável por todas as fotos, vídeos e outros conteúdos enviados à plataforma. 
-              Ao usar a Memvo, você concorda em não enviar conteúdo que seja ilegal, difamatório, ameaçador, 
-              pornográfico, ou que infrinja direitos autorais ou marcas registradas de terceiros. A Memvo 
+              Ao usar a Memvor, você concorda em não enviar conteúdo que seja ilegal, difamatório, ameaçador, 
+              pornográfico, ou que infrinja direitos autorais ou marcas registradas de terceiros. A Memvor 
               reserva-se o direito de remover conteúdos que violem estas diretrizes sem aviso prévio.
             </p>
           </section>
@@ -61,9 +61,9 @@ export default function TermsOfUse() {
           <section>
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">4. Integrações de Terceiros (Google Drive)</h2>
             <p>
-              Anfitriões podem optar por conectar suas contas do Google Drive à Memvo para backup automático 
+              Anfitriões podem optar por conectar suas contas do Google Drive à Memvor para backup automático 
               das fotos dos convidados. Ao utilizar este recurso, você concorda com as políticas do Google. 
-              Nossa aplicação não fará upload de conteúdos não relacionados ao seu evento na Memvo, e nós 
+              Nossa aplicação não fará upload de conteúdos não relacionados ao seu evento na Memvor, e nós 
               não assumimos a responsabilidade pela organização do armazenamento na sua conta pessoal.
             </p>
           </section>
@@ -71,10 +71,10 @@ export default function TermsOfUse() {
           <section>
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">5. Limitação de Responsabilidade</h2>
             <p>
-              A Memvo é fornecida "como está" e "conforme disponível". Não garantimos que a plataforma será 
+              A Memvor é fornecida "como está" e "conforme disponível". Não garantimos que a plataforma será 
               ininterrupta ou livre de erros. Devido à nossa política de limpeza de armazenamento para contas, 
               os arquivos não salvos via integração do Google Drive poderão ser excluídos 30 dias após o evento. 
-              A Memvo não se responsabiliza pela perda definitiva de fotos caso o backup não tenha sido ativado.
+              A Memvor não se responsabiliza pela perda definitiva de fotos caso o backup não tenha sido ativado.
             </p>
           </section>
 
@@ -89,7 +89,7 @@ export default function TermsOfUse() {
         </div>
       </main>
 
-      <WordmarkFooter brandName="Memvo" />
+      <WordmarkFooter brandName="Memvor" />
     </div>
   )
 }
