@@ -7,15 +7,17 @@ export async function GET(request: Request) {
   const code = searchParams.get('code')
   const eventId = searchParams.get('state') // we passed eventId in the state parameter
 
+  const origin = new URL(request.url).origin
+
   if (!code || !eventId || eventId === 'general') {
-    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/dashboard?error=MissingCodeOrEventId`)
+    return NextResponse.redirect(`${origin}/dashboard?error=MissingCodeOrEventId`)
   }
 
   try {
     const oauth2Client = new google.auth.OAuth2(
       process.env.GOOGLE_CLIENT_ID,
       process.env.GOOGLE_CLIENT_SECRET,
-      `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/auth/google/callback`
+      `${origin}/api/auth/google/callback`
     )
 
     const { tokens } = await oauth2Client.getToken(code)
@@ -35,13 +37,13 @@ export async function GET(request: Request) {
 
       if (error) {
         console.error('Error saving refresh token:', error)
-        return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/dashboard/${eventId}?error=DatabaseUpdateFailed`)
+        return NextResponse.redirect(`${origin}/dashboard/${eventId}?error=DatabaseUpdateFailed`)
       }
     }
 
-    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/dashboard/${eventId}?success=DriveConnected`)
+    return NextResponse.redirect(`${origin}/dashboard/${eventId}?success=DriveConnected`)
   } catch (error) {
     console.error('Error during Google OAuth callback:', error)
-    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/dashboard/${eventId}?error=OAuthFailed`)
+    return NextResponse.redirect(`${origin}/dashboard/${eventId}?error=OAuthFailed`)
   }
 }

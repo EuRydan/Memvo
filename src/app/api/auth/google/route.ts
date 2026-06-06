@@ -5,10 +5,12 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const eventId = searchParams.get('eventId')
 
+  const origin = new URL(request.url).origin
+
   const oauth2Client = new google.auth.OAuth2(
     process.env.GOOGLE_CLIENT_ID,
     process.env.GOOGLE_CLIENT_SECRET,
-    `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/auth/google/callback`
+    `${origin}/api/auth/google/callback`
   )
 
   const scopes = [
