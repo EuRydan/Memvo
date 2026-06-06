@@ -1,13 +1,21 @@
 import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
+import { z } from 'zod'
+
+const checkoutSchema = z.object({
+  plan: z.enum(['essential', 'classic', 'premium']),
+})
 
 export async function POST(request: Request) {
   try {
-    const { plan } = await request.json()
+    const body = await request.json()
+    const parsed = checkoutSchema.safeParse(body)
 
-    if (!plan) {
-      return NextResponse.json({ error: 'Plano não fornecido' }, { status: 400 })
+    if (!parsed.success) {
+      return NextResponse.json({ error: 'Plano inválido fornecido', details: parsed.error.format() }, { status: 400 })
     }
+
+    const { plan } = parsed.data
 
     const prices: Record<string, number> = {
       essential: 7900,

@@ -1,15 +1,23 @@
 import { NextResponse } from 'next/server'
 import { google } from 'googleapis'
 import { createClient } from '@supabase/supabase-js'
+import { z } from 'zod'
+
+const uploadSchema = z.object({
+  eventId: z.string().uuid(),
+  storagePath: z.string().min(5).max(500),
+})
 
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { eventId, storagePath } = body
+    const parsed = uploadSchema.safeParse(body)
 
-    if (!eventId || !storagePath) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+    if (!parsed.success) {
+      return NextResponse.json({ error: 'Invalid input data', details: parsed.error.format() }, { status: 400 })
     }
+
+    const { eventId, storagePath } = parsed.data
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
