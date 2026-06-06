@@ -5,16 +5,57 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Challenge } from '@/types'
 
-const DEFAULT_CHALLENGES = [
-  'Uma foto de grupo da sua mesa',
-  'Primeira dança do casal',
-  'Um brinde com os noivos',
-  'Um vídeo da melhor dançarina',
-  'Alguém compartilhando lágrimas de alegria',
-  'Um momento doce',
-  'Alguém fazendo um discurso',
-  'Uma selfie',
-]
+const DEFAULT_CHALLENGES = {
+  wedding: [
+    'Uma foto de grupo da sua mesa',
+    'Primeira dança do casal',
+    'Um brinde com os noivos',
+    'Um vídeo da melhor dançarina',
+    'Alguém compartilhando lágrimas de alegria',
+    'Um momento doce',
+    'Alguém fazendo um discurso',
+    'Uma selfie',
+  ],
+  birthday: [
+    'Uma foto com o(a) aniversariante',
+    'O momento do parabéns',
+    'Um brinde especial',
+    'A decoração da mesa do bolo',
+    'A pessoa mais animada da festa',
+    'Uma foto de grupo divertida',
+    'O melhor passinho de dança',
+    'Alguém comendo o primeiro pedaço de bolo',
+  ],
+  corporate: [
+    'Uma foto com a equipe',
+    'O momento do brinde',
+    'Uma selfie com o chefe',
+    'A melhor foto de networking',
+    'Alguém rindo muito',
+    'A mesa de comidinhas',
+    'Uma foto criativa com o logo da empresa',
+    'O colega mais animado do evento',
+  ],
+  general: [
+    'Uma selfie',
+    'Um brinde',
+    'A pessoa mais bem vestida',
+    'A comida mais gostosa',
+    'Um momento engraçado',
+    'A melhor dança',
+    'Uma foto com quem você conheceu hoje',
+    'Um sorriso sincero',
+  ],
+}
+
+type EventCategory = keyof typeof DEFAULT_CHALLENGES
+
+const EVENT_TYPES: Record<EventCategory, string> = {
+  wedding: 'Casamento',
+  birthday: 'Aniversário / 15 anos',
+  corporate: 'Evento Corporativo',
+  general: 'Outras Celebrações',
+}
 
 export default function ChallengesPage({ params }: { params: Promise<{ eventId: string }> }) {
   const { eventId } = use(params)
@@ -24,6 +65,7 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
   const [newTitle, setNewTitle] = useState('')
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [showCategorySelect, setShowCategorySelect] = useState(false)
 
   useEffect(() => { loadChallenges() }, [eventId])
 
@@ -48,10 +90,12 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
     setChallenges(prev => prev.filter(c => c.id !== id))
   }
 
-  async function loadDefaults() {
+  async function loadDefaults(category: EventCategory) {
     setSaving(true)
+    setShowCategorySelect(false)
     await supabase.from('challenges').delete().eq('event_id', eventId)
-    const toInsert = DEFAULT_CHALLENGES.map((title, i) => ({ event_id: eventId, title, order_index: i }))
+    const challengesToInsert = DEFAULT_CHALLENGES[category]
+    const toInsert = challengesToInsert.map((title, i) => ({ event_id: eventId, title, order_index: i }))
     const { data } = await supabase.from('challenges').insert(toInsert).select()
     if (data) setChallenges(data)
     setSaving(false)
@@ -167,14 +211,34 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
             <p className="text-2xl mb-2">🎯</p>
             <p className="text-sm font-semibold text-ink mb-1">Nenhum desafio ainda</p>
             <p className="text-xs text-slate mb-5">Adicione desafios personalizados ou use os padrão.</p>
-            <button
-              onClick={loadDefaults}
-              disabled={saving}
-              className="bg-ink text-white text-sm px-6 py-2.5 rounded-full font-semibold hover:opacity-85 transition disabled:opacity-50 cursor-pointer"
-              style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.16)' }}
-            >
-              {saving ? 'Carregando...' : 'Usar desafios padrão'}
-            </button>
+            {showCategorySelect ? (
+              <div className="flex flex-wrap justify-center gap-2 mt-4">
+                {(Object.entries(EVENT_TYPES) as [EventCategory, string][]).map(([key, label]) => (
+                  <button
+                    key={key}
+                    onClick={() => loadDefaults(key)}
+                    className="bg-[#f0f0f0] text-ink text-xs px-4 py-2 rounded-full font-medium hover:bg-hairline transition cursor-pointer"
+                  >
+                    {label}
+                  </button>
+                ))}
+                <button
+                  onClick={() => setShowCategorySelect(false)}
+                  className="text-xs text-slate underline px-4 py-2 hover:text-ink transition cursor-pointer w-full mt-2"
+                >
+                  Cancelar
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowCategorySelect(true)}
+                disabled={saving}
+                className="bg-ink text-white text-sm px-6 py-2.5 rounded-full font-semibold hover:opacity-85 transition disabled:opacity-50 cursor-pointer"
+                style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.16)' }}
+              >
+                {saving ? 'Carregando...' : 'Usar desafios padrão'}
+              </button>
+            )}
           </div>
         )}
 
@@ -205,9 +269,29 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
 
         {/* Restore defaults link */}
         {challenges.length > 0 && (
-          <div className="text-center">
+          <div className="text-center relative">
+            {showCategorySelect ? (
+              <div className="inline-flex flex-wrap justify-center gap-2 bg-white p-4 rounded-2xl shadow-lg border border-gray-100 absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-[280px]">
+                <p className="text-xs font-semibold w-full text-ink mb-1">Escolha o tipo de evento</p>
+                {(Object.entries(EVENT_TYPES) as [EventCategory, string][]).map(([key, label]) => (
+                  <button
+                    key={key}
+                    onClick={() => loadDefaults(key)}
+                    className="bg-[#f0f0f0] text-ink text-[11px] px-3 py-1.5 rounded-full font-medium hover:bg-hairline transition cursor-pointer"
+                  >
+                    {label}
+                  </button>
+                ))}
+                <button
+                  onClick={() => setShowCategorySelect(false)}
+                  className="w-full text-xs text-slate hover:text-ink mt-2"
+                >
+                  Cancelar
+                </button>
+              </div>
+            ) : null}
             <button
-              onClick={loadDefaults}
+              onClick={() => setShowCategorySelect(true)}
               disabled={saving}
               className="text-xs text-slate hover:text-ink underline transition cursor-pointer"
             >
