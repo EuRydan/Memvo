@@ -4,7 +4,7 @@ import { use, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Media, Challenge } from '@/types'
-import { Camera, Sparkles, Star, Heart } from 'lucide-react'
+import { Camera, Sparkles, Star, Heart, Share } from 'lucide-react'
 import { StoryGenerator } from '@/components/StoryGenerator'
 import { EventShareCard } from '@/components/EventShareCard'
 
@@ -17,6 +17,7 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
   const [medias, setMedias] = useState<Media[]>([])
   const [activeTab, setActiveTab] = useState<string>('free')
   const [loading, setLoading] = useState(true)
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false)
 
   useEffect(() => {
     async function load() {
@@ -109,6 +110,14 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
           >
             Desafios
           </button>
+
+          <button
+            onClick={() => setIsShareModalOpen(true)}
+            className="flex items-center gap-1.5 text-xs text-gray-900 font-semibold hover:bg-gray-100 transition border border-gray-200 bg-white px-3 py-1.5 rounded-lg shadow-sm"
+          >
+            <Share size={14} />
+            Compartilhar
+          </button>
           
           <button
             onClick={() => {
@@ -177,8 +186,8 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
         <StoryGenerator event={event} medias={medias} />
       )}
 
-      {/* Event Share Card */}
-      {event && (
+      {/* Event Share Card (Inline only if no photos) */}
+      {event && medias.length === 0 && (
         <div className="px-4 pb-2 max-w-lg mx-auto w-full relative z-10">
           <EventShareCard
             eventName={event.name}
@@ -245,6 +254,36 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
           </div>
         )}
       </div>
+
+      {/* Share Modal */}
+      {isShareModalOpen && event && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-5">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setIsShareModalOpen(false)} />
+          <div className="relative w-full max-w-lg animate-in fade-in zoom-in-95 duration-200">
+            <button 
+              onClick={() => setIsShareModalOpen(false)}
+              className="absolute -top-3 -right-3 w-8 h-8 flex items-center justify-center bg-white text-gray-900 rounded-full shadow-md hover:bg-gray-100 transition-colors z-50"
+            >
+              <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <EventShareCard
+              eventName={event.name}
+              eventDate={new Date(event.date + 'T12:00:00').toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric',
+              })}
+              inviteLink={`${typeof window !== 'undefined' ? window.location.origin : 'https://memvor.netlify.app'}/e/${event.slug}`}
+              guestCount={new Set(medias.map(m => m.uploader_name).filter(Boolean)).size}
+              photoCount={medias.length}
+              slug={event.slug}
+              coverUrl={event.cover_url}
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }
