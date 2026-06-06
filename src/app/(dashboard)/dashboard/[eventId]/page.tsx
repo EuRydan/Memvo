@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Media, Challenge } from '@/types'
 import { Camera, Sparkles, Star, Heart } from 'lucide-react'
+import { StoryGenerator } from '@/components/StoryGenerator'
 
 export default function EventGalleryPage({ params }: { params: Promise<{ eventId: string }> }) {
   const { eventId } = use(params)
@@ -151,6 +152,11 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
           })}
         </div>
       </div>
+
+      {/* Story Viral Generator */}
+      {event && medias.length > 0 && (
+        <StoryGenerator event={event} medias={medias} />
+      )}
 
       {/* Grid */}
       <div className="flex-1 p-2 md:p-4 relative z-10 max-w-6xl mx-auto w-full">
