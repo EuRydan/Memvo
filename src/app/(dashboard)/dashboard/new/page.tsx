@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { canCreateEvent, countActiveEvents, PLAN_LIMITS, PlanTier } from '@/lib/limits'
 import { Event } from '@/types'
+import { CalendarCrest } from '@/components/ui/calendar-crest'
 
 function generateSlug(text: string) {
   return text
@@ -18,7 +19,8 @@ export default function NewEventPage() {
   const router = useRouter()
   const supabase = createClient()
   const [name, setName] = useState('')
-  const [date, setDate] = useState('')
+  const [date, setDate] = useState<string>('')
+  const [endDate, setEndDate] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [checkingPlan, setCheckingPlan] = useState(true)
   const [userPlan, setUserPlan] = useState<PlanTier>('essential')
@@ -82,6 +84,12 @@ export default function NewEventPage() {
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault()
     setError('')
+    
+    if (!date) {
+      setError('Por favor, selecione ao menos uma data de início no calendário.')
+      return
+    }
+
     setLoading(true)
 
     const { data: { user } } = await supabase.auth.getUser()
@@ -89,13 +97,19 @@ export default function NewEventPage() {
 
     const slug = generateSlug(name)
 
-    const { error } = await supabase.from('events').insert([{
+    const payload: any = {
       name,
       date,
       slug,
       owner_id: user.id,
       active: true,
-    }])
+    }
+    
+    if (endDate) {
+      payload.end_date = endDate
+    }
+
+    const { error } = await supabase.from('events').insert([payload])
 
     if (error) {
       setError('Erro ao criar evento: ' + error.message)
@@ -210,25 +224,18 @@ export default function NewEventPage() {
                 </div>
               </div>
 
-              {/* Event Date */}
-              <div className="relative">
-                <input
-                  id="event_date"
-                  type="date"
-                  value={date}
-                  onChange={e => setDate(e.target.value)}
-                  required
-                  className="input-field w-full px-5 py-4 rounded-full text-sm text-ink appearance-none"
-                  style={{ colorScheme: 'light' }}
-                />
-                {/* Calendar icon */}
-                <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-stone">
-                  <svg width="17" height="17" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                    <line x1="16" y1="2" x2="16" y2="6"/>
-                    <line x1="8" y1="2" x2="8" y2="6"/>
-                    <line x1="3" y1="10" x2="21" y2="10"/>
-                  </svg>
+              {/* Event Date (Calendar Crest) */}
+              <div className="flex flex-col items-center">
+                <p className="text-sm text-stone mb-3 self-start px-2">Data do evento</p>
+                <div className="w-full flex justify-center pb-4">
+                  <CalendarCrest 
+                    defaultStart={date || undefined}
+                    defaultEnd={endDate || undefined}
+                    onRangeChange={(start, end) => {
+                      setDate(start || '')
+                      setEndDate(end)
+                    }}
+                  />
                 </div>
               </div>
 

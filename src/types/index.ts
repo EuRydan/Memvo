@@ -4,6 +4,7 @@ export type Event = {
   owner_id: string
   name: string
   date: string
+  end_date?: string
   slug: string
   active: boolean
 }
