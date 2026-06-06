@@ -40,7 +40,7 @@ export async function POST(request: Request) {
       currency: 'brl',
       description: `Plano ${plan}`,
       metadata: { plan },
-      payment_method_types: ['card', 'pix'],
+      automatic_payment_methods: { enabled: true },
     })
 
     return NextResponse.json({
