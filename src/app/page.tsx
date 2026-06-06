@@ -7,6 +7,7 @@ import { ZoomParallax } from '@/components/ZoomParallax'
 import { IntroAnimation } from '@/components/IntroAnimation'
 import { WordmarkFooter } from '@/components/WordmarkFooter'
 import { FeaturesSection } from '@/components/FeaturesSection'
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
 
 export default function LandingPage() {
   return (
@@ -70,64 +71,73 @@ export default function LandingPage() {
           ]} 
         />
 
-        <div className="flex flex-col gap-4 mt-20 px-6 max-w-lg mx-auto">
-          {[
-            {
-              step: '01',
-              icon: (
-                <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
-                  <rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>
-                </svg>
-              ),
-              title: 'Crie e compartilhe via QR Code',
-              desc: 'Configure seu evento em segundos e compartilhe o QR Code. Sem cadastro para os convidados.',
-              gradient: 'linear-gradient(135deg, #f4c5a8 0%, #e8b898 100%)',
-            },
-            {
-              step: '02',
-              icon: (
-                <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-                  <circle cx="12" cy="13" r="4"/>
-                </svg>
-              ),
-              title: 'Desafios fotográficos',
-              desc: 'Engaje seus convidados com missões criativas: primeira dança, brinde, selfie em grupo...',
-              gradient: 'linear-gradient(135deg, #c8b8e0 0%, #b8a8d0 100%)',
-            },
-            {
-              step: '03',
-              icon: (
-                <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
-                  <line x1="4" y1="22" x2="4" y2="15"/>
-                </svg>
-              ),
-              title: 'Álbum em tempo real',
-              desc: 'Todas as fotos aparecem instantaneamente no álbum. Acesse e baixe quando quiser.',
-              gradient: 'linear-gradient(135deg, #b8d4f0 0%, #a8c4e0 100%)',
-            },
-          ].map(({ step, icon, title, desc, gradient }) => (
-            <div key={step}
-              className="rounded-[20px] p-6 flex items-start gap-5"
-              style={{
-                background: 'rgba(255,255,255,0.9)',
-                boxShadow: '0 4px 24px rgba(0,0,0,0.05)',
-              }}>
-              <div className="w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0 text-white"
-                style={{ background: gradient }}>
-                {icon}
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[10px] font-mono font-semibold text-[#939393]">{step}</span>
-                  <h3 className="text-[0.95rem] font-semibold text-[#0a0a0a]">{title}</h3>
-                </div>
-                <p className="text-sm text-[#676f7b] leading-relaxed">{desc}</p>
-              </div>
+        <div className="mt-20 px-6 max-w-lg mx-auto">
+          <Carousel opts={{ align: "start" }} className="w-full">
+            <CarouselContent>
+              {[
+                {
+                  step: '01',
+                  icon: (
+                    <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+                      <rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>
+                    </svg>
+                  ),
+                  title: 'Crie e compartilhe via QR Code',
+                  desc: 'Configure seu evento em segundos e compartilhe o QR Code. Sem cadastro para os convidados.',
+                  gradient: 'linear-gradient(135deg, #f4c5a8 0%, #e8b898 100%)',
+                },
+                {
+                  step: '02',
+                  icon: (
+                    <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                      <circle cx="12" cy="13" r="4"/>
+                    </svg>
+                  ),
+                  title: 'Desafios fotográficos',
+                  desc: 'Engaje seus convidados com missões criativas: primeira dança, brinde, selfie em grupo...',
+                  gradient: 'linear-gradient(135deg, #c8b8e0 0%, #b8a8d0 100%)',
+                },
+                {
+                  step: '03',
+                  icon: (
+                    <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
+                      <line x1="4" y1="22" x2="4" y2="15"/>
+                    </svg>
+                  ),
+                  title: 'Álbum em tempo real',
+                  desc: 'Todas as fotos aparecem instantaneamente no álbum. Acesse e baixe quando quiser.',
+                  gradient: 'linear-gradient(135deg, #b8d4f0 0%, #a8c4e0 100%)',
+                },
+              ].map(({ step, icon, title, desc, gradient }) => (
+                <CarouselItem key={step}>
+                  <div className="rounded-[20px] p-6 flex items-start gap-5"
+                    style={{
+                      background: 'rgba(255,255,255,0.9)',
+                      boxShadow: '0 4px 24px rgba(0,0,0,0.05)',
+                    }}>
+                    <div className="w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0 text-white"
+                      style={{ background: gradient }}>
+                      {icon}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-[10px] font-mono font-semibold text-[#939393]">{step}</span>
+                        <h3 className="text-[0.95rem] font-semibold text-[#0a0a0a]">{title}</h3>
+                      </div>
+                      <p className="text-sm text-[#676f7b] leading-relaxed">{desc}</p>
+                    </div>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <div className="flex justify-center gap-4 mt-6">
+              <CarouselPrevious className="static translate-y-0 translate-x-0 border-[#0a0a0a]/10 hover:bg-[#0a0a0a]/5 text-[#0a0a0a]" />
+              <CarouselNext className="static translate-y-0 translate-x-0 border-[#0a0a0a]/10 hover:bg-[#0a0a0a]/5 text-[#0a0a0a]" />
             </div>
-          ))}
+          </Carousel>
         </div>
       </section>
 
