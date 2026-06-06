@@ -217,7 +217,7 @@ export function CalendarCrest({
       <div>
         {/* Month name */}
         <div
-          className="text-neutral-700 dark:text-neutral-300"
+          className="text-gray-900"
           style={{
             fontSize: 13,
             fontWeight: 590,
@@ -240,7 +240,7 @@ export function CalendarCrest({
           {DOW.map((d) => (
             <div
               key={d}
-              className="text-neutral-300 dark:text-neutral-700"
+              className="text-stone"
               style={{
                 fontSize: 10,
                 fontWeight: 500,
@@ -329,18 +329,18 @@ export function CalendarCrest({
             /* Text color classes */
             const textCls =
               isStart || isEnd
-                ? "text-white dark:text-neutral-950"
+                ? "text-white"
                 : inRange
-                  ? "text-neutral-700 dark:text-neutral-300"
+                  ? "text-gray-900"
                   : isToday
-                    ? "text-neutral-900 dark:text-neutral-100"
-                    : "text-neutral-400 dark:text-neutral-500";
+                    ? "text-ink"
+                    : "text-stone";
 
             /* Background classes */
             const bgCls = inRange
               ? isStart || isEnd
-                ? "bg-neutral-900 dark:bg-neutral-100"
-                : "bg-neutral-100 dark:bg-neutral-800"
+                ? "bg-ink"
+                : "bg-gray-100"
               : "";
 
             return (
@@ -362,7 +362,7 @@ export function CalendarCrest({
                   "border-none transition-colors duration-100",
                   bgCls,
                   !inRange &&
-                    "rounded-[10px] hover:bg-neutral-100 dark:hover:bg-neutral-800",
+                    "rounded-[10px] hover:bg-gray-50",
                 )}
                 style={{
                   width: CELL,
@@ -380,7 +380,7 @@ export function CalendarCrest({
                 <span
                   className={cn(
                     "relative z-[1] text-[13px] tabular-nums transition-colors duration-100",
-                    isHov ? "text-neutral-600 dark:text-neutral-400" : textCls,
+                    isHov ? "text-gray-900" : textCls,
                   )}
                   style={{
                     fontWeight:
@@ -414,7 +414,7 @@ export function CalendarCrest({
   })();
 
   return (
-    <div className="w-fit overflow-hidden rounded-[20px] border border-neutral-200 bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-950">
+    <div className="w-fit overflow-hidden rounded-[20px] border border-gray-100 bg-white shadow-sm">
       {/* Header */}
       <div
         style={{
@@ -427,7 +427,7 @@ export function CalendarCrest({
         <motion.button
           whileTap={{ scale: 0.85 }}
           onClick={() => goMonth(-1)}
-          className="text-neutral-400 transition-colors duration-150 hover:bg-neutral-100 hover:text-neutral-600 dark:text-neutral-600 dark:hover:bg-neutral-800 dark:hover:text-neutral-400"
+          className="text-stone transition-colors duration-150 hover:bg-gray-50 hover:text-ink"
           style={{
             background: "transparent",
             border: "none",
@@ -442,7 +442,7 @@ export function CalendarCrest({
         </motion.button>
 
         <span
-          className="text-neutral-900 dark:text-neutral-100"
+          className="text-ink"
           style={{
             fontSize: 15,
             fontWeight: 590,
@@ -455,7 +455,7 @@ export function CalendarCrest({
         <motion.button
           whileTap={{ scale: 0.85 }}
           onClick={() => goMonth(1)}
-          className="text-neutral-400 transition-colors duration-150 hover:bg-neutral-100 hover:text-neutral-600 dark:text-neutral-600 dark:hover:bg-neutral-800 dark:hover:text-neutral-400"
+          className="text-stone transition-colors duration-150 hover:bg-gray-50 hover:text-ink"
           style={{
             background: "transparent",
             border: "none",
@@ -502,10 +502,10 @@ export function CalendarCrest({
           >
             <div
               className={cn(
-                "border-t border-neutral-100 dark:border-neutral-800/50",
+                "border-t border-gray-100",
                 isConfirmed
-                  ? "text-neutral-500 dark:text-neutral-500"
-                  : "text-neutral-400 dark:text-neutral-600",
+                  ? "text-slate"
+                  : "text-stone",
               )}
               style={{
                 padding: "12px 24px 14px",
