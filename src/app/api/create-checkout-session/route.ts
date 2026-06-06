@@ -18,7 +18,7 @@ export async function POST(request: Request) {
     const priceAmount = prices[plan] || 7900
 
     // Inicializa o Stripe
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_mock', {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'mock_secret_key', {
       // @ts-ignore
       apiVersion: '2023-10-16',
     })
