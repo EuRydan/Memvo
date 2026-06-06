@@ -26,7 +26,11 @@ export async function POST(request: Request) {
     const priceAmount = prices[plan] || 7900
 
     // Inicializa o Stripe
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'mock_secret_key', {
+    const stripeKey = process.env.STRIPE_SECRET_KEY
+    if (!stripeKey) {
+      return NextResponse.json({ error: 'Stripe not configured' }, { status: 503 })
+    }
+    const stripe = new Stripe(stripeKey, {
       // @ts-ignore
       apiVersion: '2023-10-16',
     })

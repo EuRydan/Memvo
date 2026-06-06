@@ -9,7 +9,7 @@ import { WordmarkFooter } from '@/components/WordmarkFooter'
 import { Logo } from '@/components/Logo'
 
 // Assegure-se de colocar essa chave no arquivo .env.local
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'mock_public_key')
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? '')
 
 const PLANS = [
   {
