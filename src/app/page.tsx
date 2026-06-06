@@ -71,7 +71,7 @@ export default function LandingPage() {
           ]} 
         />
 
-        <div className="mt-20 px-6 max-w-lg mx-auto">
+        <div className="mt-20 px-6 max-w-3xl mx-auto">
           <Carousel opts={{ align: "start" }} className="w-full">
             <CarouselContent>
               {[
@@ -113,7 +113,7 @@ export default function LandingPage() {
                 },
               ].map(({ step, icon, title, desc, gradient }) => (
                 <CarouselItem key={step}>
-                  <div className="rounded-[20px] p-6 flex items-start gap-5"
+                  <div className="rounded-[24px] p-8 md:p-10 flex items-start gap-6"
                     style={{
                       background: 'rgba(255,255,255,0.9)',
                       boxShadow: '0 4px 24px rgba(0,0,0,0.05)',
@@ -124,10 +124,10 @@ export default function LandingPage() {
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="text-[10px] font-mono font-semibold text-[#939393]">{step}</span>
-                        <h3 className="text-[0.95rem] font-semibold text-[#0a0a0a]">{title}</h3>
+                        <span className="text-[11px] font-mono font-semibold text-[#939393]">{step}</span>
+                        <h3 className="text-base font-semibold text-[#0a0a0a]">{title}</h3>
                       </div>
-                      <p className="text-sm text-[#676f7b] leading-relaxed">{desc}</p>
+                      <p className="text-[15px] text-[#676f7b] leading-relaxed">{desc}</p>
                     </div>
                   </div>
                 </CarouselItem>
