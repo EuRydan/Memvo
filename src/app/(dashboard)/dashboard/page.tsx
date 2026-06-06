@@ -186,7 +186,7 @@ export default function DashboardPage() {
               {/* Stats & Actions */}
               <div className="w-full grid grid-cols-2 gap-1 pt-3 border-t border-gray-100/80">
                  <button
-                   onClick={() => window.open(`/dashboard/${event.id}`, '_blank')}
+                   onClick={() => router.push(`/dashboard/${event.id}`)}
                    className="flex flex-col items-center justify-center p-2.5 rounded-[14px] hover:bg-gray-50 transition-colors group cursor-pointer"
                  >
                    <span className="text-[16px] font-bold text-gray-900 group-hover:text-black">Álbum</span>
