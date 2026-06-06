@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion } from "motion/react";
+import Link from "next/link";
 
 /**
  * Wordmark Footer — Rauno Freiberg craft, Ruixen UI edition.
@@ -212,6 +213,27 @@ export function WordmarkFooter({
             pointerEvents: "none",
           }}
         />
+
+        {/* ── Links ── */}
+        <div
+          style={{
+            position: "absolute",
+            bottom: "clamp(4px, 0.8vw, 12px)",
+            left: 0,
+            right: 0,
+            display: "flex",
+            justifyContent: "center",
+            gap: "24px",
+            zIndex: 10,
+          }}
+        >
+          <Link href="/privacy" className="text-xs text-black/40 hover:text-black/80 transition-colors">
+            Política de Privacidade
+          </Link>
+          <Link href="/terms" className="text-xs text-black/40 hover:text-black/80 transition-colors">
+            Termos de Uso
+          </Link>
+        </div>
       </section>
     </footer>
   );
