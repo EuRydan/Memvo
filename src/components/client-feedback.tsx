@@ -24,7 +24,7 @@ function ClientFeedback() {
     };
   
   return (
-    <section className="relative h-full container text-black mx-auto rounded-lg py-14 bg-[#fafafa]" ref={testimonialRef}>
+    <section className="relative h-full container text-black mx-auto rounded-lg py-14 bg-transparent" ref={testimonialRef}>
       <article className={"max-w-screen-md mx-auto text-center space-y-2 mb-8"} >
         <TimelineContent as="h1" className={"xl:text-4xl text-3xl font-medium tracking-tight text-ink"} animationNum={0} customVariants={revealVariants} timelineRef={testimonialRef} style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}>
           Confiado por centenas de anfitriões

@@ -143,11 +143,43 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── TESTIMONIAL ── */}
-      <ClientFeedback />
+      {/* ── MIDDLE SECTIONS WRAPPER WITH BACKGROUND ── */}
+      <div className="relative w-full overflow-hidden">
+        {/* Grid Background */}
+        <div
+            className="absolute inset-0 w-full h-full pointer-events-none"
+            style={{
+                backgroundImage: 'linear-gradient(to right, #e8e8e8 1px, transparent 1px), linear-gradient(to bottom, #e8e8e8 1px, transparent 1px)',
+                backgroundSize: '6rem 4rem',
+            }}
+        >
+            <div className="absolute inset-0" style={{
+                background: 'radial-gradient(circle 800px at 50% 50%, rgba(213,197,255,0.3), transparent)',
+            }} />
+        </div>
 
-      {/* ── FEATURES GRID ── */}
-      <FeaturesSection />
+        {/* Orbs */}
+        <div className="absolute top-[10%] left-[-100px] w-[500px] h-[500px] rounded-full pointer-events-none"
+            style={{
+                background: 'radial-gradient(circle, rgba(244,197,168,0.4) 0%, rgba(200,184,224,0.3) 60%, transparent 80%)',
+                filter: 'blur(80px)',
+                animation: 'drift 20s ease-in-out infinite alternate',
+            }} />
+        <div className="absolute bottom-[10%] right-[-80px] w-[400px] h-[400px] rounded-full pointer-events-none"
+            style={{
+                background: 'radial-gradient(circle, rgba(186,210,255,0.4) 0%, rgba(200,184,224,0.25) 60%, transparent 80%)',
+                filter: 'blur(70px)',
+                animation: 'drift2 16s ease-in-out infinite alternate',
+            }} />
+
+        <div className="relative z-10">
+          {/* ── TESTIMONIAL ── */}
+          <ClientFeedback />
+
+          {/* ── FEATURES GRID ── */}
+          <FeaturesSection />
+        </div>
+      </div>
 
       {/* ── FINAL CTA ── */}
       <section className="relative px-6 py-20 overflow-hidden mx-5 mb-10 rounded-[28px]"
