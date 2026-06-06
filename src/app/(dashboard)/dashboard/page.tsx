@@ -16,6 +16,7 @@ export default function DashboardPage() {
   const [events, setEvents] = useState<Event[]>([])
   const [loading, setLoading] = useState(true)
   const [hasPlan, setHasPlan] = useState<boolean>(true)
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false)
   const orb1Ref = useRef<HTMLDivElement>(null)
   const orb2Ref = useRef<HTMLDivElement>(null)
 
@@ -47,15 +48,17 @@ export default function DashboardPage() {
 
       if (!planData) {
         setHasPlan(false)
-      } else {
-        const { data } = await supabase
-          .from('events')
-          .select('*')
-          .eq('owner_id', user.id)
-          .order('created_at', { ascending: false })
-
-        if (data) setEvents(data)
       }
+      
+      // Sempre carrega os eventos, mesmo se não tiver plano
+      // para caso o usuário tenha eventos antigos ou para deixar a interface visível
+      const { data } = await supabase
+        .from('events')
+        .select('*')
+        .eq('owner_id', user.id)
+        .order('created_at', { ascending: false })
+
+      if (data) setEvents(data)
       
       setLoading(false)
     }
@@ -141,44 +144,25 @@ export default function DashboardPage() {
               Suas celebrações
             </h2>
           </div>
-          {hasPlan && (
-            <button
-              onClick={() => router.push('/dashboard/new')}
-              className="bg-ink text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:opacity-85 active:scale-95 transition-all duration-200 cursor-pointer flex-shrink-0"
-              style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.16)' }}
-            >
+          <button
+            onClick={() => {
+              if (hasPlan) router.push('/dashboard/new')
+              else setShowUpgradeModal(true)
+            }}
+            className="bg-ink text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:opacity-85 active:scale-95 transition-all duration-200 cursor-pointer flex-shrink-0 relative overflow-hidden group"
+            style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.16)' }}
+          >
+            <span className="relative z-10 flex items-center gap-2">
               Novo evento
-            </button>
-          )}
+              {!hasPlan && <span className="text-[10px] bg-white/20 px-1.5 py-0.5 rounded-full">🔒</span>}
+            </span>
+            {!hasPlan && (
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+            )}
+          </button>
         </div>
 
-        {/* Blocked state if no plan */}
-        {!hasPlan ? (
-          <div className="flex flex-col items-center justify-center pt-10 pb-20">
-            <div className="bg-white p-10 rounded-[32px] border border-gray-100 shadow-[0_8px_40px_rgba(0,0,0,0.06)] text-center max-w-md w-full">
-              <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg width="32" height="32" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                </svg>
-              </div>
-              <h3 className="text-2xl font-bold text-ink mb-3" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
-                Recursos Bloqueados
-              </h3>
-              <p className="text-sm text-slate mb-8 leading-relaxed">
-                Você precisa de um plano ativo para criar e gerenciar seus eventos. Assine um plano agora para desbloquear todos os recursos do Memvo.
-              </p>
-              <button
-                onClick={() => router.push('/pricing')}
-                className="w-full bg-ink text-white font-semibold py-4 rounded-full hover:opacity-85 active:scale-95 transition-all duration-200 cursor-pointer"
-                style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.16)' }}
-              >
-                Assinar um plano
-              </button>
-            </div>
-          </div>
-        ) : (
-          <>
-            {/* Empty state */}
+        {/* Empty state */}
             {events.length === 0 && (
               <div
                 className="rounded-2xl p-10 text-center"
@@ -226,25 +210,73 @@ export default function DashboardPage() {
                   {/* Stats & Actions */}
                   <div className="w-full grid grid-cols-2 gap-1 pt-3 border-t border-gray-100/80">
                      <button
-                       onClick={() => router.push(`/dashboard/${event.id}`)}
+                       onClick={() => {
+                         if (hasPlan) router.push(`/dashboard/${event.id}`)
+                         else setShowUpgradeModal(true)
+                       }}
                        className="flex flex-col items-center justify-center p-2.5 rounded-[14px] hover:bg-gray-50 transition-colors group cursor-pointer"
                      >
-                       <span className="text-[16px] font-bold text-gray-900 group-hover:text-black">Álbum</span>
+                       <span className="text-[16px] font-bold text-gray-900 group-hover:text-black">
+                         Álbum {!hasPlan && <span className="text-[10px] ml-1">🔒</span>}
+                       </span>
                        <span className="text-[11px] text-gray-500 font-medium tracking-wide">Visualizar</span>
                      </button>
                      <button
-                       onClick={() => router.push(`/dashboard/${event.id}/challenges`)}
+                       onClick={() => {
+                         if (hasPlan) router.push(`/dashboard/${event.id}/challenges`)
+                         else setShowUpgradeModal(true)
+                       }}
                        className="flex flex-col items-center justify-center p-2.5 rounded-[14px] hover:bg-gray-50 transition-colors group cursor-pointer"
                      >
-                       <span className="text-[16px] font-bold text-gray-900 group-hover:text-black">Desafios</span>
+                       <span className="text-[16px] font-bold text-gray-900 group-hover:text-black">
+                         Desafios {!hasPlan && <span className="text-[10px] ml-1">🔒</span>}
+                       </span>
                        <span className="text-[11px] text-gray-500 font-medium tracking-wide">Configurar</span>
                      </button>
                   </div>
                 </div>
               ))}
             </div>
-          </>
-        )}
+      {/* Upgrade Modal */}
+      {showUpgradeModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-5">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowUpgradeModal(false)} />
+          <div className="relative bg-white rounded-[2rem] p-8 max-w-sm w-full shadow-[0_20px_60px_rgba(0,0,0,0.15)] animate-in fade-in zoom-in-95 duration-200">
+            <button 
+              onClick={() => setShowUpgradeModal(false)}
+              className="absolute top-4 right-4 text-stone hover:text-ink transition-colors p-2"
+            >
+              <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            <div className="text-center mb-6 mt-2">
+              <div className="w-16 h-16 bg-stone-50 rounded-full flex items-center justify-center mx-auto mb-5 text-4xl">
+                ✨
+              </div>
+              <h3 className="text-2xl font-bold text-ink mb-2" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
+                Acesso Premium
+              </h3>
+              <p className="text-sm text-slate leading-relaxed px-2">
+                Para criar novos eventos, gerenciar desafios e ter acesso completo ao álbum, você precisa de um plano ativo.
+              </p>
+            </div>
+
+            <button
+              onClick={() => router.push('/pricing')}
+              className="w-full bg-ink text-white font-semibold py-3.5 rounded-full hover:opacity-85 active:scale-95 transition-all duration-200"
+              style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.16)' }}
+            >
+              Ver planos e preços
+            </button>
+            <p className="text-xs text-stone text-center mt-4">
+              Cancele a qualquer momento.
+            </p>
+          </div>
+        </div>
+      )}
+
       </main>
 
       {/* ── Bottom Nav Bar ── */}
