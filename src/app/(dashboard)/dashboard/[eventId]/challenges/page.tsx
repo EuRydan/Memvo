@@ -46,6 +46,36 @@ const DEFAULT_CHALLENGES = {
     'Uma foto com quem você conheceu hoje',
     'Um sorriso sincero',
   ],
+  bridal_shower: [
+    'O presente mais engraçado',
+    'Um momento divertido nas brincadeiras',
+    'A noiva pagando um mico',
+    'Uma foto de grupo com as madrinhas',
+    'A mesa de doces',
+    'Um brinde à noiva',
+    'A reação ao abrir os presentes',
+    'A convidada mais animada',
+  ],
+  gender_reveal: [
+    'A reação dos pais no momento da revelação',
+    'Alguém do Team Menino vibrando',
+    'Alguém do Team Menina vibrando',
+    'A cara de surpresa de um convidado',
+    'A fumaça/confetes no ar',
+    'Uma foto com os avós emocionados',
+    'A decoração maravilhosa',
+    'Os papais se abraçando',
+  ],
+  baby_shower: [
+    'A mãe exibindo o barrigão',
+    'Os pais juntos',
+    'A mesa do bolo',
+    'Alguém apertando a bochecha (ou a barriga!)',
+    'A foto com o sapatinho do bebê',
+    'O momento de abrir as fraldas',
+    'Uma foto com as vovós',
+    'A lembrancinha do evento',
+  ],
 }
 
 type EventCategory = keyof typeof DEFAULT_CHALLENGES
@@ -54,6 +84,9 @@ const EVENT_TYPES: Record<EventCategory, string> = {
   wedding: 'Casamento',
   birthday: 'Aniversário / 15 anos',
   corporate: 'Evento Corporativo',
+  bridal_shower: 'Chá de Panela',
+  gender_reveal: 'Chá Revelação',
+  baby_shower: 'Chá de Bebê',
   general: 'Outras Celebrações',
 }
 
