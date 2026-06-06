@@ -61,13 +61,22 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
         .from('media').upload(fileName, file, { cacheControl: '3600', upsert: false })
       if (storageError) { console.error(storageError); continue }
       const isVideo = file.type.startsWith('video/')
-      await supabase.from('media').insert({
+      const { error: dbError } = await supabase.from('media').insert({
         event_id: event.id,
         storage_path: fileName,
         uploader_name: uploaderName || null,
         type: isVideo ? 'video' : 'photo',
         challenge_id: challengeId || null,
       })
+      
+      // Trigger background upload to Google Drive
+      if (!dbError && !isVideo) {
+        fetch('/api/drive/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ eventId: event.id, storagePath: fileName })
+        }).catch(err => console.error('Drive upload trigger failed', err))
+      }
     }
     setUploadingId(null)
   }

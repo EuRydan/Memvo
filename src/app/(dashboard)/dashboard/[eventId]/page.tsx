@@ -11,7 +11,7 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
   const { eventId } = use(params)
   const router = useRouter()
   const supabase = createClient()
-  const [event, setEvent] = useState<{ id: string; name: string; date: string } | null>(null)
+  const [event, setEvent] = useState<{ id: string; name: string; date: string; google_refresh_token?: string } | null>(null)
   const [challenges, setChallenges] = useState<Challenge[]>([])
   const [medias, setMedias] = useState<Media[]>([])
   const [activeTab, setActiveTab] = useState<string>('free')
@@ -21,7 +21,7 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
     async function load() {
       const { data: eventData } = await supabase
         .from('events')
-        .select('id, name, date')
+        .select('id, name, date, google_refresh_token')
         .eq('id', eventId)
         .single()
 
@@ -108,6 +108,24 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
           >
             Desafios
           </button>
+          
+          <button
+            onClick={() => {
+              if (event?.google_refresh_token) {
+                alert("Google Drive já está conectado!")
+              } else {
+                window.location.href = `/api/auth/google?eventId=${eventId}`
+              }
+            }}
+            className={`text-xs font-medium transition px-3 py-1.5 rounded-lg shadow-sm ${
+              event?.google_refresh_token
+                ? 'bg-green-50 text-green-700 border border-green-200 hover:bg-green-100'
+                : 'bg-white text-blue-600 border border-blue-200 hover:bg-blue-50'
+            }`}
+          >
+            {event?.google_refresh_token ? 'Drive Conectado ✓' : 'Conectar GDrive'}
+          </button>
+
           <span className="text-xs text-gray-600 font-medium border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm">
             {medias.length} fotos
           </span>
