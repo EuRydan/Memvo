@@ -37,7 +37,7 @@ export async function POST(request: Request) {
 
     const protocol = request.headers.get('x-forwarded-proto') || 'http'
     const host = request.headers.get('host') || 'localhost:3000'
-    const returnUrl = `${protocol}://${host}/register?plan=${plan}`
+    const returnUrl = `${protocol}://${host}/dashboard/success?session_id={CHECKOUT_SESSION_ID}&plan=${plan}`
 
     // Cria a Checkout Session com ui_mode elements
     const session = await stripe.checkout.sessions.create({

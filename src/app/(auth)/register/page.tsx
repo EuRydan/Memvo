@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, Suspense } from 'react'
+import { useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
@@ -31,45 +31,11 @@ function RegisterContent() {
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const orb1Ref = useRef<HTMLDivElement>(null)
-  const orb2Ref = useRef<HTMLDivElement>(null)
 
   const sessionId = searchParams.get('session_id')
   const invite = searchParams.get('invite')
   const plan = searchParams.get('plan') || 'essential'
   const strength = getStrength(password)
-  const canRegister = sessionId || invite === 'memvo-vip-2026'
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (window.innerWidth <= 768) return
-      const cx = window.innerWidth / 2
-      const cy = window.innerHeight / 2
-      const dx = (e.clientX - cx) * 0.012
-      const dy = (e.clientY - cy) * 0.012
-      if (orb1Ref.current) orb1Ref.current.style.transform = `translate(${dx}px, ${dy}px)`
-      if (orb2Ref.current) orb2Ref.current.style.transform = `translate(${-dx * 0.7}px, ${-dy * 0.7}px)`
-    }
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [])
-
-  if (!canRegister) {
-    return (
-      <div className="relative min-h-screen flex flex-col items-center justify-center px-5 py-10 overflow-hidden bg-[#fafafa]">
-        <div className="text-center bg-white p-8 rounded-[2rem] max-w-sm w-full border border-[#f0f0f0] shadow-[0_8px_40px_rgba(0,0,0,0.06)]">
-          <p className="text-5xl mb-4">💳</p>
-          <h2 style={{ fontFamily: 'Georgia, "Times New Roman", serif' }} className="text-2xl font-bold text-ink mb-2">
-            Escolha um plano
-          </h2>
-          <p className="text-sm text-slate mb-6">Você precisa adquirir um plano antes de criar sua conta no Memvo.</p>
-          <Link href="/pricing" className="block w-full bg-ink text-white py-3 rounded-full text-sm font-semibold hover:opacity-85 transition-opacity">
-            Ver planos e preços
-          </Link>
-        </div>
-      </div>
-    )
-  }
 
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault()
@@ -93,7 +59,7 @@ function RegisterContent() {
       return
     }
 
-    if (authData.user) {
+    if (authData.user && (sessionId || invite === 'memvo-vip-2026')) {
       // 2. Insert into user_plans (use 'classic' for invite registrations)
       const planToSave = invite === 'memvo-vip-2026' ? 'classic' : plan
       const paymentRef = invite === 'memvo-vip-2026' ? `invite-${authData.user.id}` : sessionId
@@ -104,10 +70,7 @@ function RegisterContent() {
       })
 
       if (planError) {
-        // Log this error, but don't block login if possible, or handle gracefully
         console.error('Failed to save plan:', planError)
-        // In a production app, we would probably have a webhook handling this,
-        // or a rollback mechanism. Here we just show an error.
       }
     }
 
@@ -117,9 +80,32 @@ function RegisterContent() {
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center px-5 py-10 overflow-hidden bg-[#fafafa]">
 
-      {/* Decorative Orbs */}
-      <div ref={orb1Ref} className="orb orb-1" />
-      <div ref={orb2Ref} className="orb orb-2" />
+      {/* Grid Background */}
+      <div
+          className="absolute inset-0 w-full h-full pointer-events-none"
+          style={{
+              backgroundImage: 'linear-gradient(to right, #e8e8e8 1px, transparent 1px), linear-gradient(to bottom, #e8e8e8 1px, transparent 1px)',
+              backgroundSize: '6rem 4rem',
+          }}
+      >
+          <div className="absolute inset-0" style={{
+              background: 'radial-gradient(circle 800px at 50% 50%, rgba(213,197,255,0.3), transparent)',
+          }} />
+      </div>
+
+      {/* Orbs */}
+      <div className="absolute top-[10%] left-[-100px] w-[500px] h-[500px] rounded-full pointer-events-none"
+          style={{
+              background: 'radial-gradient(circle, rgba(244,197,168,0.4) 0%, rgba(200,184,224,0.3) 60%, transparent 80%)',
+              filter: 'blur(80px)',
+              animation: 'drift 20s ease-in-out infinite alternate',
+          }} />
+      <div className="absolute bottom-[10%] right-[-80px] w-[400px] h-[400px] rounded-full pointer-events-none"
+          style={{
+              background: 'radial-gradient(circle, rgba(186,210,255,0.4) 0%, rgba(200,184,224,0.25) 60%, transparent 80%)',
+              filter: 'blur(70px)',
+              animation: 'drift2 16s ease-in-out infinite alternate',
+          }} />
 
       {/* Card */}
       <div className="auth-card relative z-10 w-full max-w-[420px]">
@@ -127,7 +113,7 @@ function RegisterContent() {
         {/* Branding */}
         <div className="text-center mb-8">
           <p className="text-[11px] font-semibold tracking-[0.18em] text-stone uppercase mb-3">
-            Pagamento Confirmado
+            Junte-se a nós
           </p>
           <div className="flex justify-center mb-2">
             <Logo className="h-10 w-auto text-ink" />

@@ -15,6 +15,7 @@ export default function DashboardPage() {
   const supabase = createClient()
   const [events, setEvents] = useState<Event[]>([])
   const [loading, setLoading] = useState(true)
+  const [hasPlan, setHasPlan] = useState<boolean>(true)
   const orb1Ref = useRef<HTMLDivElement>(null)
   const orb2Ref = useRef<HTMLDivElement>(null)
 
@@ -38,13 +39,24 @@ export default function DashboardPage() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { router.push('/login'); return }
 
-      const { data } = await supabase
-        .from('events')
+      const { data: planData } = await supabase
+        .from('user_plans')
         .select('*')
-        .eq('owner_id', user.id)
-        .order('created_at', { ascending: false })
+        .eq('user_id', user.id)
+        .maybeSingle()
 
-      if (data) setEvents(data)
+      if (!planData) {
+        setHasPlan(false)
+      } else {
+        const { data } = await supabase
+          .from('events')
+          .select('*')
+          .eq('owner_id', user.id)
+          .order('created_at', { ascending: false })
+
+        if (data) setEvents(data)
+      }
+      
       setLoading(false)
     }
     load()
@@ -129,80 +141,110 @@ export default function DashboardPage() {
               Suas celebrações
             </h2>
           </div>
-          <button
-            onClick={() => router.push('/dashboard/new')}
-            className="bg-ink text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:opacity-85 active:scale-95 transition-all duration-200 cursor-pointer flex-shrink-0"
-            style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.16)' }}
-          >
-            Novo evento
-          </button>
-        </div>
-
-        {/* Empty state */}
-        {events.length === 0 && (
-          <div
-            className="rounded-2xl p-10 text-center"
-            style={{
-              background: 'rgba(255,255,255,0.9)',
-              backdropFilter: 'blur(10px)',
-              boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
-            }}
-          >
-            <p className="text-3xl mb-3">🎉</p>
-            <p className="text-sm font-semibold text-ink mb-1">Nenhum evento ainda</p>
-            <p className="text-xs text-slate">Crie seu primeiro evento e compartilhe memórias.</p>
-          </div>
-        )}
-
-        {/* Event Cards */}
-        <div className="flex flex-wrap justify-center" style={{ gap: '48px' }}>
-          {events.map(event => (
-            <div
-              key={event.id}
-              className="flex flex-col items-center w-[280px] bg-white rounded-[32px] overflow-hidden border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] hover:-translate-y-1 p-5"
+          {hasPlan && (
+            <button
+              onClick={() => router.push('/dashboard/new')}
+              className="bg-ink text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:opacity-85 active:scale-95 transition-all duration-200 cursor-pointer flex-shrink-0"
+              style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.16)' }}
             >
-              {/* Image / QR Code Container (Gradient Border) */}
-              <div className="w-full aspect-square rounded-[24px] relative overflow-hidden mb-5 p-1.5 bg-gradient-to-br from-[#f4c5a8] to-[#d4bde8] shadow-sm">
-                 <div className="w-full h-full rounded-[18px] overflow-hidden transition-transform hover:scale-105 duration-300">
-                   <QRCodeGenerator slug={event.slug} eventName={event.name} eventDate={event.date} size={400} variant="cover" />
-                 </div>
-                 {!isEventActive(event) && (
-                   <div className="absolute top-4 left-4 bg-white/95 backdrop-blur text-[9px] font-bold uppercase tracking-wider px-2.5 py-1.5 rounded-full text-stone-600 shadow-sm border border-black/5">
-                     Arquivado
-                   </div>
-                 )}
-              </div>
-
-              {/* Text Info */}
-              <div className="flex flex-col items-center text-center px-2 w-full mb-4">
-                 <h3 className="text-[17px] font-bold text-gray-900 leading-snug line-clamp-1 w-full truncate">
-                   {event.name}
-                 </h3>
-                 <p className="text-[13px] text-gray-500 mt-1 font-medium">
-                   {new Date(event.date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
-                 </p>
-              </div>
-
-              {/* Stats & Actions */}
-              <div className="w-full grid grid-cols-2 gap-1 pt-3 border-t border-gray-100/80">
-                 <button
-                   onClick={() => router.push(`/dashboard/${event.id}`)}
-                   className="flex flex-col items-center justify-center p-2.5 rounded-[14px] hover:bg-gray-50 transition-colors group cursor-pointer"
-                 >
-                   <span className="text-[16px] font-bold text-gray-900 group-hover:text-black">Álbum</span>
-                   <span className="text-[11px] text-gray-500 font-medium tracking-wide">Visualizar</span>
-                 </button>
-                 <button
-                   onClick={() => router.push(`/dashboard/${event.id}/challenges`)}
-                   className="flex flex-col items-center justify-center p-2.5 rounded-[14px] hover:bg-gray-50 transition-colors group cursor-pointer"
-                 >
-                   <span className="text-[16px] font-bold text-gray-900 group-hover:text-black">Desafios</span>
-                   <span className="text-[11px] text-gray-500 font-medium tracking-wide">Configurar</span>
-                 </button>
-              </div>
-            </div>
-          ))}
+              Novo evento
+            </button>
+          )}
         </div>
+
+        {/* Blocked state if no plan */}
+        {!hasPlan ? (
+          <div className="flex flex-col items-center justify-center pt-10 pb-20">
+            <div className="bg-white p-10 rounded-[32px] border border-gray-100 shadow-[0_8px_40px_rgba(0,0,0,0.06)] text-center max-w-md w-full">
+              <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg width="32" height="32" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+              </div>
+              <h3 className="text-2xl font-bold text-ink mb-3" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
+                Recursos Bloqueados
+              </h3>
+              <p className="text-sm text-slate mb-8 leading-relaxed">
+                Você precisa de um plano ativo para criar e gerenciar seus eventos. Assine um plano agora para desbloquear todos os recursos do Memvo.
+              </p>
+              <button
+                onClick={() => router.push('/pricing')}
+                className="w-full bg-ink text-white font-semibold py-4 rounded-full hover:opacity-85 active:scale-95 transition-all duration-200 cursor-pointer"
+                style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.16)' }}
+              >
+                Assinar um plano
+              </button>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* Empty state */}
+            {events.length === 0 && (
+              <div
+                className="rounded-2xl p-10 text-center"
+                style={{
+                  background: 'rgba(255,255,255,0.9)',
+                  backdropFilter: 'blur(10px)',
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
+                }}
+              >
+                <p className="text-3xl mb-3">🎉</p>
+                <p className="text-sm font-semibold text-ink mb-1">Nenhum evento ainda</p>
+                <p className="text-xs text-slate">Crie seu primeiro evento e compartilhe memórias.</p>
+              </div>
+            )}
+
+            {/* Event Cards */}
+            <div className="flex flex-wrap justify-center" style={{ gap: '48px' }}>
+              {events.map(event => (
+                <div
+                  key={event.id}
+                  className="flex flex-col items-center w-[280px] bg-white rounded-[32px] overflow-hidden border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] hover:-translate-y-1 p-5"
+                >
+                  {/* Image / QR Code Container (Gradient Border) */}
+                  <div className="w-full aspect-square rounded-[24px] relative overflow-hidden mb-5 p-1.5 bg-gradient-to-br from-[#f4c5a8] to-[#d4bde8] shadow-sm">
+                     <div className="w-full h-full rounded-[18px] overflow-hidden transition-transform hover:scale-105 duration-300">
+                       <QRCodeGenerator slug={event.slug} eventName={event.name} eventDate={event.date} size={400} variant="cover" />
+                     </div>
+                     {!isEventActive(event) && (
+                       <div className="absolute top-4 left-4 bg-white/95 backdrop-blur text-[9px] font-bold uppercase tracking-wider px-2.5 py-1.5 rounded-full text-stone-600 shadow-sm border border-black/5">
+                         Arquivado
+                       </div>
+                     )}
+                  </div>
+
+                  {/* Text Info */}
+                  <div className="flex flex-col items-center text-center px-2 w-full mb-4">
+                     <h3 className="text-[17px] font-bold text-gray-900 leading-snug line-clamp-1 w-full truncate">
+                       {event.name}
+                     </h3>
+                     <p className="text-[13px] text-gray-500 mt-1 font-medium">
+                       {new Date(event.date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
+                     </p>
+                  </div>
+
+                  {/* Stats & Actions */}
+                  <div className="w-full grid grid-cols-2 gap-1 pt-3 border-t border-gray-100/80">
+                     <button
+                       onClick={() => router.push(`/dashboard/${event.id}`)}
+                       className="flex flex-col items-center justify-center p-2.5 rounded-[14px] hover:bg-gray-50 transition-colors group cursor-pointer"
+                     >
+                       <span className="text-[16px] font-bold text-gray-900 group-hover:text-black">Álbum</span>
+                       <span className="text-[11px] text-gray-500 font-medium tracking-wide">Visualizar</span>
+                     </button>
+                     <button
+                       onClick={() => router.push(`/dashboard/${event.id}/challenges`)}
+                       className="flex flex-col items-center justify-center p-2.5 rounded-[14px] hover:bg-gray-50 transition-colors group cursor-pointer"
+                     >
+                       <span className="text-[16px] font-bold text-gray-900 group-hover:text-black">Desafios</span>
+                       <span className="text-[11px] text-gray-500 font-medium tracking-wide">Configurar</span>
+                     </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
       </main>
 
       {/* ── Bottom Nav Bar ── */}
