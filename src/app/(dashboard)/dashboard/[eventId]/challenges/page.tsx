@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Challenge } from '@/types'
 import { SelectNative } from '@/components/ui/select-native'
+import { ButtonColorful } from '@/components/ui/button-colorful'
 
 const DEFAULT_CHALLENGES = {
   wedding: [
@@ -254,14 +255,12 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
                   <option key={key} value={key}>{label}</option>
                 ))}
               </SelectNative>
-              <button
+              <ButtonColorful
                 onClick={loadDefaults}
                 disabled={saving}
-                className="bg-ink text-white text-sm px-6 py-2.5 rounded-lg font-semibold hover:opacity-85 transition disabled:opacity-50 cursor-pointer"
-                style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.16)' }}
-              >
-                {saving ? 'Carregando...' : 'Carregar desafios'}
-              </button>
+                label={saving ? 'Carregando...' : 'Carregar desafios'}
+                className="w-full"
+              />
             </div>
           </div>
         )}
