@@ -4,7 +4,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 export async function middleware(request: NextRequest) {
   // Basic memory rate limiter (isolated per edge instance)
   // We use this to prevent simple brute force/DDoS on APIs
-  const ip = request.ip || request.headers.get('x-forwarded-for') || 'unknown'
+  const ip = request.headers.get('x-forwarded-for') || 'unknown'
   const now = Date.now()
   
   if (request.nextUrl.pathname.startsWith('/api/')) {
