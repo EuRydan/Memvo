@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Logo } from '@/components/Logo'
+import ClientFeedback from '@/components/client-feedback'
 import { ArrowRight } from 'lucide-react'
 import { PortfolioGallery } from '@/components/PortfolioGallery'
 import { ZoomParallax } from '@/components/ZoomParallax'
@@ -130,30 +131,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── TESTIMONIAL ── */}
-      <section className="relative px-6 py-16 overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none"
-          style={{
-            background: 'linear-gradient(160deg, rgba(244,197,168,0.2) 0%, rgba(200,184,224,0.2) 100%)',
-          }} />
-        <div className="relative max-w-sm mx-auto text-center">
-          <div className="text-5xl mb-4 leading-none" style={{ fontFamily: 'Georgia, serif', color: '#c8956a' }}>"</div>
-          <blockquote
-            style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
-            className="text-[1.35rem] font-semibold leading-snug tracking-[-0.01em] text-[#0a0a0a] mb-5">
-            Foi incrível ver as fotos dos convidados aparecendo em tempo real durante o casamento.
-          </blockquote>
-          <div className="flex items-center justify-center gap-3">
-            <div className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold"
-              style={{ background: 'linear-gradient(135deg, #f4c5a8, #c8b8e0)' }}>
-              A
-            </div>
-            <div className="text-left">
-              <p className="text-sm font-semibold text-[#0a0a0a]">Ana Paula</p>
-              <p className="text-xs text-[#939393]">Casamento • Junho 2024</p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <ClientFeedback />
 
       {/* ── FEATURES GRID ── */}
       <section className="px-6 py-16 max-w-lg mx-auto">
