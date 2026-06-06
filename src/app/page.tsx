@@ -1,11 +1,12 @@
 import Link from 'next/link'
 import { Logo } from '@/components/Logo'
 import ClientFeedback from '@/components/client-feedback'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, QrCode, Zap, Target, Download, Unlock, Smartphone } from 'lucide-react'
 import { PortfolioGallery } from '@/components/PortfolioGallery'
 import { ZoomParallax } from '@/components/ZoomParallax'
 import { IntroAnimation } from '@/components/IntroAnimation'
 import { WordmarkFooter } from '@/components/WordmarkFooter'
+import { ServiceCarousel } from '@/components/ui/animated-service-card'
 
 export default function LandingPage() {
   return (
@@ -134,35 +135,22 @@ export default function LandingPage() {
       <ClientFeedback />
 
       {/* ── FEATURES GRID ── */}
-      <section className="px-6 py-16 max-w-lg mx-auto">
-        <div className="text-center mb-10">
+      <section className="py-16 w-full max-w-6xl mx-auto overflow-hidden">
+        <div className="text-center mb-10 px-6 max-w-lg mx-auto">
           <p className="text-[11px] font-semibold tracking-[0.2em] text-[#939393] uppercase mb-3">Recursos</p>
           <h2 style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
             className="text-[1.9rem] font-bold tracking-[-0.02em] text-[#0a0a0a] leading-tight">
             Tudo que você precisa
           </h2>
         </div>
-        <div className="grid grid-cols-2 gap-3">
-          {[
-            { emoji: '🔗', title: 'Link & QR Code', desc: 'Compartilhe por qualquer canal' },
-            { emoji: '⚡', title: 'Tempo real', desc: 'Fotos aparecem instantaneamente' },
-            { emoji: '🎯', title: 'Desafios', desc: 'Missões para engajar convidados' },
-            { emoji: '📥', title: 'Download', desc: 'Baixe todas as fotos em HD' },
-            { emoji: '🔒', title: 'Sem login', desc: 'Convidados enviam sem cadastro' },
-            { emoji: '📱', title: 'Mobile first', desc: 'Funciona em qualquer celular' },
-          ].map(({ emoji, title, desc }) => (
-            <div key={title}
-              className="rounded-[18px] p-5 flex flex-col gap-2"
-              style={{
-                background: 'rgba(255,255,255,0.9)',
-                boxShadow: '0 4px 20px rgba(0,0,0,0.04)',
-              }}>
-              <span className="text-2xl">{emoji}</span>
-              <p className="text-sm font-semibold text-[#0a0a0a] leading-snug">{title}</p>
-              <p className="text-xs text-[#939393] leading-relaxed">{desc}</p>
-            </div>
-          ))}
-        </div>
+        <ServiceCarousel services={[
+          { number: '01', icon: QrCode, title: 'Link & QR Code', description: 'Compartilhe por qualquer canal', gradient: 'from-[#f4c5a8] to-[#e8b898]' },
+          { number: '02', icon: Zap, title: 'Tempo real', description: 'Fotos aparecem instantaneamente', gradient: 'from-[#c8b8e0] to-[#b8a8d0]' },
+          { number: '03', icon: Target, title: 'Desafios', description: 'Missões para engajar convidados', gradient: 'from-[#b8d4f0] to-[#a8c4e0]' },
+          { number: '04', icon: Download, title: 'Download', description: 'Baixe todas as fotos em HD', gradient: 'from-[#f4c5a8]/80 to-[#e8b898]/80' },
+          { number: '05', icon: Unlock, title: 'Sem login', description: 'Convidados enviam sem cadastro', gradient: 'from-[#c8b8e0]/80 to-[#b8a8d0]/80' },
+          { number: '06', icon: Smartphone, title: 'Mobile first', description: 'Funciona em qualquer celular', gradient: 'from-[#b8d4f0]/80 to-[#a8c4e0]/80' },
+        ]} />
       </section>
 
       {/* ── FINAL CTA ── */}
