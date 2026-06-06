@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
-import { CheckoutElementsProvider } from '@stripe/react-stripe-js/checkout'
+import { Elements } from '@stripe/react-stripe-js'
 import CheckoutForm from './CheckoutForm'
 import { WordmarkFooter } from '@/components/WordmarkFooter'
 import { Logo } from '@/components/Logo'
@@ -344,13 +344,13 @@ export default function PricingPage() {
               <p className="text-[11px] font-semibold text-[#939393] uppercase tracking-widest mb-6">Ambiente protegido</p>
 
               {clientSecret ? (
-                <CheckoutElementsProvider options={{ clientSecret }} stripe={stripePromise}>
+                <Elements options={{ clientSecret }} stripe={stripePromise}>
                   <CheckoutForm 
                     planId={selectedPlan.id} 
                     planPrice={selectedPlan.price} 
-                    returnUrl={`${typeof window !== 'undefined' ? window.location.origin : ''}/register?plan=${selectedPlan.id}`} 
+                    returnUrl={`${typeof window !== 'undefined' ? window.location.origin : ''}/dashboard/success?plan=${selectedPlan.id}`} 
                   />
-                </CheckoutElementsProvider>
+                </Elements>
               ) : (
                 <div className="flex-1 flex flex-col items-center justify-center">
                   <div className="w-8 h-8 border-4 border-stone-200 border-t-[#0a0a0a] rounded-full animate-spin mb-4"></div>

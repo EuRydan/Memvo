@@ -35,31 +35,15 @@ export async function POST(request: Request) {
       apiVersion: '2026-05-27.dahlia',
     })
 
-    const protocol = request.headers.get('x-forwarded-proto') || 'http'
-    const host = request.headers.get('host') || 'localhost:3000'
-    const returnUrl = `${protocol}://${host}/dashboard/success?session_id={CHECKOUT_SESSION_ID}&plan=${plan}`
-
-    // Cria a Checkout Session com ui_mode elements
-    const session = await stripe.checkout.sessions.create({
-      ui_mode: 'elements',
-      line_items: [
-        {
-          price_data: {
-            currency: 'brl',
-            product_data: {
-              name: `Plano ${plan}`,
-            },
-            unit_amount: priceAmount,
-          },
-          quantity: 1,
-        },
-      ],
-      mode: 'payment',
-      return_url: returnUrl,
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: priceAmount,
+      currency: 'brl',
+      description: `Plano ${plan}`,
+      metadata: { plan },
     })
 
     return NextResponse.json({
-      clientSecret: session.client_secret,
+      clientSecret: paymentIntent.client_secret,
     })
   } catch (error: any) {
     console.error('Erro ao criar Checkout Session:', error)

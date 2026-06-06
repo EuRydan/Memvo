@@ -1,11 +1,11 @@
 'use client'
 
 import React, { useState } from 'react'
-import { PaymentElement } from '@stripe/react-stripe-js'
-import { useCheckout } from '@stripe/react-stripe-js/checkout'
+import { useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js'
 
 export default function CheckoutForm({ planId, planPrice, returnUrl }: { planId: string, planPrice: string, returnUrl: string }) {
-  const checkout: any = useCheckout()
+  const stripe = useStripe()
+  const elements = useElements()
 
   const [message, setMessage] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -13,15 +13,20 @@ export default function CheckoutForm({ planId, planPrice, returnUrl }: { planId:
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!checkout || !checkout.confirm) {
+    if (!stripe || !elements) {
       return
     }
 
     setIsLoading(true)
 
-    const result = await checkout.confirm()
+    const result = await stripe.confirmPayment({
+      elements,
+      confirmParams: {
+        return_url: returnUrl,
+      },
+    })
 
-    if (result && result.type === 'error') {
+    if (result.error) {
       const { error } = result
       if (error.type === 'card_error' || error.type === 'validation_error') {
         setMessage(error.message || 'Erro de validação')
@@ -42,7 +47,7 @@ export default function CheckoutForm({ planId, planPrice, returnUrl }: { planId:
 
       {/* Botão de pagamento */}
       <button
-        disabled={isLoading || !checkout || !checkout.confirm}
+        disabled={isLoading || !stripe || !elements}
         id="submit"
         className="mt-auto block w-full bg-[#0a0a0a] text-white text-center py-4 rounded-full text-[14px] font-semibold tracking-wide hover:opacity-85 active:scale-[0.98] transition-all disabled:opacity-50"
         style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.18)' }}
