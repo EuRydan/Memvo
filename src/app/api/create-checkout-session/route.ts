@@ -32,7 +32,7 @@ export async function POST(request: Request) {
     }
     const stripe = new Stripe(stripeKey, {
       // @ts-ignore
-      apiVersion: '2023-10-16',
+      apiVersion: '2026-05-27.dahlia',
     })
 
     const protocol = request.headers.get('x-forwarded-proto') || 'http'
