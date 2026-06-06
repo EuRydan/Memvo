@@ -188,7 +188,11 @@ export default function DashboardPage() {
                   {/* Image / QR Code Container (Gradient Border) */}
                   <div className="w-full aspect-square rounded-[24px] relative overflow-hidden mb-5 p-1.5 bg-gradient-to-br from-[#f4c5a8] to-[#d4bde8] shadow-sm">
                      <div className="w-full h-full rounded-[18px] overflow-hidden transition-transform hover:scale-105 duration-300">
-                       <QRCodeGenerator slug={event.slug} eventName={event.name} eventDate={event.date} size={400} variant="cover" />
+                       {event.cover_url ? (
+                         <img src={event.cover_url} alt={event.name} className="w-full h-full object-cover" />
+                       ) : (
+                         <QRCodeGenerator slug={event.slug} eventName={event.name} eventDate={event.date} size={400} variant="cover" />
+                       )}
                      </div>
                      {!isEventActive(event) && (
                        <div className="absolute top-4 left-4 bg-white/95 backdrop-blur text-[9px] font-bold uppercase tracking-wider px-2.5 py-1.5 rounded-full text-stone-600 shadow-sm border border-black/5">
