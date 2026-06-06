@@ -4,6 +4,7 @@ import { use, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Challenge } from '@/types'
+import { SelectNative } from '@/components/ui/select-native'
 
 const DEFAULT_CHALLENGES = {
   wedding: [
@@ -98,7 +99,7 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
   const [newTitle, setNewTitle] = useState('')
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [showCategorySelect, setShowCategorySelect] = useState(false)
+  const [selectedCategory, setSelectedCategory] = useState<EventCategory>('wedding')
 
   useEffect(() => { loadChallenges() }, [eventId])
 
@@ -123,11 +124,10 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
     setChallenges(prev => prev.filter(c => c.id !== id))
   }
 
-  async function loadDefaults(category: EventCategory) {
+  async function loadDefaults() {
     setSaving(true)
-    setShowCategorySelect(false)
     await supabase.from('challenges').delete().eq('event_id', eventId)
-    const challengesToInsert = DEFAULT_CHALLENGES[category]
+    const challengesToInsert = DEFAULT_CHALLENGES[selectedCategory]
     const toInsert = challengesToInsert.map((title, i) => ({ event_id: eventId, title, order_index: i }))
     const { data } = await supabase.from('challenges').insert(toInsert).select()
     if (data) setChallenges(data)
@@ -244,34 +244,25 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
             <p className="text-2xl mb-2">🎯</p>
             <p className="text-sm font-semibold text-ink mb-1">Nenhum desafio ainda</p>
             <p className="text-xs text-slate mb-5">Adicione desafios personalizados ou use os padrão.</p>
-            {showCategorySelect ? (
-              <div className="flex flex-wrap justify-center gap-2 mt-4">
-                {(Object.entries(EVENT_TYPES) as [EventCategory, string][]).map(([key, label]) => (
-                  <button
-                    key={key}
-                    onClick={() => loadDefaults(key)}
-                    className="bg-[#f0f0f0] text-ink text-xs px-4 py-2 rounded-full font-medium hover:bg-hairline transition cursor-pointer"
-                  >
-                    {label}
-                  </button>
-                ))}
-                <button
-                  onClick={() => setShowCategorySelect(false)}
-                  className="text-xs text-slate underline px-4 py-2 hover:text-ink transition cursor-pointer w-full mt-2"
-                >
-                  Cancelar
-                </button>
-              </div>
-            ) : (
-              <button
-                onClick={() => setShowCategorySelect(true)}
+            <div className="flex flex-col gap-3 max-w-[240px] mx-auto mt-4">
+              <SelectNative 
+                value={selectedCategory} 
+                onChange={e => setSelectedCategory(e.target.value as EventCategory)}
                 disabled={saving}
-                className="bg-ink text-white text-sm px-6 py-2.5 rounded-full font-semibold hover:opacity-85 transition disabled:opacity-50 cursor-pointer"
+              >
+                {(Object.entries(EVENT_TYPES) as [EventCategory, string][]).map(([key, label]) => (
+                  <option key={key} value={key}>{label}</option>
+                ))}
+              </SelectNative>
+              <button
+                onClick={loadDefaults}
+                disabled={saving}
+                className="bg-ink text-white text-sm px-6 py-2.5 rounded-lg font-semibold hover:opacity-85 transition disabled:opacity-50 cursor-pointer"
                 style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.16)' }}
               >
-                {saving ? 'Carregando...' : 'Usar desafios padrão'}
+                {saving ? 'Carregando...' : 'Carregar desafios'}
               </button>
-            )}
+            </div>
           </div>
         )}
 
@@ -302,34 +293,27 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
 
         {/* Restore defaults link */}
         {challenges.length > 0 && (
-          <div className="text-center relative">
-            {showCategorySelect ? (
-              <div className="inline-flex flex-wrap justify-center gap-2 bg-white p-4 rounded-2xl shadow-lg border border-gray-100 absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-[280px]">
-                <p className="text-xs font-semibold w-full text-ink mb-1">Escolha o tipo de evento</p>
+          <div className="text-center flex flex-col items-center gap-3 mt-4 pt-4 border-t border-slate/10">
+            <p className="text-xs font-semibold text-slate uppercase tracking-wider">Substituir todos por padrão</p>
+            <div className="flex items-center gap-2 max-w-[300px] w-full">
+              <SelectNative 
+                value={selectedCategory} 
+                onChange={e => setSelectedCategory(e.target.value as EventCategory)}
+                disabled={saving}
+                className="flex-1"
+              >
                 {(Object.entries(EVENT_TYPES) as [EventCategory, string][]).map(([key, label]) => (
-                  <button
-                    key={key}
-                    onClick={() => loadDefaults(key)}
-                    className="bg-[#f0f0f0] text-ink text-[11px] px-3 py-1.5 rounded-full font-medium hover:bg-hairline transition cursor-pointer"
-                  >
-                    {label}
-                  </button>
+                  <option key={key} value={key}>{label}</option>
                 ))}
-                <button
-                  onClick={() => setShowCategorySelect(false)}
-                  className="w-full text-xs text-slate hover:text-ink mt-2"
-                >
-                  Cancelar
-                </button>
-              </div>
-            ) : null}
-            <button
-              onClick={() => setShowCategorySelect(true)}
-              disabled={saving}
-              className="text-xs text-slate hover:text-ink underline transition cursor-pointer"
-            >
-              {saving ? 'Restaurando...' : 'Restaurar desafios padrão'}
-            </button>
+              </SelectNative>
+              <button
+                onClick={loadDefaults}
+                disabled={saving}
+                className="bg-[#f0f0f0] text-ink text-sm px-4 h-9 rounded-lg font-semibold hover:bg-hairline transition disabled:opacity-50 cursor-pointer whitespace-nowrap"
+              >
+                {saving ? '...' : 'Restaurar'}
+              </button>
+            </div>
           </div>
         )}
 
