@@ -29,6 +29,8 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
 
 	const scales = [scale4, scale5, scale6, scale5, scale6, scale8, scale9];
 
+	const mainLabelOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
+
 	return (
 		<div ref={container} className="relative h-auto md:h-[300vh]">
 			{/* Desktop Parallax Effect */}
@@ -49,9 +51,12 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
 									className="h-full w-full object-cover rounded-lg shadow-lg"
 								/>
 								{challenge && (
-									<div className="absolute bottom-4 left-4 right-4 bg-white/80 backdrop-blur-md px-3 py-2 rounded-xl shadow-lg border border-white/40">
-										<p className="text-xs font-semibold text-gray-800 text-center">{challenge}</p>
-									</div>
+									<motion.div 
+										style={{ opacity: index === 0 ? mainLabelOpacity : 1 }}
+										className="absolute top-3 right-3 bg-white/80 backdrop-blur-md px-3 py-1.5 rounded-full shadow-md border border-white/40"
+									>
+										<p className="text-[10px] uppercase tracking-wide font-bold text-gray-800 text-center">{challenge}</p>
+									</motion.div>
 								)}
 							</div>
 						</motion.div>
@@ -72,8 +77,8 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
 							className="h-full w-full object-cover hover:scale-105 transition-transform duration-500"
 						/>
 						{challenge && (
-							<div className="absolute bottom-2 left-2 right-2 bg-white/80 backdrop-blur-md px-2 py-1.5 rounded-lg shadow-lg border border-white/40">
-								<p className="text-[10px] font-semibold text-gray-800 text-center truncate">{challenge}</p>
+							<div className="absolute top-2 right-2 bg-white/80 backdrop-blur-md px-2 py-1 rounded-full shadow-md border border-white/40 max-w-[85%]">
+								<p className="text-[8px] uppercase tracking-wide font-bold text-gray-800 text-center truncate">{challenge}</p>
 							</div>
 						)}
 					</div>
