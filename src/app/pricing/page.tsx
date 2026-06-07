@@ -2,14 +2,9 @@
 
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
-import { loadStripe } from '@stripe/stripe-js'
-import { Elements } from '@stripe/react-stripe-js'
 import CheckoutForm from './CheckoutForm'
 import { WordmarkFooter } from '@/components/WordmarkFooter'
 import { Logo } from '@/components/Logo'
-
-// Assegure-se de colocar essa chave no arquivo .env.local
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? '')
 
 const PLANS = [
   {
@@ -87,33 +82,6 @@ const FAQS = [
 export default function PricingPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [selectedPlan, setSelectedPlan] = useState<typeof PLANS[0] | null>(null)
-  const [clientSecret, setClientSecret] = useState<string>('')
-  const [paymentError, setPaymentError] = useState<string>('')
-
-  // Quando um plano é selecionado, gerar o PaymentIntent no backend
-  useEffect(() => {
-    if (selectedPlan) {
-      setClientSecret('') // Reseta o segredo anterior
-      setPaymentError('')
-      fetch('/api/create-checkout-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan: selectedPlan.id }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.error) {
-            setPaymentError(data.error)
-          } else {
-            setClientSecret(data.clientSecret)
-          }
-        })
-        .catch((err) => {
-          setPaymentError('Erro na conexão com o gateway de pagamento.')
-          console.error('Erro ao gerar pagamento:', err)
-        })
-    }
-  }, [selectedPlan])
 
   return (
     <div className="min-h-screen bg-[#fafafa] overflow-x-hidden">
@@ -354,30 +322,11 @@ export default function PricingPage() {
               </div>
               <p className="text-[11px] font-semibold text-[#939393] uppercase tracking-widest mb-6">Ambiente protegido</p>
 
-              {paymentError ? (
-                <div className="flex-1 flex flex-col items-center justify-center p-6 text-center animate-fade-in">
-                  <div className="w-12 h-12 bg-red-50 text-red-500 rounded-full flex items-center justify-center mb-3">
-                    <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                    </svg>
-                  </div>
-                  <p className="text-sm font-semibold text-red-600 mb-2">Erro de inicialização</p>
-                  <p className="text-xs text-[#676f7b]">{paymentError}</p>
-                </div>
-              ) : clientSecret ? (
-                <Elements options={{ clientSecret }} stripe={stripePromise}>
-                  <CheckoutForm 
-                    planId={selectedPlan.id} 
-                    planPrice={selectedPlan.price} 
-                    returnUrl={`${typeof window !== 'undefined' ? window.location.origin : ''}/dashboard/success?plan=${selectedPlan.id}`} 
-                  />
-                </Elements>
-              ) : (
-                <div className="flex-1 flex flex-col items-center justify-center">
-                  <div className="w-8 h-8 border-4 border-stone-200 border-t-[#0a0a0a] rounded-full animate-spin mb-4"></div>
-                  <p className="text-sm font-semibold text-[#676f7b]">Iniciando ambiente seguro...</p>
-                </div>
-              )}
+              <CheckoutForm 
+                planId={selectedPlan.id} 
+                planPrice={selectedPlan.price} 
+                returnUrl={`${typeof window !== 'undefined' ? window.location.origin : ''}/dashboard/success?plan=${selectedPlan.id}`} 
+              />
             </div>
           </div>
         )}
