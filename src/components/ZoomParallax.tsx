@@ -30,7 +30,7 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
 
 	const scales = [scale4, scale5, scale6, scale5, scale6, scale8, scale9];
 
-	const mainLabelOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
+	const mainLabelOpacity = useTransform(scrollYProgress, [0, 0.03], [1, 0]);
 
 	return (
 		<div ref={container} className="relative h-auto md:h-[300vh]">
@@ -51,14 +51,22 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
 									alt={alt || `Parallax image ${index + 1}`}
 									className="h-full w-full object-cover rounded-lg shadow-lg"
 								/>
-								{challenge && (
+								{challenge && index === 0 && (
 									<motion.div 
-										style={{ opacity: index === 0 ? mainLabelOpacity : 1 }}
+										style={{ opacity: mainLabelOpacity }}
 										className="absolute top-3 right-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/60 shadow-[0_4px_24px_rgba(0,0,0,0.2),inset_0_1px_2px_rgba(255,255,255,0.9)] bg-gradient-to-br from-white/95 via-white/70 to-white/40 backdrop-blur-xl"
 									>
 										<Camera className="w-3 h-3 text-black" />
 										<p className="text-[10px] uppercase tracking-[0.08em] font-extrabold text-black text-center">{challenge}</p>
 									</motion.div>
+								)}
+								{challenge && index !== 0 && (
+									<div 
+										className="absolute top-3 right-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/60 shadow-[0_4px_24px_rgba(0,0,0,0.2),inset_0_1px_2px_rgba(255,255,255,0.9)] bg-gradient-to-br from-white/95 via-white/70 to-white/40 backdrop-blur-xl"
+									>
+										<Camera className="w-3 h-3 text-black" />
+										<p className="text-[10px] uppercase tracking-[0.08em] font-extrabold text-black text-center">{challenge}</p>
+									</div>
 								)}
 							</div>
 						</motion.div>
