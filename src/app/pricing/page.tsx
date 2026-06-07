@@ -122,7 +122,7 @@ export default function PricingPage() {
         </Link>
       </header>
 
-      <main className={`relative z-10 pt-24 pb-20 px-5 mx-auto transition-all duration-500 ${selectedPlan ? 'max-w-4xl' : 'max-w-lg'}`}>
+      <main className={`relative z-10 pt-24 pb-20 px-5 mx-auto transition-all duration-500 ${selectedPlan ? 'max-w-5xl' : 'max-w-6xl'}`}>
 
         {/* Hero */}
         <div className="text-center mb-10">
@@ -197,73 +197,51 @@ export default function PricingPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-14 items-start animate-fade-in">
             {/* Left: Selected Plan */}
-            <div className="rounded-[22px] overflow-hidden relative w-full max-w-sm mx-auto md:max-w-none"
-              style={{
-                background: selectedPlan.popular ? '#0a0a0a' : 'rgba(255,255,255,0.95)',
-                boxShadow: selectedPlan.popular
-                  ? '0 12px 40px rgba(0,0,0,0.22)'
-                  : '0 4px 24px rgba(0,0,0,0.06)',
-                border: selectedPlan.popular ? 'none' : '1.5px solid rgba(0,0,0,0.06)',
-              }}>
-              {!selectedPlan.popular && (
-                <div className="h-[3.5px] w-full"
-                  style={{ background: 'linear-gradient(90deg, #fdceb0 0%, #d0c0e8 100%)' }} />
-              )}
+            <div className={`w-full max-w-[320px] mx-auto md:max-w-sm relative text-center border p-8 pb-14 rounded-2xl ${
+                selectedPlan.popular 
+                  ? 'bg-[#0a0a0a] text-white border-white/10 shadow-2xl' 
+                  : 'bg-white text-gray-800/80 border-gray-200 shadow-sm'
+              }`}
+            >
+              {/* Popular Badge */}
               {selectedPlan.popular && (
-                <div className="h-[3.5px] w-full"
-                  style={{ background: 'linear-gradient(90deg, #f4c5a8 0%, #c8b8e0 50%, #b8d4f0 100%)' }} />
-              )}
-              <div className="p-6">
-                <div className="flex items-start justify-between mb-5">
-                  <div>
-                    <h2 className={`text-xl font-bold tracking-[-0.01em] ${selectedPlan.popular ? 'text-white' : 'text-[#0a0a0a]'}`}
-                      style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}>
-                      {selectedPlan.name}
-                    </h2>
-                    <p className={`text-xs mt-0.5 ${selectedPlan.popular ? 'text-white/60' : 'text-[#939393]'}`}>
-                      {selectedPlan.desc}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className={`text-2xl font-bold tracking-[-0.02em] ${selectedPlan.popular ? 'text-white' : 'text-[#0a0a0a]'}`}>
-                      {selectedPlan.price}
-                    </p>
-                    <p className={`text-[10px] ${selectedPlan.popular ? 'text-white/50' : 'text-[#939393]'}`}>
-                      pagamento único
-                    </p>
-                  </div>
+                <div 
+                  className="absolute px-3 text-xs font-semibold tracking-wide -top-3.5 left-1/2 -translate-x-1/2 py-1 rounded-full text-[#0a0a0a]"
+                  style={{ background: 'linear-gradient(90deg, #f4c5a8 0%, #c8b8e0 50%, #b8d4f0 100%)' }}
+                >
+                  Mais popular
                 </div>
-                <ul className="flex flex-col gap-2.5 mb-6">
-                  {selectedPlan.features.map(f => (
-                    <li key={f.text} className="flex items-center gap-3">
-                      {f.included ? (
-                        <div className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0"
-                          style={{ background: selectedPlan.popular ? 'rgba(255,255,255,0.2)' : 'rgba(74,197,80,0.12)' }}>
-                          <svg width="9" height="9" fill="none" stroke={selectedPlan.popular ? 'white' : '#4ac550'} strokeWidth="2.5" viewBox="0 0 24 24">
-                            <polyline points="20 6 9 17 4 12"/>
-                          </svg>
-                        </div>
-                      ) : (
-                        <div className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0"
-                          style={{ background: 'rgba(0,0,0,0.05)' }}>
-                          <svg width="8" height="8" fill="none" stroke="#c0c0c0" strokeWidth="2.5" viewBox="0 0 24 24">
-                            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                          </svg>
-                        </div>
-                      )}
-                      <span className={`text-sm ${f.included
-                        ? selectedPlan.popular ? 'text-white/90' : 'text-[#0a0a0a]'
-                        : selectedPlan.popular ? 'text-white/30' : 'text-[#c0c0c0]'}`}>
-                        {f.text}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-                <button onClick={() => setSelectedPlan(null)}
-                  className={`block w-full text-center py-3.5 rounded-full text-sm font-semibold transition-all active:scale-[0.98] ${selectedPlan.popular ? 'text-white/80 hover:text-white bg-white/10 hover:bg-white/20' : 'text-[#676f7b] hover:text-[#0a0a0a] bg-stone-100 hover:bg-stone-200'}`}>
-                  Mudar de plano
-                </button>
-              </div>
+              )}
+
+              <p className={`font-semibold ${selectedPlan.popular ? 'pt-2' : ''}`}>{selectedPlan.name}</p>
+              <h1 className={`text-4xl font-bold mt-2 ${selectedPlan.popular ? 'text-white' : 'text-[#0a0a0a]'}`}>
+                {selectedPlan.price}
+                <span className={`text-sm font-normal block mt-1 ${selectedPlan.popular ? 'text-white/60' : 'text-gray-500'}`}>
+                  pagamento único
+                </span>
+              </h1>
+
+              <ul className={`list-none text-sm mt-8 space-y-3 text-left ${selectedPlan.popular ? 'text-white/90' : 'text-gray-600'}`}>
+                {selectedPlan.features.map((f, i) => (
+                  <li key={i} className="flex items-start gap-3">
+                    {f.included ? (
+                      <svg className="flex-shrink-0 mt-0.5" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M7.162 13.5 2.887 9.225l1.07-1.069 3.205 3.207 6.882-6.882 1.069 1.07z" fill={selectedPlan.popular ? '#fff' : '#0a0a0a'}/>
+                      </svg>
+                    ) : (
+                      <svg className="flex-shrink-0 mt-0.5 opacity-30" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M13.5 5.56l-1.06-1.06-3.44 3.44-3.44-3.44-1.06 1.06 3.44 3.44-3.44 3.44 1.06 1.06 3.44-3.44 3.44 3.44 1.06-1.06-3.44-3.44 3.44-3.44z" fill={selectedPlan.popular ? '#fff' : '#0a0a0a'}/>
+                      </svg>
+                    )}
+                    <p className={f.included ? '' : 'opacity-40 line-through'}>{f.text}</p>
+                  </li>
+                ))}
+              </ul>
+
+              <button onClick={() => setSelectedPlan(null)}
+                className={`mt-8 text-xs font-semibold hover:underline ${selectedPlan.popular ? 'text-white/60' : 'text-[#676f7b]'}`}>
+                ← Escolher outro plano
+              </button>
             </div>
 
             {/* Right: Payment Gateway via Stripe Elements */}
