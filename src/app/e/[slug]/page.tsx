@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { isEventActive } from '@/lib/limits'
 import { Media, Challenge } from '@/types'
 import StoryCamera from '@/components/StoryCamera'
+import MediaViewer from '@/components/MediaViewer'
 
 export default function EventPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params)
@@ -16,6 +17,8 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
   const [uploadingId, setUploadingId] = useState<string | null>(null)
   const [isCameraOpen, setIsCameraOpen] = useState(false)
   const [activeChallengeId, setActiveChallengeId] = useState<string>('')
+  const [tappedMediaId, setTappedMediaId] = useState<string | null>(null)
+  const [viewingMedia, setViewingMedia] = useState<Media | null>(null)
   const [notFound, setNotFound] = useState(false)
   const fileRefs = useRef<Record<string, HTMLInputElement | null>>({})
   const freeUploadRef = useRef<HTMLInputElement | null>(null)
@@ -89,6 +92,18 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
     const dataTransfer = new DataTransfer()
     dataTransfer.items.add(file)
     handleUpload(dataTransfer.files, activeChallengeId)
+  }
+
+  async function handleDeleteMedia(mediaId: string) {
+    // Delete from Supabase. Real-time will remove it from `medias` automatically.
+    const { error } = await supabase.from('media').delete().eq('id', mediaId)
+    if (error) {
+      console.error('Failed to delete media', error)
+      alert('Erro ao apagar a mídia.')
+    } else {
+      setViewingMedia(null)
+      setTappedMediaId(null)
+    }
   }
 
   function getPublicUrl(path: string) {
@@ -327,14 +342,44 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
                   {/* Photos grid */}
                   {photos.length > 0 && (
                     <div className="grid grid-cols-3 gap-1.5 px-5 pb-5">
-                      {photos.map(media => (
-                        <div key={media.id} className="relative aspect-square rounded-xl overflow-hidden bg-[#f3f3f3]">
-                          {media.type === 'video'
-                            ? <video src={getPublicUrl(media.storage_path)} className="w-full h-full object-cover" />
-                            : <img src={getPublicUrl(media.storage_path)} alt="" className="w-full h-full object-cover" />
-                          }
-                        </div>
-                      ))}
+                      {photos.map(media => {
+                        const isTapped = tappedMediaId === media.id
+                        return (
+                          <div 
+                            key={media.id} 
+                            onClick={() => {
+                              if (isTapped) {
+                                setViewingMedia(media)
+                              } else {
+                                setTappedMediaId(media.id)
+                              }
+                            }}
+                            className="relative aspect-square rounded-xl overflow-hidden bg-[#f3f3f3] cursor-pointer"
+                          >
+                            {media.type === 'video'
+                              ? <video src={getPublicUrl(media.storage_path)} className="w-full h-full object-cover pointer-events-none" />
+                              : <img src={getPublicUrl(media.storage_path)} alt="" className="w-full h-full object-cover pointer-events-none" />
+                            }
+                            
+                            {/* Tap Overlay with Trash Icon */}
+                            {isTapped && (
+                              <div className="absolute inset-0 bg-black/40 flex items-start justify-end p-2 transition-all">
+                                <button 
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleDeleteMedia(media.id)
+                                  }}
+                                  className="w-8 h-8 flex items-center justify-center rounded-full bg-red-500 text-white shadow-lg active:scale-90 transition"
+                                >
+                                  <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                  </svg>
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        )
+                      })}
                     </div>
                   )}
                 </div>
@@ -349,6 +394,15 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
         <StoryCamera 
           onClose={() => setIsCameraOpen(false)} 
           onCapture={handleCameraCapture} 
+        />
+      )}
+
+      {viewingMedia && (
+        <MediaViewer
+          media={viewingMedia}
+          publicUrl={getPublicUrl(viewingMedia.storage_path)}
+          onClose={() => setViewingMedia(null)}
+          onDelete={() => handleDeleteMedia(viewingMedia.id)}
         />
       )}
     </div>
