@@ -333,7 +333,7 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
                           {/* Gallery Button */}
                           <button
                             onClick={() => fileRefs.current[challenge.id]?.click()}
-                            disabled={isUploading || (planType === 'essential' && photos.filter(m => myUploads.includes(m.id)).length >= 3)}
+                            disabled={isUploading || ((planType === 'freemium' || planType === 'essential') && photos.filter(m => myUploads.includes(m.id)).length >= (planType === 'freemium' ? 1 : 3))}
                             title="Enviar da galeria"
                             className="w-10 h-10 rounded-full flex items-center justify-center transition disabled:opacity-50 disabled:bg-gray-200"
                             style={{ background: '#f3f3f3', color: '#0a0a0a' }}
@@ -351,7 +351,7 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
                               setActiveChallengeId(challenge.id)
                               setIsCameraOpen(true)
                             }}
-                            disabled={isUploading || (planType === 'essential' && photos.filter(m => myUploads.includes(m.id)).length >= 3)}
+                            disabled={isUploading || ((planType === 'freemium' || planType === 'essential') && photos.filter(m => myUploads.includes(m.id)).length >= (planType === 'freemium' ? 1 : 3))}
                             className="text-xs px-4 py-2 h-10 rounded-full font-semibold transition flex items-center gap-2 cursor-pointer disabled:opacity-50 disabled:bg-gray-300 disabled:text-gray-500 disabled:border-transparent disabled:shadow-none"
                             style={done
                               ? { background: '#f3f3f3', color: '#0a0a0a', border: '1.5px solid #e0e0e0' }
@@ -373,7 +373,7 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
                             )}
                           </button>
                         </div>
-                        {planType === 'essential' && photos.filter(m => myUploads.includes(m.id)).length >= 3 && (
+                        {(planType === 'freemium' || planType === 'essential') && photos.filter(m => myUploads.includes(m.id)).length >= (planType === 'freemium' ? 1 : 3) && (
                           <span className="text-[10px] font-bold text-red-500 uppercase tracking-widest mt-1">Limite Atingido</span>
                         )}
                       </div>
@@ -431,6 +431,127 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
                 </div>
               )
             })}
+          </div>
+        )}
+
+        {/* ── Free Album (Premium Only) ── */}
+        {planType === 'premium' && (
+          <div className="flex flex-col gap-3 mt-4">
+            <h2
+              style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+              className="text-[1.1rem] font-bold text-ink px-1 flex items-center gap-2"
+            >
+              📸 Álbum Livre
+            </h2>
+
+            <div
+              className="rounded-[18px] overflow-hidden"
+              style={{
+                background: '#fff',
+                boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
+                border: '1.5px solid transparent',
+              }}
+            >
+              <div className="flex items-center gap-4 px-5 py-4">
+                <p className="flex-1 text-sm leading-snug text-graphite">
+                  Tire fotos à vontade sem regras!
+                </p>
+
+                <input
+                  ref={freeUploadRef}
+                  type="file" accept="image/*,video/*" className="hidden"
+                  onChange={e => handleUpload(e.target.files, '')}
+                />
+
+                {isEventActive(event) && (
+                  <div className="flex gap-2 flex-shrink-0">
+                    <button
+                      onClick={() => freeUploadRef.current?.click()}
+                      disabled={uploadingId === ''}
+                      title="Enviar da galeria"
+                      className="w-10 h-10 rounded-full flex items-center justify-center transition disabled:opacity-50"
+                      style={{ background: '#f3f3f3', color: '#0a0a0a' }}
+                    >
+                      <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                        <polyline points="21 15 16 10 5 21"/>
+                      </svg>
+                    </button>
+                    
+                    <button
+                      onClick={() => {
+                        setActiveChallengeId('')
+                        setIsCameraOpen(true)
+                      }}
+                      disabled={uploadingId === ''}
+                      className="text-xs px-4 py-2 h-10 rounded-full font-semibold transition flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                      style={{ background: '#0a0a0a', color: '#fff', boxShadow: '0 2px 12px rgba(0,0,0,0.2)' }}
+                    >
+                      {uploadingId === '' ? (
+                        <svg className="animate-spin" width="14" height="14" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                        </svg>
+                      ) : (
+                        <>
+                          <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 7h3l2-2h8l2 2h3v12H3V7zm5 6a4 4 0 108 0 4 4 0 00-8 0z" />
+                          </svg>
+                          Câmera
+                        </>
+                      )}
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {mediasWithoutChallenge().length > 0 && (
+                <div className="grid grid-cols-3 gap-1.5 px-5 pb-5">
+                  {mediasWithoutChallenge().map(media => {
+                    const isMine = myUploads.includes(media.id)
+                    const isTapped = tappedMediaId === media.id
+
+                    return (
+                      <div 
+                        key={media.id} 
+                        onClick={() => {
+                          if (!isMine) {
+                            setViewingMedia(media)
+                          } else if (isTapped) {
+                            setViewingMedia(media)
+                          } else {
+                            setTappedMediaId(media.id)
+                          }
+                        }}
+                        className="relative aspect-square rounded-xl overflow-hidden bg-[#f3f3f3] cursor-pointer"
+                      >
+                        {media.type === 'video'
+                          ? <video src={getPublicUrl(media.storage_path)} className="w-full h-full object-cover pointer-events-none" />
+                          : <img src={getPublicUrl(media.storage_path)} alt="" className="w-full h-full object-cover pointer-events-none" />
+                        }
+                        
+                        {isTapped && isMine && (
+                          <div className="absolute inset-0 bg-black/40 flex items-start justify-end p-2 transition-all">
+                            <button 
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                handleDeleteMedia(media.id)
+                              }}
+                              className="w-8 h-8 flex items-center justify-center rounded-full bg-red-500 text-white shadow-lg active:scale-90 transition"
+                            >
+                              <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              </svg>
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
           </div>
         )}
 

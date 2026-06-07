@@ -8,6 +8,24 @@ import { Logo } from '@/components/Logo'
 
 const PLANS = [
   {
+    id: 'freemium',
+    name: 'Teste Grátis',
+    desc: 'Para testar o funcionamento',
+    price: 'R$0',
+    popular: false,
+    features: [
+      { text: 'Até 10 convidados', included: true },
+      { text: '1 foto por convidado no desafio', included: true },
+      { text: 'Até 1 desafio fotográfico', included: true },
+      { text: 'Álbum em tempo real', included: true },
+      { text: 'Download do QR Code', included: true },
+      { text: 'Álbum Livre (Sem desafios)', included: false },
+      { text: 'Download em ZIP', included: false },
+      { text: 'Upload de vídeos', included: false },
+      { text: 'Suporte prioritário', included: false },
+    ],
+  },
+  {
     id: 'essential',
     name: 'Essencial',
     desc: 'Perfeito para pequenas reuniões',
@@ -19,6 +37,7 @@ const PLANS = [
       { text: 'Até 5 desafios fotográficos', included: true },
       { text: 'Álbum em tempo real', included: true },
       { text: 'Download do QR Code', included: true },
+      { text: 'Álbum Livre (Sem desafios)', included: false },
       { text: 'Download em ZIP', included: false },
       { text: 'Upload de vídeos', included: false },
       { text: 'Suporte prioritário', included: false },
@@ -36,6 +55,7 @@ const PLANS = [
       { text: 'Desafios ilimitados', included: true },
       { text: 'Álbum em tempo real', included: true },
       { text: 'Download do QR Code', included: true },
+      { text: 'Álbum Livre (Sem desafios)', included: false },
       { text: 'Download em ZIP', included: true },
       { text: 'Upload de vídeos (2 min)', included: true },
       { text: 'Suporte prioritário', included: false },
@@ -53,6 +73,7 @@ const PLANS = [
       { text: 'Desafios ilimitados', included: true },
       { text: 'Álbum em tempo real', included: true },
       { text: 'Download do QR Code', included: true },
+      { text: 'Álbum Livre (Sem desafios)', included: true },
       { text: 'Download em ZIP', included: true },
       { text: 'Upload de vídeos (10 min)', included: true },
       { text: 'Suporte prioritário', included: true },

@@ -120,6 +120,7 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
       if (type === 'essential') setChallengeLimit(5)
       else if (type === 'classic') setChallengeLimit(Infinity)
       else if (type === 'premium') setChallengeLimit(Infinity)
+      else if (type === 'freemium') setChallengeLimit(1)
       else setChallengeLimit(0) // Sem plano não pode adicionar (embora a view em si devesse estar bloqueada)
     }
 
