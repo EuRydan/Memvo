@@ -49,9 +49,25 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
 
       if (mediaData) setMedias(mediaData)
       setLoading(false)
+
+      // Subscribe to realtime changes
+      supabase.channel(`dashboard-media-${eventId}`)
+        .on('postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'media', filter: `event_id=eq.${eventId}` },
+          (payload) => setMedias(prev => [payload.new as Media, ...prev])
+        )
+        .on('postgres_changes',
+          { event: 'DELETE', schema: 'public', table: 'media', filter: `event_id=eq.${eventId}` },
+          (payload) => setMedias(prev => prev.filter(m => m.id !== payload.old.id))
+        )
+        .subscribe()
     }
 
     load()
+
+    return () => {
+      supabase.channel(`dashboard-media-${eventId}`).unsubscribe()
+    }
   }, [eventId])
 
   function getPublicUrl(path: string) {

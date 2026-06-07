@@ -59,7 +59,12 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
       .on('postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'media', filter: `event_id=eq.${eventId}` },
         (payload) => setMedias(prev => [payload.new as Media, ...prev])
-      ).subscribe()
+      )
+      .on('postgres_changes',
+        { event: 'DELETE', schema: 'public', table: 'media', filter: `event_id=eq.${eventId}` },
+        (payload) => setMedias(prev => prev.filter(m => m.id !== payload.old.id))
+      )
+      .subscribe()
   }
 
   async function handleUpload(files: FileList | null, challengeId: string) {
@@ -117,6 +122,7 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
       
       setViewingMedia(null)
       setTappedMediaId(null)
+      setMedias(prev => prev.filter(m => m.id !== mediaId))
       
       const updatedUploads = myUploads.filter(id => id !== mediaId)
       setMyUploads(updatedUploads)
