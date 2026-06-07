@@ -2,6 +2,7 @@
 
 import { use, useEffect, useRef, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { isEventActive } from '@/lib/limits'
 import { Media, Challenge } from '@/types'
 import StoryCamera from '@/components/StoryCamera'
 
