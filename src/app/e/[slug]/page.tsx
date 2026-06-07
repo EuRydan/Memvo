@@ -268,10 +268,10 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
                       {challenge.title}
                     </p>
 
-                    {/* Hidden file input */}
+                    {/* Hidden file input for Gallery */}
                     <input
                       ref={el => { fileRefs.current[challenge.id] = el }}
-                      type="file" accept="image/*" capture="environment" className="hidden"
+                      type="file" accept="image/*,video/*" className="hidden"
                       onChange={e => handleUpload(e.target.files, challenge.id)}
                     />
 
