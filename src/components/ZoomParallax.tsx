@@ -31,7 +31,7 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
 
 	const scales = [scale4, scale5, scale6, scale5, scale6, scale8, scale9];
 
-	const mainLabelOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
+	const mainLabelOpacity = useTransform(scrollYProgress, [0, 0.15, 1], [1, 0, 0]);
 
 	return (
 		<div ref={container} className="relative h-auto md:h-[300vh]">
