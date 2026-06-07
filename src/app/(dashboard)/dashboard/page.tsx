@@ -17,6 +17,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
   const [hasPlan, setHasPlan] = useState<boolean>(true)
   const [showUpgradeModal, setShowUpgradeModal] = useState(false)
+  const [userRole, setUserRole] = useState<'host' | 'partner'>('host')
   const orb1Ref = useRef<HTMLDivElement>(null)
   const orb2Ref = useRef<HTMLDivElement>(null)
 
@@ -60,6 +61,8 @@ export default function DashboardPage() {
 
       if (data) setEvents(data)
       
+      // Guardar o papel do usuário no estado (host vs partner)
+      setUserRole(user.user_metadata?.role || 'host')
       setLoading(false)
     }
     load()
@@ -145,12 +148,14 @@ export default function DashboardPage() {
             </h2>
           </div>
           <div className="flex items-center gap-3">
-            <button
-              onClick={() => router.push('/parceiros')}
-              className="hidden md:flex items-center gap-2 bg-stone-100 text-[#0a0a0a] text-sm font-semibold px-5 py-2.5 rounded-full hover:bg-stone-200 transition-all duration-200 cursor-pointer flex-shrink-0"
-            >
-              💼 Parceiros B2B
-            </button>
+            {userRole === 'partner' && (
+              <button
+                onClick={() => router.push('/parceiros')}
+                className="hidden md:flex items-center gap-2 bg-stone-100 text-[#0a0a0a] text-sm font-semibold px-5 py-2.5 rounded-full hover:bg-stone-200 transition-all duration-200 cursor-pointer flex-shrink-0"
+              >
+                💼 Parceiros B2B
+              </button>
+            )}
             <button
               onClick={() => {
                 if (hasPlan) router.push('/dashboard/new')

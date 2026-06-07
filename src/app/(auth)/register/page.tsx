@@ -29,6 +29,12 @@ function RegisterContent() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  
+  // Novos estados para Perfis
+  const [role, setRole] = useState<'host' | 'partner'>('host')
+  const [companyName, setCompanyName] = useState('')
+  const [cnpj, setCnpj] = useState('')
+
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -46,11 +52,17 @@ function RegisterContent() {
     setLoading(true)
     setError('')
 
-    // 1. Create the user
+    // 1. Create the user with specific metadata
+    const metadata: any = { full_name: name, role }
+    if (role === 'partner') {
+      metadata.company_name = companyName
+      metadata.cnpj = cnpj.replace(/\D/g, '')
+    }
+
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { full_name: name } },
+      options: { data: metadata },
     })
 
     if (authError) {
@@ -142,6 +154,24 @@ function RegisterContent() {
 
           <form onSubmit={handleRegister} className="flex flex-col gap-5">
 
+            {/* Role Toggle */}
+            <div className="flex bg-stone-100 p-1 rounded-xl mb-2">
+              <button 
+                type="button" 
+                onClick={() => setRole('host')} 
+                className={`flex-1 text-[13px] font-semibold py-2.5 rounded-lg transition-all ${role === 'host' ? 'bg-white text-[#0a0a0a] shadow-sm' : 'text-[#676f7b] hover:text-[#0a0a0a]'}`}
+              >
+                Sou Anfitrião
+              </button>
+              <button 
+                type="button" 
+                onClick={() => setRole('partner')} 
+                className={`flex-1 text-[13px] font-semibold py-2.5 rounded-lg transition-all ${role === 'partner' ? 'bg-white text-[#0a0a0a] shadow-sm' : 'text-[#676f7b] hover:text-[#0a0a0a]'}`}
+              >
+                Sou Parceiro
+              </button>
+            </div>
+
             {/* Full Name */}
             <div className="floating-group">
               <input
@@ -171,6 +201,36 @@ function RegisterContent() {
               />
               <label htmlFor="email">E-mail</label>
             </div>
+
+            {/* Partner Specific Fields */}
+            {role === 'partner' && (
+              <>
+                <div className="floating-group">
+                  <input
+                    id="company"
+                    type="text"
+                    placeholder=" "
+                    value={companyName}
+                    onChange={e => setCompanyName(e.target.value)}
+                    className="input-field w-full px-5 py-4 rounded-full text-sm text-ink"
+                    required
+                  />
+                  <label htmlFor="company">Nome da Empresa / Assessoria</label>
+                </div>
+                <div className="floating-group">
+                  <input
+                    id="cnpj"
+                    type="text"
+                    placeholder=" "
+                    value={cnpj}
+                    onChange={e => setCnpj(e.target.value)}
+                    className="input-field w-full px-5 py-4 rounded-full text-sm text-ink"
+                    required
+                  />
+                  <label htmlFor="cnpj">CNPJ / CPF</label>
+                </div>
+              </>
+            )}
 
             {/* Password */}
             <div className="flex flex-col gap-2">
