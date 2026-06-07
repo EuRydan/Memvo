@@ -19,6 +19,35 @@ export async function POST(request: Request) {
     // Usar a Service Role para burlar RLS temporariamente e garantir a atualização
     const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
+    // --- RATE LIMIT CHECK ---
+    const ip = request.headers.get('x-forwarded-for')?.split(',')[0] || request.headers.get('x-real-ip') || 'unknown'
+    
+    if (ip !== 'unknown') {
+      const { data: rlData } = await supabase.from('rate_limits').select('*').eq('ip_address', ip).single()
+      if (rlData) {
+        const hoursSinceLast = (Date.now() - new Date(rlData.last_attempt).getTime()) / (1000 * 60 * 60)
+        if (hoursSinceLast < 1 && rlData.attempts >= 5) {
+          return NextResponse.json({ error: 'Muitas tentativas inválidas. Tente novamente em 1 hora.' }, { status: 429 })
+        }
+      }
+    }
+
+    // Helper para registrar falha
+    const registerFailure = async () => {
+      if (ip === 'unknown') return
+      const { data: rlData } = await supabase.from('rate_limits').select('*').eq('ip_address', ip).single()
+      if (rlData) {
+        const hoursSinceLast = (Date.now() - new Date(rlData.last_attempt).getTime()) / (1000 * 60 * 60)
+        if (hoursSinceLast >= 1) {
+          await supabase.from('rate_limits').update({ attempts: 1, last_attempt: new Date().toISOString() }).eq('ip_address', ip)
+        } else {
+          await supabase.from('rate_limits').update({ attempts: rlData.attempts + 1, last_attempt: new Date().toISOString() }).eq('ip_address', ip)
+        }
+      } else {
+        await supabase.from('rate_limits').insert({ ip_address: ip, attempts: 1 })
+      }
+    }
+
     // 1. Busca o voucher pelo código
     const { data: voucher, error: fetchError } = await supabase
       .from('vouchers')
@@ -27,11 +56,13 @@ export async function POST(request: Request) {
       .single()
 
     if (fetchError || !voucher) {
+      await registerFailure()
       return NextResponse.json({ error: 'Código de parceiro inválido ou inexistente' }, { status: 404 })
     }
 
     // 2. Verifica se está disponível
     if (voucher.status !== 'available') {
+      await registerFailure()
       return NextResponse.json({ error: 'Este código já foi resgatado' }, { status: 400 })
     }
 
@@ -61,6 +92,11 @@ export async function POST(request: Request) {
 
     if (updateError) {
       return NextResponse.json({ error: 'Erro ao processar o resgate' }, { status: 500 })
+    }
+
+    // Limpa o rate limit em caso de sucesso
+    if (ip !== 'unknown') {
+      await supabase.from('rate_limits').delete().eq('ip_address', ip)
     }
 
     // Sucesso!
