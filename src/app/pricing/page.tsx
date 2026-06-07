@@ -33,7 +33,7 @@ const PLANS = [
     features: [
       { text: 'Até 200 convidados', included: true },
       { text: 'Fotos ilimitadas', included: true },
-      { text: 'Até 10 desafios fotográficos', included: true },
+      { text: 'Desafios ilimitados', included: true },
       { text: 'Álbum em tempo real', included: true },
       { text: 'Download do QR Code', included: true },
       { text: 'Download em ZIP', included: true },
