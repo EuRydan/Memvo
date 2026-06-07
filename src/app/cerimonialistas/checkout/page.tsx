@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react'
 import { Logo } from '@/components/Logo'
 import Link from 'next/link'
 // Import supabase client for fetching the user ID
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@/lib/supabase/client'
 
 const PACKAGES = {
   pack_5: { name: 'Pacote Starter', count: 5, price: 'R$ 590,00', rawPrice: 590 },
@@ -31,7 +31,7 @@ export default function B2BCheckoutPage() {
   const [pixData, setPixData] = useState<{ encodedImage: string, payload: string } | null>(null)
   
   const [userId, setUserId] = useState<string | null>(null)
-  const supabase = createClientComponentClient()
+  const supabase = createClient()
 
   useEffect(() => {
     // Pegar o ID do usuário logado ao carregar a página
