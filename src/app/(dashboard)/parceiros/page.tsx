@@ -4,9 +4,9 @@ import React, { useState, useEffect } from 'react'
 
 export default function ParceirosDashboard() {
   const [vouchers, setVouchers] = useState<any[]>([
-    { id: '1', code: 'MEMVO-PRO-X9K2P', status: 'available', plan_type: 'classic', created_at: '2026-06-05T10:00:00Z' },
-    { id: '2', code: 'MEMVO-PRO-A7B8C', status: 'redeemed', plan_type: 'classic', created_at: '2026-06-05T10:00:00Z', redeemed_at: '2026-06-06T14:30:00Z' },
-    { id: '3', code: 'MEMVO-PRO-J4M2L', status: 'available', plan_type: 'classic', created_at: '2026-06-05T10:00:00Z' },
+    { id: '1', code: 'me_3542-5193', status: 'available', plan_type: 'classic', created_at: '2026-06-05T10:00:00Z' },
+    { id: '2', code: 'me_8291-4402', status: 'redeemed', plan_type: 'classic', created_at: '2026-06-05T10:00:00Z', redeemed_at: '2026-06-06T14:30:00Z' },
+    { id: '3', code: 'me_1955-7384', status: 'available', plan_type: 'classic', created_at: '2026-06-05T10:00:00Z' },
   ]) // Mock data for now until Supabase is fully linked
 
   const availableCount = vouchers.filter(v => v.status === 'available').length
