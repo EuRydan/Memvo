@@ -177,7 +177,7 @@ export default function PricingPage() {
                 )}
 
                 <p className={`font-semibold ${plan.popular ? 'pt-2' : ''}`}>{plan.name}</p>
-                <h1 className={`text-4xl font-bold mt-2 ${plan.popular ? 'text-white' : 'text-[#0a0a0a]'}`}>
+                <h1 className={`text-4xl font-bold mt-2 ${plan.popular ? 'text-white' : plan.price === 'R$0' ? 'text-gray-400' : 'text-[#0a0a0a]'}`}>
                   {plan.price}
                   <span className={`text-sm font-normal block mt-1 ${plan.popular ? 'text-white/60' : 'text-gray-500'}`}>
                     pagamento único
@@ -235,7 +235,7 @@ export default function PricingPage() {
               )}
 
               <p className={`font-semibold ${selectedPlan.popular ? 'pt-2' : ''}`}>{selectedPlan.name}</p>
-              <h1 className={`text-4xl font-bold mt-2 ${selectedPlan.popular ? 'text-white' : 'text-[#0a0a0a]'}`}>
+              <h1 className={`text-4xl font-bold mt-2 ${selectedPlan.popular ? 'text-white' : selectedPlan.price === 'R$0' ? 'text-gray-400' : 'text-[#0a0a0a]'}`}>
                 {selectedPlan.price}
                 <span className={`text-sm font-normal block mt-1 ${selectedPlan.popular ? 'text-white/60' : 'text-gray-500'}`}>
                   pagamento único
@@ -272,7 +272,10 @@ export default function PricingPage() {
                 <h3 className="text-[1.3rem] font-bold text-[#0a0a0a]" style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}>
                   Pagamento Seguro
                 </h3>
-                <span className="text-xl font-bold text-[#0a0a0a] tracking-tight">{selectedPlan.price}</span>
+              </div>
+              <div className="flex justify-between items-center mb-6 pt-6 border-t border-gray-100">
+                <span className="text-gray-500 font-medium">Total a pagar</span>
+                <span className={`text-xl font-bold tracking-tight ${selectedPlan.price === 'R$0' ? 'text-gray-400' : 'text-[#0a0a0a]'}`}>{selectedPlan.price}</span>
               </div>
               <p className="text-[11px] font-semibold text-[#939393] uppercase tracking-widest mb-6">Ambiente protegido</p>
 
