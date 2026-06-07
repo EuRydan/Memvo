@@ -63,7 +63,7 @@ export default function LandingPage() {
 
         <ZoomParallax 
           images={[
-            { src: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=800&h=600&fit=crop&q=80" },
+            { src: "https://images.unsplash.com/photo-1731596153022-4cedafe3330a?w=2400&q=100&auto=format&fit=crop" },
             { src: "https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=600&fit=crop&q=80" },
             { src: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&h=600&fit=crop&q=80" },
             { src: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&h=600&fit=crop&q=80" },
