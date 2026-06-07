@@ -18,12 +18,31 @@ export default function CheckoutForm({ planId, planPrice, returnUrl }: { planId:
   
   const [pixData, setPixData] = useState<{ encodedImage: string, payload: string } | null>(null)
 
+  // Voucher state
+  const [useVoucher, setUseVoucher] = useState(false)
+  const [voucherCode, setVoucherCode] = useState('')
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
     setMessage(null)
 
     try {
+      if (useVoucher) {
+        // Fluxo de Voucher (Ativação B2B)
+        const response = await fetch('/api/vouchers/redeem', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code: voucherCode, plan: planId }),
+        })
+        const data = await response.json()
+        if (!response.ok) throw new Error(data.error || 'Erro ao validar código')
+        
+        window.location.href = returnUrl
+        return
+      }
+
+      // Fluxo Normal de Pagamento (Asaas)
       const response = await fetch('/api/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -102,44 +121,51 @@ export default function CheckoutForm({ planId, planPrice, returnUrl }: { planId:
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto pr-2 -mr-2 mb-6" style={{ maxHeight: '400px' }}>
-        <div className="flex flex-col gap-4">
-          <div>
-            <label className="block text-xs font-semibold text-[#676f7b] mb-1">Nome Completo</label>
-            <input required type="text" value={name} onChange={e => setName(e.target.value)} className="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#0a0a0a] focus:ring-1 focus:ring-[#0a0a0a] transition-all" placeholder="Como no documento" />
-          </div>
-          
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-[#676f7b] mb-1">CPF</label>
-              <input required type="text" value={cpf} onChange={e => setCpf(e.target.value)} className="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#0a0a0a] focus:ring-1 focus:ring-[#0a0a0a] transition-all" placeholder="000.000.000-00" />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-[#676f7b] mb-1">E-mail</label>
-              <input required type="email" value={email} onChange={e => setEmail(e.target.value)} className="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#0a0a0a] focus:ring-1 focus:ring-[#0a0a0a] transition-all" placeholder="seu@email.com" />
-            </div>
-          </div>
-
-          {paymentMethod === 'CREDIT_CARD' && (
-            <>
-              <div className="mt-2 pt-4 border-t border-stone-100">
-                <label className="block text-xs font-semibold text-[#676f7b] mb-1">Número do Cartão</label>
-                <input required type="text" value={cardNumber} onChange={e => setCardNumber(e.target.value)} className="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#0a0a0a] focus:ring-1 focus:ring-[#0a0a0a] transition-all" placeholder="0000 0000 0000 0000" />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-semibold text-[#676f7b] mb-1">Validade</label>
-                  <input required type="text" value={cardExpiry} onChange={e => setCardExpiry(e.target.value)} className="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#0a0a0a] focus:ring-1 focus:ring-[#0a0a0a] transition-all" placeholder="MM/AA" />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-[#676f7b] mb-1">CVV</label>
-                  <input required type="text" value={cardCvv} onChange={e => setCardCvv(e.target.value)} className="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#0a0a0a] focus:ring-1 focus:ring-[#0a0a0a] transition-all" placeholder="123" />
-                </div>
-              </div>
-            </>
-          )}
+      {useVoucher ? (
+        <div className="flex-1 flex flex-col justify-center items-center py-8">
+          <label className="block text-sm font-semibold text-[#676f7b] mb-4 text-center">Digite o código fornecido pelo seu Cerimonialista/Parceiro</label>
+          <input required type="text" value={voucherCode} onChange={e => setVoucherCode(e.target.value.toUpperCase())} className="w-full text-center bg-stone-50 border border-stone-200 rounded-xl px-4 py-4 text-xl font-bold tracking-widest uppercase focus:outline-none focus:border-[#0a0a0a] focus:ring-2 focus:ring-[#0a0a0a]/20 transition-all" placeholder="MEMVO-XXXXX" />
         </div>
-      </div>
+      ) : (
+        <div className="flex-1 overflow-y-auto pr-2 -mr-2 mb-6" style={{ maxHeight: '400px' }}>
+          <div className="flex flex-col gap-4">
+            <div>
+              <label className="block text-xs font-semibold text-[#676f7b] mb-1">Nome Completo</label>
+              <input required type="text" value={name} onChange={e => setName(e.target.value)} className="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#0a0a0a] focus:ring-1 focus:ring-[#0a0a0a] transition-all" placeholder="Como no documento" />
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-[#676f7b] mb-1">CPF</label>
+                <input required type="text" value={cpf} onChange={e => setCpf(e.target.value)} className="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#0a0a0a] focus:ring-1 focus:ring-[#0a0a0a] transition-all" placeholder="000.000.000-00" />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-[#676f7b] mb-1">E-mail</label>
+                <input required type="email" value={email} onChange={e => setEmail(e.target.value)} className="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#0a0a0a] focus:ring-1 focus:ring-[#0a0a0a] transition-all" placeholder="seu@email.com" />
+              </div>
+            </div>
+
+            {paymentMethod === 'CREDIT_CARD' && (
+              <>
+                <div className="mt-2 pt-4 border-t border-stone-100">
+                  <label className="block text-xs font-semibold text-[#676f7b] mb-1">Número do Cartão</label>
+                  <input required type="text" value={cardNumber} onChange={e => setCardNumber(e.target.value)} className="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#0a0a0a] focus:ring-1 focus:ring-[#0a0a0a] transition-all" placeholder="0000 0000 0000 0000" />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-[#676f7b] mb-1">Validade</label>
+                    <input required type="text" value={cardExpiry} onChange={e => setCardExpiry(e.target.value)} className="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#0a0a0a] focus:ring-1 focus:ring-[#0a0a0a] transition-all" placeholder="MM/AA" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-[#676f7b] mb-1">CVV</label>
+                    <input required type="text" value={cardCvv} onChange={e => setCardCvv(e.target.value)} className="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#0a0a0a] focus:ring-1 focus:ring-[#0a0a0a] transition-all" placeholder="123" />
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
 
       <button
         disabled={isLoading}
@@ -150,6 +176,8 @@ export default function CheckoutForm({ planId, planPrice, returnUrl }: { planId:
         <span>
           {isLoading ? (
             <div className="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+          ) : useVoucher ? (
+            'Ativar Evento Gratuitamente'
           ) : (
             `Pagar ${planPrice} com ${paymentMethod === 'PIX' ? 'PIX' : 'Cartão'}`
           )}
@@ -162,12 +190,24 @@ export default function CheckoutForm({ planId, planPrice, returnUrl }: { planId:
         </div>
       )}
       
-      <div className="flex items-center justify-center gap-2 mt-5 text-[#939393]">
-        <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-        </svg>
-        <p className="text-[10px] font-medium">Pagamento processado com segurança pelo Asaas.</p>
+      <div className="flex flex-col items-center justify-center gap-3 mt-5">
+        <button 
+          type="button" 
+          onClick={() => setUseVoucher(!useVoucher)}
+          className="text-xs font-semibold text-[#0a0a0a] underline decoration-stone-300 hover:decoration-[#0a0a0a] transition-all"
+        >
+          {useVoucher ? 'Voltar para Pagamento Tradicional' : 'Tenho um código de parceiro/cerimonialista'}
+        </button>
+        
+        {!useVoucher && (
+          <div className="flex items-center gap-2 text-[#939393]">
+            <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <p className="text-[10px] font-medium">Pagamento processado com segurança pelo Asaas.</p>
+          </div>
+        )}
       </div>
     </form>
   )

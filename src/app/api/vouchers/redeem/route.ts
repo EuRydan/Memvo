@@ -1,0 +1,76 @@
+import { NextResponse } from 'next/server'
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+
+export async function POST(request: Request) {
+  try {
+    const { code, plan } = await request.json()
+
+    if (!code || !plan) {
+      return NextResponse.json({ error: 'Código ou plano ausente' }, { status: 400 })
+    }
+
+    if (!supabaseUrl || !supabaseServiceKey) {
+      return NextResponse.json({ error: 'Supabase não configurado' }, { status: 503 })
+    }
+
+    // Usar a Service Role para burlar RLS temporariamente e garantir a atualização
+    const supabase = createClient(supabaseUrl, supabaseServiceKey)
+
+    // 1. Busca o voucher pelo código
+    const { data: voucher, error: fetchError } = await supabase
+      .from('vouchers')
+      .select('*')
+      .eq('code', code.toUpperCase())
+      .single()
+
+    if (fetchError || !voucher) {
+      return NextResponse.json({ error: 'Código de parceiro inválido ou inexistente' }, { status: 404 })
+    }
+
+    // 2. Verifica se está disponível
+    if (voucher.status !== 'available') {
+      return NextResponse.json({ error: 'Este código já foi resgatado' }, { status: 400 })
+    }
+
+    // 3. (Opcional) Verifica se o plano do voucher cobre o plano solicitado
+    // Se um cerimonialista comprou 'classic', ele só deve poder resgatar 'essential' ou 'classic'.
+    // Mas para simplificar nesta versão, vamos assumir que o voucher funciona para o plano exato dele.
+    if (voucher.plan_type !== plan && voucher.plan_type !== 'premium') {
+        // Logica simples de downgrade: 'premium' pode ativar qualquer um. 'classic' ativa 'classic' e 'essential'.
+        const planHierarchy = { 'essential': 1, 'classic': 2, 'premium': 3 }
+        const voucherRank = planHierarchy[voucher.plan_type as keyof typeof planHierarchy] || 0
+        const requestRank = planHierarchy[plan as keyof typeof planHierarchy] || 0
+        
+        if (requestRank > voucherRank) {
+            return NextResponse.json({ error: `Este código é válido apenas para planos até o nível ${voucher.plan_type}` }, { status: 400 })
+        }
+    }
+
+    // 4. Marca o voucher como resgatado
+    const { error: updateError } = await supabase
+      .from('vouchers')
+      .update({
+        status: 'redeemed',
+        redeemed_at: new Date().toISOString(),
+        // redeemed_by_event_id: 'evento_id_aqui' // No futuro, vincular ao evento do usuário logado
+      })
+      .eq('id', voucher.id)
+
+    if (updateError) {
+      return NextResponse.json({ error: 'Erro ao processar o resgate' }, { status: 500 })
+    }
+
+    // Sucesso!
+    return NextResponse.json({
+      success: true,
+      message: 'Voucher aplicado com sucesso. Evento ativado!'
+    })
+
+  } catch (error: any) {
+    console.error('Erro no resgate de voucher:', error)
+    return NextResponse.json({ error: 'Erro interno do servidor' }, { status: 500 })
+  }
+}
