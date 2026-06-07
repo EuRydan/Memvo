@@ -101,10 +101,28 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<EventCategory>('wedding')
+  const [challengeLimit, setChallengeLimit] = useState<number>(Infinity)
 
   useEffect(() => { loadChallenges() }, [eventId])
 
   async function loadChallenges() {
+    // Buscar usuário atual para ver o plano
+    const { data: { user } } = await supabase.auth.getUser()
+    
+    if (user) {
+      const { data: planData } = await supabase
+        .from('user_plans')
+        .select('plan_type')
+        .eq('user_id', user.id)
+        .maybeSingle()
+      
+      const type = planData?.plan_type || 'none'
+      if (type === 'essential') setChallengeLimit(5)
+      else if (type === 'classic') setChallengeLimit(10)
+      else if (type === 'premium') setChallengeLimit(Infinity)
+      else setChallengeLimit(0) // Sem plano não pode adicionar (embora a view em si devesse estar bloqueada)
+    }
+
     const { data } = await supabase
       .from('challenges').select('*').eq('event_id', eventId).order('order_index')
     if (data) setChallenges(data)
@@ -113,6 +131,10 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
 
   async function addChallenge(title: string) {
     if (!title.trim()) return
+    if (challenges.length >= challengeLimit) {
+      alert(`Você atingiu o limite de ${challengeLimit} desafios do seu plano.`)
+      return
+    }
     const { data } = await supabase
       .from('challenges')
       .insert({ event_id: eventId, title: title.trim(), order_index: challenges.length })
@@ -128,7 +150,8 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
   async function loadDefaults() {
     setSaving(true)
     await supabase.from('challenges').delete().eq('event_id', eventId)
-    const challengesToInsert = DEFAULT_CHALLENGES[selectedCategory]
+    // Limita a quantidade de desafios padrão pelo limite do plano
+    const challengesToInsert = DEFAULT_CHALLENGES[selectedCategory].slice(0, challengeLimit)
     const toInsert = challengesToInsert.map((title, i) => ({ event_id: eventId, title, order_index: i }))
     const { data } = await supabase.from('challenges').insert(toInsert).select()
     if (data) setChallenges(data)
@@ -146,7 +169,7 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
     )
   }
 
-  const isComplete = challenges.length >= 8
+  const isComplete = challenges.length > 0 && challenges.length >= (challengeLimit === Infinity ? 8 : challengeLimit)
 
   return (
     <div className="min-h-screen bg-[#fafafa] overflow-x-hidden">
@@ -257,37 +280,46 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
               </SelectNative>
               <ButtonColorful
                 onClick={loadDefaults}
-                disabled={saving}
+                disabled={saving || challengeLimit === 0}
                 label={saving ? 'Carregando...' : 'Carregar desafios'}
                 className="w-full"
               />
             </div>
+            {challengeLimit === 0 && <p className="text-xs text-red-500 mt-3 font-semibold">Você precisa de um plano para adicionar desafios.</p>}
           </div>
         )}
 
         {/* Add challenge input */}
-        <div
-          className="rounded-[18px] px-5 py-4 flex items-center gap-3 mb-4"
-          style={{
-            background: 'rgba(255,255,255,0.95)',
-            boxShadow: '0 4px 24px rgba(0,0,0,0.05)',
-          }}
-        >
-          <input
-            type="text"
-            placeholder="Adicionar desafio..."
-            value={newTitle}
-            onChange={e => setNewTitle(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && addChallenge(newTitle)}
-            className="flex-1 text-sm text-ink bg-transparent outline-none placeholder:text-stone"
-          />
-          <button
-            onClick={() => addChallenge(newTitle)}
-            disabled={!newTitle.trim()}
-            className="bg-ink text-white text-xs font-semibold px-4 py-2 rounded-full hover:opacity-85 transition disabled:opacity-30 cursor-pointer flex-shrink-0"
+        <div className="mb-4">
+          <div
+            className={`rounded-[18px] px-5 py-4 flex items-center gap-3 ${challenges.length >= challengeLimit ? 'opacity-50 pointer-events-none' : ''}`}
+            style={{
+              background: 'rgba(255,255,255,0.95)',
+              boxShadow: '0 4px 24px rgba(0,0,0,0.05)',
+            }}
           >
-            Adicionar
-          </button>
+            <input
+              type="text"
+              placeholder="Adicionar desafio..."
+              value={newTitle}
+              onChange={e => setNewTitle(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && addChallenge(newTitle)}
+              disabled={challenges.length >= challengeLimit}
+              className="flex-1 text-sm text-ink bg-transparent outline-none placeholder:text-stone"
+            />
+            <button
+              onClick={() => addChallenge(newTitle)}
+              disabled={!newTitle.trim() || challenges.length >= challengeLimit}
+              className="bg-ink text-white text-xs font-semibold px-4 py-2 rounded-full hover:opacity-85 transition disabled:opacity-30 cursor-pointer flex-shrink-0"
+            >
+              Adicionar
+            </button>
+          </div>
+          {challenges.length >= challengeLimit && challengeLimit > 0 && challengeLimit !== Infinity && (
+            <p className="text-[11px] font-semibold text-[#de3b3b] text-center mt-2 px-4">
+              Você atingiu o limite de {challengeLimit} desafios do seu plano. Para adicionar mais, faça o upgrade.
+            </p>
+          )}
         </div>
 
         {/* Restore defaults link */}
