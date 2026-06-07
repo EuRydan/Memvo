@@ -34,7 +34,7 @@ export async function POST(request: Request) {
     let purchaserId = body.userId
 
     if (!purchaserId) {
-      const cookieStore = cookies()
+      const cookieStore = await cookies()
       const authCookie = cookieStore.get('sb-access-token') || cookieStore.get('supabase-auth-token')
       if (authCookie) {
         // Tentativa de pegar auth server side
