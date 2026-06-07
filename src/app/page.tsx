@@ -61,16 +61,16 @@ export default function LandingPage() {
           </h2>
         </div>
 
-        <ZoomParallax 
+        <ZoomParallax
           images={[
             { src: "https://images.unsplash.com/photo-1731596153022-4cedafe3330a?w=2400&q=100&auto=format&fit=crop" },
             { src: "https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=600&fit=crop&q=80" },
             { src: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&h=600&fit=crop&q=80" },
             { src: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&h=600&fit=crop&q=80" },
-            { src: "https://images.unsplash.com/photo-1520854221256-17451cc331bf?w=800&h=600&fit=crop&q=80" },
-            { src: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=800&h=600&fit=crop&q=80" },
+            { src: "https://images.unsplash.com/photo-1628551019393-46e6a870b94b?w=800&h=600&fit=crop&q=80" },
+            { src: "https://images.unsplash.com/photo-1633657322446-ed5784d121e4?w=800&h=600&fit=crop&q=80" },
             { src: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=800&h=600&fit=crop&q=80" }
-          ]} 
+          ]}
         />
 
         <div className="mt-20 px-6 max-w-3xl mx-auto">
@@ -81,8 +81,8 @@ export default function LandingPage() {
                   step: '01',
                   icon: (
                     <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
-                      <rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>
+                      <rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" />
+                      <rect x="14" y="14" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" />
                     </svg>
                   ),
                   title: 'Crie e compartilhe via QR Code',
@@ -93,8 +93,8 @@ export default function LandingPage() {
                   step: '02',
                   icon: (
                     <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-                      <circle cx="12" cy="13" r="4"/>
+                      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                      <circle cx="12" cy="13" r="4" />
                     </svg>
                   ),
                   title: 'Desafios fotográficos',
@@ -105,8 +105,8 @@ export default function LandingPage() {
                   step: '03',
                   icon: (
                     <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
-                      <line x1="4" y1="22" x2="4" y2="15"/>
+                      <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+                      <line x1="4" y1="22" x2="4" y2="15" />
                     </svg>
                   ),
                   title: 'Álbum em tempo real',
@@ -147,30 +147,30 @@ export default function LandingPage() {
       <div className="relative w-full overflow-hidden">
         {/* Grid Background */}
         <div
-            className="absolute inset-0 w-full h-full pointer-events-none"
-            style={{
-                backgroundImage: 'linear-gradient(to right, #e8e8e8 1px, transparent 1px), linear-gradient(to bottom, #e8e8e8 1px, transparent 1px)',
-                backgroundSize: '6rem 4rem',
-            }}
+          className="absolute inset-0 w-full h-full pointer-events-none"
+          style={{
+            backgroundImage: 'linear-gradient(to right, #e8e8e8 1px, transparent 1px), linear-gradient(to bottom, #e8e8e8 1px, transparent 1px)',
+            backgroundSize: '6rem 4rem',
+          }}
         >
-            <div className="absolute inset-0" style={{
-                background: 'radial-gradient(circle 800px at 50% 50%, rgba(213,197,255,0.3), transparent)',
-            }} />
+          <div className="absolute inset-0" style={{
+            background: 'radial-gradient(circle 800px at 50% 50%, rgba(213,197,255,0.3), transparent)',
+          }} />
         </div>
 
         {/* Orbs */}
         <div className="absolute top-[10%] left-[-100px] w-[500px] h-[500px] rounded-full pointer-events-none"
-            style={{
-                background: 'radial-gradient(circle, rgba(244,197,168,0.4) 0%, rgba(200,184,224,0.3) 60%, transparent 80%)',
-                filter: 'blur(80px)',
-                animation: 'drift 20s ease-in-out infinite alternate',
-            }} />
+          style={{
+            background: 'radial-gradient(circle, rgba(244,197,168,0.4) 0%, rgba(200,184,224,0.3) 60%, transparent 80%)',
+            filter: 'blur(80px)',
+            animation: 'drift 20s ease-in-out infinite alternate',
+          }} />
         <div className="absolute bottom-[10%] right-[-80px] w-[400px] h-[400px] rounded-full pointer-events-none"
-            style={{
-                background: 'radial-gradient(circle, rgba(186,210,255,0.4) 0%, rgba(200,184,224,0.25) 60%, transparent 80%)',
-                filter: 'blur(70px)',
-                animation: 'drift2 16s ease-in-out infinite alternate',
-            }} />
+          style={{
+            background: 'radial-gradient(circle, rgba(186,210,255,0.4) 0%, rgba(200,184,224,0.25) 60%, transparent 80%)',
+            filter: 'blur(70px)',
+            animation: 'drift2 16s ease-in-out infinite alternate',
+          }} />
 
         <div className="relative z-10">
           {/* ── TESTIMONIAL ── */}
