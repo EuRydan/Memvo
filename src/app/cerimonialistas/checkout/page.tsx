@@ -7,13 +7,15 @@ import Link from 'next/link'
 // Import supabase client for fetching the user ID
 import { createClient } from '@/lib/supabase/client'
 
+import { Suspense } from 'react'
+
 const PACKAGES = {
   pack_5: { name: 'Pacote Starter', count: 5, price: 'R$ 590,00', rawPrice: 590 },
   pack_10: { name: 'Pacote Pro', count: 10, price: 'R$ 990,00', rawPrice: 990 },
   pack_20: { name: 'Pacote Elite', count: 20, price: 'R$ 1.580,00', rawPrice: 1580 }
 }
 
-export default function B2BCheckoutPage() {
+function CheckoutContent() {
   const searchParams = useSearchParams()
   const packId = searchParams?.get('pack') || 'pack_10'
   const packInfo = PACKAGES[packId as keyof typeof PACKAGES]
@@ -212,5 +214,13 @@ export default function B2BCheckoutPage() {
         )}
       </div>
     </div>
+  )
+}
+
+export default function B2BCheckoutPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#fafafa] flex items-center justify-center">Carregando checkout...</div>}>
+      <CheckoutContent />
+    </Suspense>
   )
 }
