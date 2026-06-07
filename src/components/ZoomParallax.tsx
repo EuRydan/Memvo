@@ -6,6 +6,7 @@ import { useRef } from 'react';
 interface Image {
 	src: string;
 	alt?: string;
+	challenge?: string;
 }
 
 interface ZoomParallaxProps {
@@ -32,7 +33,7 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
 		<div ref={container} className="relative h-auto md:h-[300vh]">
 			{/* Desktop Parallax Effect */}
 			<div className="hidden md:block sticky top-0 h-screen overflow-hidden">
-				{images.map(({ src, alt }, index) => {
+				{images.map(({ src, alt, challenge }, index) => {
 					const scale = scales[index % scales.length];
 
 					return (
@@ -47,6 +48,11 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
 									alt={alt || `Parallax image ${index + 1}`}
 									className="h-full w-full object-cover rounded-lg shadow-lg"
 								/>
+								{challenge && (
+									<div className="absolute bottom-4 left-4 right-4 bg-white/80 backdrop-blur-md px-3 py-2 rounded-xl shadow-lg border border-white/40">
+										<p className="text-xs font-semibold text-gray-800 text-center">{challenge}</p>
+									</div>
+								)}
 							</div>
 						</motion.div>
 					);
@@ -55,7 +61,7 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
 
 			{/* Mobile Static Grid */}
 			<div className="md:hidden grid grid-cols-2 gap-3 px-6 py-4">
-				{images.slice(0, 4).map(({ src, alt }, index) => (
+				{images.slice(0, 4).map(({ src, alt, challenge }, index) => (
 					<div 
 						key={`mobile-${index}`}
 						className={`relative w-full overflow-hidden rounded-2xl shadow-sm ${index === 0 ? 'col-span-2 aspect-[2/1]' : 'aspect-square'}`}
@@ -65,6 +71,11 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
 							alt={alt || `Mobile image ${index + 1}`}
 							className="h-full w-full object-cover hover:scale-105 transition-transform duration-500"
 						/>
+						{challenge && (
+							<div className="absolute bottom-2 left-2 right-2 bg-white/80 backdrop-blur-md px-2 py-1.5 rounded-lg shadow-lg border border-white/40">
+								<p className="text-[10px] font-semibold text-gray-800 text-center truncate">{challenge}</p>
+							</div>
+						)}
 					</div>
 				))}
 			</div>

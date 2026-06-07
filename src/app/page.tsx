@@ -63,13 +63,13 @@ export default function LandingPage() {
 
         <ZoomParallax
           images={[
-            { src: "https://images.unsplash.com/photo-1731596153022-4cedafe3330a?w=2400&q=100&auto=format&fit=crop" },
-            { src: "https://images.pexels.com/photos/17931371/pexels-photo-17931371.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop" },
-            { src: "https://images.unsplash.com/photo-1723373457175-31b09fa7d405?w=800&h=600&fit=crop&q=80" },
-            { src: "https://images.unsplash.com/photo-1595877786462-ea6dc03f1695?w=800&h=600&fit=crop&q=80" },
-            { src: "https://images.unsplash.com/photo-1628551019393-46e6a870b94b?w=800&h=600&fit=crop&q=80" },
-            { src: "https://images.unsplash.com/photo-1633657322446-ed5784d121e4?w=800&h=600&fit=crop&q=80" },
-            { src: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=800&h=600&fit=crop&q=80" }
+            { src: "https://images.unsplash.com/photo-1731596153022-4cedafe3330a?w=2400&q=100&auto=format&fit=crop", challenge: "A melhor dançarina" },
+            { src: "https://images.pexels.com/photos/17931371/pexels-photo-17931371.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop", challenge: "Valsa da debutante" },
+            { src: "https://images.unsplash.com/photo-1723373457175-31b09fa7d405?w=800&h=600&fit=crop&q=80", challenge: "Uma foto do grupo da mesa" },
+            { src: "https://images.unsplash.com/photo-1595877786462-ea6dc03f1695?w=800&h=600&fit=crop&q=80", challenge: "Reúna as madrinhas para uma foto espontânea" },
+            { src: "https://images.unsplash.com/photo-1628551019393-46e6a870b94b?w=800&h=600&fit=crop&q=80", challenge: "As donas da festa" },
+            { src: "https://images.unsplash.com/photo-1633657322446-ed5784d121e4?w=800&h=600&fit=crop&q=80", challenge: "Um momento muito louco" },
+            { src: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=800&h=600&fit=crop&q=80", challenge: "Um brinde" }
           ]}
         />
 
