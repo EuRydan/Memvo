@@ -92,9 +92,9 @@ const MAX_SCROLL = 3000;
 
 // Wedding & Party Images for Memvor
 const IMAGES = [
-    "https://images.unsplash.com/photo-f3joY2ZArCQ?w=300&q=80",
-    "https://images.unsplash.com/photo-1606238023543-ba68f2cc50f8?w=300&q=80",
-    "https://images.unsplash.com/photo-1485872299829-c673f5194813?w=300&q=80",
+    "https://images.unsplash.com/photo-LWf_uWTCx04?w=300&q=80",
+    "https://images.unsplash.com/photo-1762553901347-0c4ee15f381f?w=300&q=80",
+    "https://images.unsplash.com/photo-1541532713592-79a0317b6b77?w=300&q=80",
     "https://images.unsplash.com/photo-1640204332963-4c90be33a71f?w=300&q=80",
     "https://images.unsplash.com/photo-1648090317719-a57c907a7284?w=300&q=80",
     "https://images.unsplash.com/photo-1773966583140-81e6cce0856b?w=300&q=80",
@@ -110,8 +110,8 @@ const IMAGES = [
     "https://images.unsplash.com/photo-1511895426328-dc8714191300?w=300&q=80",
     "https://images.unsplash.com/photo-1520854221256-17451cc331bf?w=300&q=80",
     "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=300&q=80",
-    "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=300&q=80",
-    "https://images.unsplash.com/photo-1511556532299-8f662fc26c06?w=300&q=80",
+    "https://images.unsplash.com/photo-1648154164366-d067faecdc51?w=300&q=80",
+    "https://images.unsplash.com/photo-1643699749701-ed7048210228?w=300&q=80",
 ];
 
 const lerp = (start: number, end: number, t: number) => start * (1 - t) + end * t;
