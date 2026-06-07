@@ -143,7 +143,7 @@ export default function PricingPage() {
         </Link>
       </header>
 
-      <main className={`relative z-10 pt-24 pb-20 px-5 mx-auto transition-all duration-500 ${selectedPlan ? 'max-w-5xl' : 'max-w-6xl'}`}>
+      <main className={`relative z-10 pt-24 pb-20 px-5 mx-auto transition-all duration-500 ${selectedPlan ? 'max-w-5xl' : 'max-w-[1400px]'}`}>
 
         {/* Hero */}
         <div className="text-center mb-10">
@@ -157,10 +157,10 @@ export default function PricingPage() {
 
         {/* ── Pricing Cards / Gateway ── */}
         {!selectedPlan ? (
-          <div className="flex flex-wrap items-center justify-center gap-6 lg:gap-8 mb-14">
+          <div className="flex flex-nowrap overflow-x-auto items-stretch justify-start xl:justify-center gap-6 lg:gap-8 mb-14 pb-8 snap-x snap-mandatory px-4 sm:px-0" style={{ scrollbarWidth: 'none' }}>
             {PLANS.map(plan => (
               <div key={plan.id}
-                className={`w-full max-w-[320px] md:w-80 relative text-center border p-8 pb-14 rounded-2xl transition-all duration-300 hover:-translate-y-1 ${
+                className={`shrink-0 snap-center w-full max-w-[320px] md:w-80 relative text-center border p-8 pb-14 rounded-2xl transition-all duration-300 hover:-translate-y-1 flex flex-col ${
                   plan.popular 
                     ? 'bg-[#0a0a0a] text-white border-white/10 shadow-2xl md:scale-105 z-10' 
                     : 'bg-white text-gray-800/80 border-gray-200 shadow-sm'
@@ -204,7 +204,7 @@ export default function PricingPage() {
                 <button 
                   onClick={() => setSelectedPlan(plan)}
                   type="button" 
-                  className={`text-sm w-full py-3.5 rounded-xl font-semibold mt-9 transition-all active:scale-[0.98] ${
+                  className={`text-sm w-full py-3.5 rounded-xl font-semibold mt-auto transition-all active:scale-[0.98] ${
                     plan.popular
                       ? 'bg-white text-[#0a0a0a] hover:bg-gray-100'
                       : 'bg-[#0a0a0a] text-white hover:bg-gray-900'
