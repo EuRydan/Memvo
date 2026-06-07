@@ -157,7 +157,7 @@ export default function PricingPage() {
 
         {/* ── Pricing Cards / Gateway ── */}
         {!selectedPlan ? (
-          <div className="flex flex-nowrap overflow-x-auto items-stretch justify-start xl:justify-center gap-6 lg:gap-8 mb-14 pb-8 snap-x snap-mandatory px-4 sm:px-0" style={{ scrollbarWidth: 'none' }}>
+          <div className="flex flex-nowrap overflow-x-auto items-stretch justify-start xl:justify-center gap-6 lg:gap-8 mb-14 pt-6 pb-8 snap-x snap-mandatory px-4 sm:px-0" style={{ scrollbarWidth: 'none' }}>
             {PLANS.map(plan => (
               <div key={plan.id}
                 className={`shrink-0 snap-center w-full max-w-[320px] md:w-80 relative text-center border p-8 pb-14 rounded-2xl transition-all duration-300 hover:-translate-y-1 flex flex-col ${
