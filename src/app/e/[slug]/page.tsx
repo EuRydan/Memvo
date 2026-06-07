@@ -19,6 +19,7 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
   const [activeChallengeId, setActiveChallengeId] = useState<string>('')
   const [tappedMediaId, setTappedMediaId] = useState<string | null>(null)
   const [viewingMedia, setViewingMedia] = useState<Media | null>(null)
+  const [myUploads, setMyUploads] = useState<string[]>([])
   const [notFound, setNotFound] = useState(false)
   const fileRefs = useRef<Record<string, HTMLInputElement | null>>({})
   const freeUploadRef = useRef<HTMLInputElement | null>(null)
@@ -32,6 +33,11 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
       loadMedias(data.id)
       loadChallenges(data.id)
       subscribeRealtime(data.id)
+      
+      const stored = localStorage.getItem('memvor_uploads')
+      if (stored) {
+        setMyUploads(JSON.parse(stored))
+      }
     }
     loadEvent()
   }, [slug])
@@ -67,13 +73,19 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
         .from('media').upload(fileName, file, { cacheControl: '3600', upsert: false })
       if (storageError) { console.error(storageError); continue }
       const isVideo = file.type.startsWith('video/')
-      const { error: dbError } = await supabase.from('media').insert({
+      const { data: newMedia, error: dbError } = await supabase.from('media').insert({
         event_id: event.id,
         storage_path: fileName,
         uploader_name: uploaderName || null,
         type: isVideo ? 'video' : 'photo',
         challenge_id: challengeId || null,
-      })
+      }).select().single()
+      
+      if (newMedia) {
+        const updatedUploads = [...myUploads, newMedia.id]
+        setMyUploads(updatedUploads)
+        localStorage.setItem('memvor_uploads', JSON.stringify(updatedUploads))
+      }
       
       // Trigger background upload to Google Drive
       if (!dbError && !isVideo) {
@@ -95,14 +107,23 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
   }
 
   async function handleDeleteMedia(mediaId: string) {
-    // Delete from Supabase. Real-time will remove it from `medias` automatically.
-    const { error } = await supabase.from('media').delete().eq('id', mediaId)
-    if (error) {
-      console.error('Failed to delete media', error)
-      alert('Erro ao apagar a mídia.')
-    } else {
+    try {
+      const res = await fetch('/api/media/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mediaId })
+      })
+      if (!res.ok) throw new Error('Failed to delete')
+      
       setViewingMedia(null)
       setTappedMediaId(null)
+      
+      const updatedUploads = myUploads.filter(id => id !== mediaId)
+      setMyUploads(updatedUploads)
+      localStorage.setItem('memvor_uploads', JSON.stringify(updatedUploads))
+    } catch (err) {
+      console.error('Delete error', err)
+      alert('Erro ao apagar a mídia.')
     }
   }
 
@@ -343,12 +364,17 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
                   {photos.length > 0 && (
                     <div className="grid grid-cols-3 gap-1.5 px-5 pb-5">
                       {photos.map(media => {
+                        const isMine = myUploads.includes(media.id)
                         const isTapped = tappedMediaId === media.id
+
                         return (
                           <div 
                             key={media.id} 
                             onClick={() => {
-                              if (isTapped) {
+                              if (!isMine) {
+                                // If not mine, just open full screen immediately
+                                setViewingMedia(media)
+                              } else if (isTapped) {
                                 setViewingMedia(media)
                               } else {
                                 setTappedMediaId(media.id)
@@ -362,7 +388,7 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
                             }
                             
                             {/* Tap Overlay with Trash Icon */}
-                            {isTapped && (
+                            {isTapped && isMine && (
                               <div className="absolute inset-0 bg-black/40 flex items-start justify-end p-2 transition-all">
                                 <button 
                                   onClick={(e) => {
@@ -403,6 +429,7 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
           publicUrl={getPublicUrl(viewingMedia.storage_path)}
           onClose={() => setViewingMedia(null)}
           onDelete={() => handleDeleteMedia(viewingMedia.id)}
+          canDelete={myUploads.includes(viewingMedia.id)}
         />
       )}
     </div>
