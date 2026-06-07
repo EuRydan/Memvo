@@ -141,11 +141,12 @@ export default function PartnersPage() {
                   </li>
                 </ul>
 
-                <button 
-                  className={`w-full py-4 rounded-full text-sm font-bold transition-all active:scale-95 ${pack.popular ? 'bg-white text-[#0a0a0a] hover:bg-stone-100' : 'bg-[#0a0a0a] text-white hover:opacity-90'}`}
+                <Link 
+                  href={`/cerimonialistas/checkout?pack=${pack.id}`}
+                  className={`w-full py-4 rounded-full text-sm font-bold transition-all active:scale-95 text-center inline-block ${pack.popular ? 'bg-white text-[#0a0a0a] hover:bg-stone-100' : 'bg-[#0a0a0a] text-white hover:opacity-90'}`}
                 >
                   Comprar Pacote
-                </button>
+                </Link>
               </div>
             </div>
           ))}

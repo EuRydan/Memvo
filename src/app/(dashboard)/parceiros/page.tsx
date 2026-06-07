@@ -1,13 +1,36 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 export default function ParceirosDashboard() {
-  const [vouchers, setVouchers] = useState<any[]>([
-    { id: '1', code: 'me_3542-5193', status: 'available', plan_type: 'classic', created_at: '2026-06-05T10:00:00Z' },
-    { id: '2', code: 'me_8291-4402', status: 'redeemed', plan_type: 'classic', created_at: '2026-06-05T10:00:00Z', redeemed_at: '2026-06-06T14:30:00Z' },
-    { id: '3', code: 'me_1955-7384', status: 'available', plan_type: 'classic', created_at: '2026-06-05T10:00:00Z' },
-  ]) // Mock data for now until Supabase is fully linked
+  const [vouchers, setVouchers] = useState<any[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const supabase = createClientComponentClient()
+
+  useEffect(() => {
+    async function fetchVouchers() {
+      const { data: { user } } = await supabase.auth.getUser()
+      
+      if (!user) {
+        setIsLoading(false)
+        return
+      }
+
+      const { data, error } = await supabase
+        .from('vouchers')
+        .select('*')
+        .eq('purchaser_id', user.id)
+        .order('created_at', { ascending: false })
+
+      if (data && !error) {
+        setVouchers(data)
+      }
+      setIsLoading(false)
+    }
+
+    fetchVouchers()
+  }, [supabase])
 
   const availableCount = vouchers.filter(v => v.status === 'available').length
   const redeemedCount = vouchers.filter(v => v.status === 'redeemed').length
@@ -24,7 +47,7 @@ export default function ParceirosDashboard() {
           <h1 className="text-3xl font-bold text-[#0a0a0a] mb-2 tracking-tight">Painel do Parceiro</h1>
           <p className="text-[#676f7b]">Gerencie seus lotes de ativação e acompanhe os casamentos.</p>
         </div>
-        <button className="bg-[#0a0a0a] text-white px-6 py-3 rounded-full text-sm font-semibold hover:opacity-90 transition-opacity">
+        <button onClick={() => window.location.href = '/cerimonialistas'} className="bg-[#0a0a0a] text-white px-6 py-3 rounded-full text-sm font-semibold hover:opacity-90 transition-opacity">
           Comprar Novo Lote
         </button>
       </header>
@@ -36,7 +59,7 @@ export default function ParceirosDashboard() {
             <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-500">🎟️</div>
             <h3 className="font-semibold text-[#676f7b]">Total Adquirido</h3>
           </div>
-          <p className="text-3xl font-bold text-[#0a0a0a]">{vouchers.length}</p>
+          <p className="text-3xl font-bold text-[#0a0a0a]">{isLoading ? '-' : vouchers.length}</p>
         </div>
 
         <div className="bg-white border border-stone-200 rounded-2xl p-6 shadow-sm">
@@ -44,7 +67,7 @@ export default function ParceirosDashboard() {
             <div className="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center text-green-500">✅</div>
             <h3 className="font-semibold text-[#676f7b]">Disponíveis p/ Uso</h3>
           </div>
-          <p className="text-3xl font-bold text-green-600">{availableCount}</p>
+          <p className="text-3xl font-bold text-green-600">{isLoading ? '-' : availableCount}</p>
         </div>
 
         <div className="bg-white border border-stone-200 rounded-2xl p-6 shadow-sm">
@@ -52,7 +75,7 @@ export default function ParceirosDashboard() {
             <div className="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-[#676f7b]">🔒</div>
             <h3 className="font-semibold text-[#676f7b]">Já Resgatados</h3>
           </div>
-          <p className="text-3xl font-bold text-[#0a0a0a]">{redeemedCount}</p>
+          <p className="text-3xl font-bold text-[#0a0a0a]">{isLoading ? '-' : redeemedCount}</p>
         </div>
       </div>
 
@@ -60,7 +83,6 @@ export default function ParceirosDashboard() {
       <div className="bg-white border border-stone-200 rounded-2xl shadow-sm overflow-hidden">
         <div className="px-6 py-5 border-b border-stone-100 flex items-center justify-between">
           <h2 className="text-lg font-bold text-[#0a0a0a]">Seus Vouchers</h2>
-          <span className="text-sm font-medium bg-stone-100 text-[#676f7b] px-3 py-1 rounded-full">Lote Clássico</span>
         </div>
         
         <div className="overflow-x-auto">
@@ -75,7 +97,19 @@ export default function ParceirosDashboard() {
               </tr>
             </thead>
             <tbody className="divide-y divide-stone-100">
-              {vouchers.map(v => (
+              {isLoading ? (
+                <tr>
+                  <td colSpan={5} className="px-6 py-12 text-center text-[#676f7b]">
+                    Carregando seus vouchers...
+                  </td>
+                </tr>
+              ) : vouchers.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="px-6 py-12 text-center text-[#676f7b]">
+                    Você ainda não possui vouchers. Adquira um lote para começar!
+                  </td>
+                </tr>
+              ) : vouchers.map(v => (
                 <tr key={v.id} className="hover:bg-stone-50 transition-colors">
                   <td className="px-6 py-4">
                     <span className="font-mono font-bold tracking-widest text-[#0a0a0a] bg-stone-100 px-3 py-1.5 rounded-md">

@@ -144,22 +144,30 @@ export default function DashboardPage() {
               Suas celebrações
             </h2>
           </div>
-          <button
-            onClick={() => {
-              if (hasPlan) router.push('/dashboard/new')
-              else setShowUpgradeModal(true)
-            }}
-            className="bg-ink text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:opacity-85 active:scale-95 transition-all duration-200 cursor-pointer flex-shrink-0 relative overflow-hidden group"
-            style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.16)' }}
-          >
-            <span className="relative z-10 flex items-center gap-2">
-              Novo evento
-              {!hasPlan && <span className="text-[10px] bg-white/20 px-1.5 py-0.5 rounded-full">🔒</span>}
-            </span>
-            {!hasPlan && (
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
-            )}
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => router.push('/parceiros')}
+              className="hidden md:flex items-center gap-2 bg-stone-100 text-[#0a0a0a] text-sm font-semibold px-5 py-2.5 rounded-full hover:bg-stone-200 transition-all duration-200 cursor-pointer flex-shrink-0"
+            >
+              💼 Parceiros B2B
+            </button>
+            <button
+              onClick={() => {
+                if (hasPlan) router.push('/dashboard/new')
+                else setShowUpgradeModal(true)
+              }}
+              className="bg-ink text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:opacity-85 active:scale-95 transition-all duration-200 cursor-pointer flex-shrink-0 relative overflow-hidden group"
+              style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.16)' }}
+            >
+              <span className="relative z-10 flex items-center gap-2">
+                Novo evento
+                {!hasPlan && <span className="text-[10px] bg-white/20 px-1.5 py-0.5 rounded-full">🔒</span>}
+              </span>
+              {!hasPlan && (
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Empty state */}
