@@ -2,6 +2,7 @@
 
 import { useScroll, useTransform, motion } from 'framer-motion';
 import { useRef } from 'react';
+import { Camera } from 'lucide-react';
 
 interface Image {
 	src: string;
@@ -29,7 +30,7 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
 
 	const scales = [scale4, scale5, scale6, scale5, scale6, scale8, scale9];
 
-	const mainLabelOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
+	const mainLabelOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
 
 	return (
 		<div ref={container} className="relative h-auto md:h-[300vh]">
@@ -53,8 +54,9 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
 								{challenge && (
 									<motion.div 
 										style={{ opacity: index === 0 ? mainLabelOpacity : 1 }}
-										className="absolute top-3 right-3 bg-white/80 backdrop-blur-md px-3 py-1.5 rounded-full shadow-md border border-white/40"
+										className="absolute top-3 right-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/40 shadow-[0_8px_32px_0_rgba(31,38,135,0.15),inset_0_1px_1px_rgba(255,255,255,0.6)] bg-gradient-to-br from-white/60 via-white/20 to-transparent backdrop-blur-md"
 									>
+										<Camera className="w-3 h-3 text-gray-800" />
 										<p className="text-[10px] uppercase tracking-wide font-bold text-gray-800 text-center">{challenge}</p>
 									</motion.div>
 								)}
@@ -77,7 +79,8 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
 							className="h-full w-full object-cover hover:scale-105 transition-transform duration-500"
 						/>
 						{challenge && (
-							<div className="absolute top-2 right-2 bg-white/80 backdrop-blur-md px-2 py-1 rounded-full shadow-md border border-white/40 max-w-[85%]">
+							<div className="absolute top-2 right-2 flex items-center gap-1 px-2 py-1 rounded-full border border-white/40 shadow-[0_8px_32px_0_rgba(31,38,135,0.15),inset_0_1px_1px_rgba(255,255,255,0.6)] bg-gradient-to-br from-white/60 via-white/20 to-transparent backdrop-blur-md max-w-[85%]">
+								<Camera className="w-2.5 h-2.5 text-gray-800 flex-shrink-0" />
 								<p className="text-[8px] uppercase tracking-wide font-bold text-gray-800 text-center truncate">{challenge}</p>
 							</div>
 						)}
