@@ -15,7 +15,7 @@ const PLANS = [
     popular: false,
     features: [
       { text: 'Até 50 convidados', included: true },
-      { text: 'Fotos ilimitadas', included: true },
+      { text: '3 fotos por convidado no desafio', included: true },
       { text: 'Até 5 desafios fotográficos', included: true },
       { text: 'Álbum em tempo real', included: true },
       { text: 'Download do QR Code', included: true },
