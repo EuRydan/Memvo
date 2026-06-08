@@ -39,6 +39,22 @@ export async function POST(request: Request) {
 
     const asaasKey = process.env.ASAAS_API_KEY
     if (!asaasKey) {
+      if (process.env.NODE_ENV !== 'production') {
+        // MOCK SUCCESS for development
+        if (paymentMethod === 'PIX') {
+          return NextResponse.json({
+            success: true,
+            pix: {
+              encodedImage: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+              payload: "00020101021226360014br.gov.bcb.pix0114+5511999999999520400005303986540510.005802BR5913Mock Payment6009Sao Paulo62070503***63041D3D"
+            }
+          })
+        }
+        return NextResponse.json({
+          success: true,
+          paymentId: "mock_payment_123"
+        })
+      }
       return NextResponse.json({ error: 'Asaas API Key não configurada no servidor' }, { status: 503 })
     }
 
