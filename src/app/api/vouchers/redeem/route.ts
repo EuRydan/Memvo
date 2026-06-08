@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { createClient as createServerClient } from '@/lib/supabase/server'
 
 export async function POST(request: Request) {
   try {
@@ -19,18 +20,8 @@ export async function POST(request: Request) {
     // Usar a Service Role para burlar RLS temporariamente e garantir a atualização
     const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey)
     
-    // Obter o usuário que está resgatando o voucher via cookie original
-    const supabaseAuth = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL || '', 
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '', 
-      {
-        global: {
-          headers: {
-            Cookie: request.headers.get('cookie') || ''
-          }
-        }
-      }
-    )
+    // Obter o usuário que está resgatando o voucher via server client
+    const supabaseAuth = await createServerClient()
     
     const { data: { user }, error: authError } = await supabaseAuth.auth.getUser()
     if (!user || authError) {
