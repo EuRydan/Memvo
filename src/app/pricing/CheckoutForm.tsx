@@ -69,8 +69,9 @@ export default function CheckoutForm({ planId, planPrice, returnUrl }: { planId:
       if (paymentMethod === 'PIX' && data.pix) {
         setPixData(data.pix)
       } else if (paymentMethod === 'CREDIT_CARD') {
-        // Redireciona para sucesso
-        window.location.href = returnUrl
+        // Redireciona para sucesso com session_id
+        const separator = returnUrl.includes('?') ? '&' : '?'
+        window.location.href = `${returnUrl}${separator}session_id=${data.paymentId}`
       }
     } catch (err: any) {
       setMessage(err.message)

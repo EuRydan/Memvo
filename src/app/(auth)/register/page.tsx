@@ -86,7 +86,12 @@ function RegisterContent() {
       }
     }
 
-    router.push('/dashboard')
+    const redirectTo = searchParams.get('redirect')
+    if (redirectTo) {
+      router.push(redirectTo)
+    } else {
+      router.push('/dashboard')
+    }
   }
 
   return (

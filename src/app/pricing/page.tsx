@@ -6,6 +6,8 @@ import CheckoutForm from './CheckoutForm'
 import { WordmarkFooter } from '@/components/WordmarkFooter'
 import { Logo } from '@/components/Logo'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { createClient } from '@/lib/supabase/client'
+import { useRouter } from 'next/navigation'
 
 const PLANS = [
   {
@@ -104,6 +106,25 @@ const FAQS = [
 export default function PricingPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [selectedPlan, setSelectedPlan] = useState<typeof PLANS[0] | null>(null)
+  const [user, setUser] = useState<any>(null)
+  const router = useRouter()
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      setUser(user)
+    }
+    checkUser()
+  }, [])
+
+  const handleSelectPlan = (plan: typeof PLANS[0]) => {
+    if (!user) {
+      router.push('/register?redirect=/pricing')
+      return
+    }
+    setSelectedPlan(plan)
+  }
 
   return (
     <div className="min-h-screen bg-[#fafafa] overflow-x-hidden">
@@ -203,7 +224,7 @@ export default function PricingPage() {
                 </ul>
 
                 <button 
-                  onClick={() => setSelectedPlan(plan)}
+                  onClick={() => handleSelectPlan(plan)}
                   type="button" 
                   className={`text-sm w-full py-3.5 rounded-xl font-semibold mt-auto transition-all active:scale-[0.98] ${
                     plan.popular
