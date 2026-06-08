@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import CheckoutForm from './CheckoutForm'
 import { WordmarkFooter } from '@/components/WordmarkFooter'
 import { Logo } from '@/components/Logo'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 
 const PLANS = [
   {
@@ -300,17 +301,21 @@ export default function PricingPage() {
           </div>
           <div className="flex justify-center items-center -space-x-3 mb-3">
             {['A', 'J', 'M', 'C'].map((letter, i) => (
-              <div key={i} className="w-10 h-10 rounded-full flex items-center justify-center text-white text-xs font-bold border-2 border-[#fafafa]"
-                style={{
-                  background: [
-                    'linear-gradient(135deg, #f4c5a8, #e0a888)',
-                    'linear-gradient(135deg, #c8b8e0, #a898c8)',
-                    'linear-gradient(135deg, #b8d4f0, #98b8d8)',
-                    'linear-gradient(135deg, #f4c5a8, #c8b8e0)',
-                  ][i],
-                }}>
-                {letter}
-              </div>
+              <Avatar key={i} className="border-2 border-[#fafafa] bg-transparent hover:-translate-y-1 transition-transform cursor-pointer">
+                <AvatarFallback 
+                  className="text-white font-bold border-none"
+                  style={{
+                    background: [
+                      'linear-gradient(135deg, #f4c5a8, #e0a888)',
+                      'linear-gradient(135deg, #c8b8e0, #a898c8)',
+                      'linear-gradient(135deg, #b8d4f0, #98b8d8)',
+                      'linear-gradient(135deg, #f4c5a8, #c8b8e0)',
+                    ][i],
+                  }}
+                >
+                  {letter}
+                </AvatarFallback>
+              </Avatar>
             ))}
           </div>
           <p className="text-xs font-semibold text-[#676f7b] italic">
