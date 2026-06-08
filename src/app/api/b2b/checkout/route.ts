@@ -55,7 +55,7 @@ export async function POST(request: Request) {
 
     const packData = PACKAGES[pack as keyof typeof PACKAGES]
 
-    const baseUrl = asaasKey.includes('sandbox') || process.env.NODE_ENV !== 'production'
+    const baseUrl = asaasKey.includes('sandbox') || asaasKey.includes('hmlg') || process.env.NODE_ENV !== 'production'
       ? 'https://sandbox.asaas.com/api/v3'
       : 'https://api.asaas.com/v3'
 
