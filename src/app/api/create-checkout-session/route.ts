@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
+import { createClient as createServerClient } from '@/lib/supabase/server'
 
 const checkoutSchema = z.object({
   plan: z.enum(['essential', 'classic', 'premium']),
@@ -28,6 +29,13 @@ export async function POST(request: Request) {
     }
 
     const { plan, paymentMethod, customer, card } = parsed.data
+
+    const supabaseAuth = await createServerClient()
+    const { data: { user } } = await supabaseAuth.auth.getUser()
+
+    if (!user) {
+      return NextResponse.json({ error: 'Usuário não autenticado' }, { status: 401 })
+    }
 
     const prices: Record<string, number> = {
       essential: 79.00,
@@ -96,6 +104,7 @@ export async function POST(request: Request) {
       value: priceAmount,
       dueDate: dueDate.toISOString().split('T')[0],
       description: `Memvo - Plano ${plan}`,
+      externalReference: `${user.id}|${plan}`
     }
 
     // 2.1 Se for Cartão de Crédito, adicionar informações do cartão
