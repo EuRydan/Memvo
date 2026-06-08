@@ -285,11 +285,11 @@ export default function DashboardPage() {
                      )}
                   </div>
 
-                  <div className="w-full grid grid-cols-3 gap-1 pt-3 border-t border-gray-100/80">
+                  <div className="w-full grid grid-cols-4 gap-1 pt-3 border-t border-gray-100/80">
                     {isEventLocked(event.id, events, planId) ? (
                       <button
                         onClick={() => router.push('/pricing')}
-                        className="col-span-3 flex items-center justify-center gap-2 p-2.5 rounded-[14px] bg-red-50 text-red-600 hover:bg-red-100 transition-colors font-semibold text-sm"
+                        className="col-span-4 flex items-center justify-center gap-2 p-2.5 rounded-[14px] bg-red-50 text-red-600 hover:bg-red-100 transition-colors font-semibold text-sm"
                       >
                         🔒 Desbloquear Evento
                       </button>
@@ -318,9 +318,18 @@ export default function DashboardPage() {
                           className="flex flex-col items-center justify-center p-2.5 rounded-[14px] hover:bg-gray-50 transition-colors group cursor-pointer"
                         >
                           <span className="text-[16px] font-bold text-gray-900 group-hover:text-black">
-                            Desafios
+                            Missões
                           </span>
-                          <span className="text-[11px] text-gray-500 font-medium tracking-wide">Configurar</span>
+                          <span className="text-[11px] text-gray-500 font-medium tracking-wide">Desafios</span>
+                        </button>
+                        <button
+                          onClick={() => router.push(`/dashboard/${event.id}/stats`)}
+                          className="flex flex-col items-center justify-center p-2.5 rounded-[14px] hover:bg-gray-50 transition-colors group cursor-pointer"
+                        >
+                          <span className="text-[16px] font-bold text-gray-900 group-hover:text-black">
+                            📊
+                          </span>
+                          <span className="text-[11px] text-gray-500 font-medium tracking-wide">Resumo</span>
                         </button>
                       </>
                     )}

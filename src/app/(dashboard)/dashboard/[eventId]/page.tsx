@@ -165,8 +165,15 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
         </div>
         <div className="w-full md:w-auto flex flex-wrap gap-2 md:ml-auto">
           <button
+            onClick={() => router.push(`/dashboard/${eventId}/stats`)}
+            className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-1.5 cursor-pointer"
+          >
+            📊 Estatísticas
+          </button>
+
+          <button
             onClick={() => router.push(`/dashboard/${eventId}/challenges`)}
-            className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm"
+            className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm cursor-pointer"
           >
             Desafios
           </button>
