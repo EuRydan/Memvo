@@ -323,6 +323,7 @@ export default function PricingPage() {
               Confiado por <span className="font-semibold text-[#0a0a0a]">+10.000</span> anfitriões
             </p>
           </div>
+        </div>
 
         {/* ── Comparison table ── */}
         <section className="mb-14">
