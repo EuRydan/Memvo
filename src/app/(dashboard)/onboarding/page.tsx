@@ -136,10 +136,13 @@ export default function OnboardingWizard() {
         }
       }
 
+      // Create a unique slug using a random suffix to avoid global collisions
+      const baseSlug = generateSlug(name)
+      const uniqueSlug = `${baseSlug}-${Math.random().toString(36).slice(2, 6)}`
+
       const payload: any = {
         name,
         date,
-        slug: generateSlug(name),
         owner_id: user.id,
         active: true,
         event_type: eventType,
@@ -151,20 +154,34 @@ export default function OnboardingWizard() {
       if (endDate) payload.end_date = endDate
       if (coverUrl) payload.cover_url = coverUrl
 
-      // Insert event
-      const { data: eventData, error: eventError } = await supabase
-        .from('events')
-        .insert([payload])
-        .select('id')
-        .single()
+      let newEventId = savedEventId
 
-      if (eventError) throw eventError
+      if (savedEventId) {
+        // Update existing event (we do NOT update the slug to prevent breaking the URL)
+        const { error: eventError } = await supabase
+          .from('events')
+          .update(payload)
+          .eq('id', savedEventId)
 
-      const newEventId = eventData.id
-      setSavedEventId(newEventId)
+        if (eventError) throw eventError
+
+        // Remove old challenges before re-inserting
+        await supabase.from('challenges').delete().eq('event_id', savedEventId)
+      } else {
+        // Insert new event
+        const { data: eventData, error: eventError } = await supabase
+          .from('events')
+          .insert([{ ...payload, slug: uniqueSlug }])
+          .select('id')
+          .single()
+
+        if (eventError) throw eventError
+        newEventId = eventData.id
+        setSavedEventId(newEventId)
+      }
 
       // Insert challenges
-      if (selectedChallenges.length > 0) {
+      if (selectedChallenges.length > 0 && newEventId) {
         const challengesPayload = selectedChallenges.map((title, idx) => ({
           event_id: newEventId,
           title,
@@ -176,8 +193,8 @@ export default function OnboardingWizard() {
       // Clear draft
       localStorage.removeItem('memvor_onboarding_draft')
 
-      // Move to step 7
-      setStep(7)
+      // Move to step 6
+      setStep(6)
     } catch (err: any) {
       setError(err.message || 'Ocorreu um erro ao salvar o evento.')
     } finally {
