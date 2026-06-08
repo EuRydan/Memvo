@@ -4,6 +4,7 @@ import { use, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Challenge } from '@/types'
+import { isEventLocked } from '@/lib/limits'
 import { SelectNative } from '@/components/ui/select-native'
 import { ButtonColorful } from '@/components/ui/button-colorful'
 
@@ -102,6 +103,7 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
   const [saving, setSaving] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<EventCategory>('wedding')
   const [challengeLimit, setChallengeLimit] = useState<number>(Infinity)
+  const [isLocked, setIsLocked] = useState(false)
 
   useEffect(() => { loadChallenges() }, [eventId])
 
@@ -124,6 +126,17 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
       else if (type === 'premium') setChallengeLimit(Infinity)
       else if (type === 'freemium') setChallengeLimit(1)
       else setChallengeLimit(0) // Sem plano não pode adicionar (embora a view em si devesse estar bloqueada)
+
+      const { data: allEvents } = await supabase
+        .from('events')
+        .select('id, date, active, created_at')
+        .eq('owner_id', user.id)
+        
+      if (allEvents && isEventLocked(eventId, allEvents, type)) {
+        setIsLocked(true)
+        setLoading(false)
+        return
+      }
     }
 
     const { data } = await supabase
@@ -159,6 +172,21 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
     const { data } = await supabase.from('challenges').insert(toInsert).select()
     if (data) setChallenges(data)
     setSaving(false)
+  }
+
+  if (isLocked) {
+    return (
+      <div className="min-h-screen bg-[#fafafa] flex flex-col items-center justify-center p-6 text-center relative z-10 pt-24 pb-28">
+        <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 max-w-sm w-full">
+          <div className="text-4xl mb-4">🔒</div>
+          <h2 className="text-xl font-bold text-ink mb-2">Desafios Bloqueados</h2>
+          <p className="text-sm text-slate mb-6">Você precisa ativar este evento efetuando o pagamento do plano para configurar os desafios.</p>
+          <button onClick={() => router.push('/pricing')} className="bg-ink text-white font-semibold py-3 px-6 rounded-full w-full hover:opacity-90 transition-opacity">
+            Desbloquear Agora
+          </button>
+        </div>
+      </div>
+    )
   }
 
   if (loading) {

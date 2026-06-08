@@ -7,6 +7,7 @@ import { Media, Challenge } from '@/types'
 import { Camera, Sparkles, Star, Heart, Share } from 'lucide-react'
 import { StoryGenerator } from '@/components/StoryGenerator'
 import { EventShareCard } from '@/components/EventShareCard'
+import { isEventLocked } from '@/lib/limits'
 
 export default function EventGalleryPage({ params }: { params: Promise<{ eventId: string }> }) {
   const { eventId } = use(params)
@@ -18,6 +19,7 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
   const [activeTab, setActiveTab] = useState<string>('free')
   const [loading, setLoading] = useState(true)
   const [isShareModalOpen, setIsShareModalOpen] = useState(false)
+  const [isLocked, setIsLocked] = useState(false)
 
   useEffect(() => {
     async function load() {
@@ -28,6 +30,31 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
         .single()
 
       if (!eventData) { router.push('/dashboard'); return }
+
+      // Check if locked
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        const { data: planData } = await supabase
+          .from('user_plans')
+          .select('plan_id')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .maybeSingle()
+
+        const planId = planData?.plan_id || 'none'
+        const { data: allEvents } = await supabase
+          .from('events')
+          .select('id, date, active, created_at')
+          .eq('owner_id', user.id)
+          
+        if (allEvents && isEventLocked(eventId, allEvents, planId)) {
+          setIsLocked(true)
+          setLoading(false)
+          return
+        }
+      }
+
       setEvent(eventData)
 
       const { data: challengeData } = await supabase
@@ -83,6 +110,21 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
   const tabs = [
     ...challenges.map(c => ({ id: c.id, label: c.title }))
   ]
+
+  if (isLocked) {
+    return (
+      <div className="min-h-screen bg-[#fafafa] flex flex-col items-center justify-center p-6 text-center relative z-10 pt-24 pb-28">
+        <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 max-w-sm w-full">
+          <div className="text-4xl mb-4">🔒</div>
+          <h2 className="text-xl font-bold text-gray-900 mb-2">Evento Bloqueado</h2>
+          <p className="text-sm text-gray-600 mb-6">Você precisa ativar este evento efetuando o pagamento do plano para visualizar o álbum e configurações.</p>
+          <button onClick={() => router.push('/pricing')} className="bg-gray-900 text-white font-semibold py-3 px-6 rounded-full w-full hover:opacity-90 transition-opacity">
+            Desbloquear Agora
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
