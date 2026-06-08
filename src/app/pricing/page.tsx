@@ -9,7 +9,7 @@ import { Logo } from '@/components/Logo'
 const PLANS = [
   {
     id: 'freemium',
-    name: 'Teste Grátis',
+    name: 'Free',
     desc: 'Para testar o funcionamento',
     price: 'R$0',
     popular: false,
