@@ -52,7 +52,7 @@ export async function POST(request: Request) {
     const { data: voucher, error: fetchError } = await supabase
       .from('vouchers')
       .select('*')
-      .eq('code', code.toUpperCase())
+      .eq('code', code.trim().toLowerCase())
       .single()
 
     if (fetchError || !voucher) {
