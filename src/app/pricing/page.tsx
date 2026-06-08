@@ -157,7 +157,7 @@ export default function PricingPage() {
 
         {/* ── Pricing Cards / Gateway ── */}
         {!selectedPlan ? (
-          <div className="flex flex-nowrap overflow-x-auto items-stretch justify-start xl:justify-center gap-6 lg:gap-8 mb-14 pt-12 pb-12 snap-x snap-mandatory px-4 sm:px-0" style={{ scrollbarWidth: 'none' }}>
+          <div className="flex flex-nowrap overflow-x-auto items-stretch justify-start xl:justify-center gap-6 lg:gap-8 mb-14 pt-16 pb-16 snap-x snap-mandatory px-6 sm:px-12" style={{ scrollbarWidth: 'none' }}>
             {PLANS.map(plan => (
               <div key={plan.id}
                 className={`shrink-0 snap-center w-full max-w-[320px] md:w-80 relative text-center border p-8 pb-14 rounded-2xl transition-all duration-300 hover:-translate-y-1 flex flex-col ${
@@ -184,7 +184,7 @@ export default function PricingPage() {
                   </span>
                 </h1>
 
-                <ul className={`list-none text-sm mt-8 space-y-3 text-left ${plan.popular ? 'text-white/90' : 'text-gray-600'}`}>
+                <ul className={`list-none flex-grow text-sm mt-8 mb-8 space-y-3 text-left ${plan.popular ? 'text-white/90' : 'text-gray-600'}`}>
                   {plan.features.map((f, i) => (
                     <li key={i} className="flex items-start gap-3">
                       {f.included ? (
@@ -242,7 +242,7 @@ export default function PricingPage() {
                 </span>
               </h1>
 
-              <ul className={`list-none text-sm mt-8 space-y-3 text-left ${selectedPlan.popular ? 'text-white/90' : 'text-gray-600'}`}>
+              <ul className={`list-none text-sm mt-8 mb-8 space-y-3 text-left ${selectedPlan.popular ? 'text-white/90' : 'text-gray-600'}`}>
                 {selectedPlan.features.map((f, i) => (
                   <li key={i} className="flex items-start gap-3">
                     {f.included ? (
