@@ -18,6 +18,8 @@ export const metadata: Metadata = {
   description: "Crie um álbum compartilhado para sua celebração. Seus convidados escaneiam, fotografam e compartilham — instantaneamente.",
 };
 
+import { RealtimeToast } from "@/components/RealtimeToast";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -30,6 +32,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-canvas text-ink" suppressHydrationWarning>
         {children}
+        <RealtimeToast />
       </body>
     </html>
   );
