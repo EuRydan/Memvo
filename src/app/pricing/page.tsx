@@ -56,9 +56,9 @@ const PLANS = [
       { text: 'Desafios ilimitados', included: true },
       { text: 'Álbum em tempo real', included: true },
       { text: 'Download do QR Code', included: true },
-      { text: 'Álbum Livre (Sem desafios)', included: false },
       { text: 'Download em ZIP', included: true },
       { text: 'Upload de vídeos (2 min)', included: true },
+      { text: 'Álbum Livre (Sem desafios)', included: false },
       { text: 'Suporte prioritário', included: false },
     ],
   },
@@ -325,55 +325,7 @@ export default function PricingPage() {
           </div>
         </div>
 
-        {/* ── Comparison table ── */}
-        <section className="mb-14">
-          <h2 style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
-            className="text-[1.3rem] font-bold text-[#0a0a0a] text-center mb-5">
-            Comparação de planos
-          </h2>
-          <div className="rounded-[18px] overflow-hidden"
-            style={{ background: 'rgba(255,255,255,0.95)', boxShadow: '0 4px 24px rgba(0,0,0,0.05)' }}>
-            {/* Header */}
-            <div className="grid grid-cols-5 px-4 py-3"
-              style={{ borderBottom: '1px solid #f0f0f0', background: '#f8f8f8' }}>
-              <p className="text-[11px] font-semibold text-[#939393] uppercase tracking-wide">Recurso</p>
-              {['Free', 'Ess.', 'Clá.', 'Pre.'].map(h => (
-                <p key={h} className="text-[11px] font-semibold text-[#939393] uppercase tracking-wide text-center">{h}</p>
-              ))}
-            </div>
-            {[
-              { feature: 'Convidados máx.', values: ['10', '50', '200', '∞'] },
-              { feature: 'Fotos', values: ['1/conv.', '3/conv.', '∞', '∞'] },
-              { feature: 'Desafios', values: ['1', '5', '∞', '∞'] },
-              { feature: 'Álbum Livre', values: [false, false, false, true] },
-              { feature: 'Download ZIP', values: [false, false, true, true] },
-              { feature: 'Vídeos', values: ['—', '—', '2 min', '10 min'] },
-              { feature: 'Suporte prio.', values: [false, false, false, true] },
-            ].map(({ feature, values }, ri) => (
-              <div key={feature} className="grid grid-cols-5 px-4 py-3.5"
-                style={{ borderBottom: ri < 6 ? '1px solid #f5f5f5' : 'none' }}>
-                <p className="text-xs text-[#676f7b]">{feature}</p>
-                {values.map((v, i) => (
-                  <div key={i} className="flex justify-center items-center">
-                    {typeof v === 'boolean' ? (
-                      v ? (
-                        <svg width="14" height="14" fill="none" stroke="#4ac550" strokeWidth="2.5" viewBox="0 0 24 24">
-                          <polyline points="20 6 9 17 4 12"/>
-                        </svg>
-                      ) : (
-                        <svg width="12" height="12" fill="none" stroke="#d0d0d0" strokeWidth="2.5" viewBox="0 0 24 24">
-                          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                        </svg>
-                      )
-                    ) : (
-                      <span className={`text-xs font-semibold ${i === 1 ? 'text-[#0a0a0a]' : 'text-[#676f7b]'}`}>{v}</span>
-                    )}
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        </section>
+
 
         {/* ── FAQ ── */}
         <section className="mb-14">
