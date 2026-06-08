@@ -301,7 +301,7 @@ export default function PricingPage() {
           </div>
           <div className="flex justify-center items-center -space-x-3 mb-3">
             {['A', 'J', 'M', 'C'].map((letter, i) => (
-              <Avatar key={i} className="border-2 border-[#fafafa] bg-transparent hover:-translate-y-1 transition-transform cursor-pointer">
+              <Avatar key={i} className="rounded-full border-2 border-[#fafafa] bg-transparent hover:-translate-y-1 transition-transform cursor-pointer">
                 <AvatarFallback 
                   className="text-white font-bold border-none"
                   style={{
