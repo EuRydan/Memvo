@@ -21,7 +21,7 @@ export function TiltedDock() {
 
   const icons = [
     { id: 1, icon: <Home size={28} />, label: "Eventos", action: () => router.push('/dashboard') },
-    { id: 2, icon: <Plus size={28} />, label: "Novo Evento", action: () => router.push('/dashboard/new') },
+    { id: 2, icon: <Plus size={28} />, label: "Novo Evento", action: () => router.push('/onboarding') },
     { id: 3, icon: <LogOut size={28} />, label: "Sair", action: async () => { await supabase.auth.signOut(); router.push('/login') } },
   ];
 

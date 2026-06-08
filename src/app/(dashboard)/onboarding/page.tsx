@@ -20,7 +20,6 @@ export default function OnboardingWizard() {
 
   const [loading, setLoading] = useState(true)
   const [step, setStep] = useState(1)
-  const [hasEvents, setHasEvents] = useState(false)
   
   // Form State
   const [eventType, setEventType] = useState('')
@@ -49,22 +48,6 @@ export default function OnboardingWizard() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { router.push('/login'); return }
 
-      // Check if user has active events
-      const { data: eventsData } = await supabase
-        .from('events')
-        .select('id')
-        .eq('owner_id', user.id)
-        .limit(1)
-
-      if (eventsData && eventsData.length > 0) {
-        setHasEvents(true)
-        // Redirect non-new users to dashboard if they accidentally hit /onboarding
-        // However, if they just started a draft, maybe they have 0 events. 
-        // If they already have an event, they shouldn't be here.
-        router.push('/dashboard')
-        return
-      }
-
       // Load draft from localStorage
       const draft = localStorage.getItem('memvor_onboarding_draft')
       if (draft) {
@@ -88,12 +71,12 @@ export default function OnboardingWizard() {
 
   // 2. Save draft on change
   useEffect(() => {
-    if (loading || hasEvents) return
+    if (loading) return
     const draft = {
       step, eventType, name, date, endDate, time, location, additionalInfo, selectedChallenges
     }
     localStorage.setItem('memvor_onboarding_draft', JSON.stringify(draft))
-  }, [step, eventType, name, date, endDate, time, location, additionalInfo, selectedChallenges, loading, hasEvents])
+  }, [step, eventType, name, date, endDate, time, location, additionalInfo, selectedChallenges, loading])
 
   // 3. Fetch Challenges when eventType changes
   useEffect(() => {
@@ -202,7 +185,7 @@ export default function OnboardingWizard() {
     }
   }
 
-  if (loading || hasEvents) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#fafafa]">
         <svg className="animate-spin text-stone" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -239,7 +222,7 @@ export default function OnboardingWizard() {
         {step === 1 && (
           <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
             <h1 className="text-3xl font-bold text-ink mb-2" style={{ fontFamily: 'Georgia, serif' }}>Bem-vindo!</h1>
-            <p className="text-slate mb-8">Vamos configurar seu primeiro espaço de memórias.</p>
+            <p className="text-slate mb-8">Vamos configurar seu espaço de memórias.</p>
             
             <button onClick={handleNext} className="w-full bg-white border border-gray-200 rounded-[24px] p-6 text-left hover:shadow-lg transition-all group flex items-center justify-between">
               <div>
@@ -427,7 +410,7 @@ export default function OnboardingWizard() {
             <div className="text-center mb-8">
               <div className="w-16 h-16 bg-stone-50 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl">🎁</div>
               <h2 className="text-3xl font-bold text-ink mb-2" style={{ fontFamily: 'Georgia, serif' }}>Escolha o melhor plano</h2>
-              <p className="text-sm text-slate">Para celebrar seu primeiro evento, preparamos benefícios exclusivos para você.</p>
+              <p className="text-sm text-slate">Para celebrar este evento, preparamos benefícios exclusivos para você.</p>
             </div>
 
             <div className="bg-gradient-to-br from-[#fdf4ec] to-[#ede9f6] rounded-[24px] p-6 shadow-sm border border-white mb-6">
