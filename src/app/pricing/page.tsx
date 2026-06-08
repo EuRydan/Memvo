@@ -334,23 +334,24 @@ export default function PricingPage() {
           <div className="rounded-[18px] overflow-hidden"
             style={{ background: 'rgba(255,255,255,0.95)', boxShadow: '0 4px 24px rgba(0,0,0,0.05)' }}>
             {/* Header */}
-            <div className="grid grid-cols-4 px-4 py-3"
+            <div className="grid grid-cols-5 px-4 py-3"
               style={{ borderBottom: '1px solid #f0f0f0', background: '#f8f8f8' }}>
               <p className="text-[11px] font-semibold text-[#939393] uppercase tracking-wide">Recurso</p>
-              {['Ess.', 'Clá.', 'Pre.'].map(h => (
+              {['Free', 'Ess.', 'Clá.', 'Pre.'].map(h => (
                 <p key={h} className="text-[11px] font-semibold text-[#939393] uppercase tracking-wide text-center">{h}</p>
               ))}
             </div>
             {[
-              { feature: 'Convidados máx.', values: ['50', '200', '∞'] },
-              { feature: 'Fotos', values: ['∞', '∞', '∞'] },
-              { feature: 'Desafios', values: [true, true, true] },
-              { feature: 'Download ZIP', values: [false, true, true] },
-              { feature: 'Vídeos', values: ['—', '2 min', '10 min'] },
-              { feature: 'Suporte prio.', values: [false, false, true] },
+              { feature: 'Convidados máx.', values: ['10', '50', '200', '∞'] },
+              { feature: 'Fotos', values: ['1/conv.', '3/conv.', '∞', '∞'] },
+              { feature: 'Desafios', values: ['1', '5', '∞', '∞'] },
+              { feature: 'Álbum Livre', values: [false, false, false, true] },
+              { feature: 'Download ZIP', values: [false, false, true, true] },
+              { feature: 'Vídeos', values: ['—', '—', '2 min', '10 min'] },
+              { feature: 'Suporte prio.', values: [false, false, false, true] },
             ].map(({ feature, values }, ri) => (
-              <div key={feature} className="grid grid-cols-4 px-4 py-3.5"
-                style={{ borderBottom: ri < 5 ? '1px solid #f5f5f5' : 'none' }}>
+              <div key={feature} className="grid grid-cols-5 px-4 py-3.5"
+                style={{ borderBottom: ri < 6 ? '1px solid #f5f5f5' : 'none' }}>
                 <p className="text-xs text-[#676f7b]">{feature}</p>
                 {values.map((v, i) => (
                   <div key={i} className="flex justify-center items-center">
