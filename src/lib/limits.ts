@@ -63,8 +63,8 @@ export function isEventLocked(
   allEvents: Pick<Event, 'id' | 'date' | 'active' | 'created_at'>[],
   planId: string
 ): boolean {
-  const plan = (planId as PlanTier) || 'none'
-  const limit = plan === 'none' ? 0 : (PLAN_LIMITS[plan] || 0)
+  const plan = (planId || 'none') as PlanTier | 'none'
+  const limit = plan === 'none' ? 0 : (PLAN_LIMITS[plan as PlanTier] || 0)
 
   if (limit === Infinity) return false
 
