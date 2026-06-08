@@ -35,10 +35,12 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
       // Fetch owner plan type
       const { data: planData } = await supabase
         .from('user_plans')
-        .select('plan_type')
+        .select('plan_id')
         .eq('user_id', data.owner_id)
+        .order('created_at', { ascending: false })
+        .limit(1)
         .maybeSingle()
-      setPlanType(planData?.plan_type || 'essential')
+      setPlanType(planData?.plan_id || 'essential')
       loadMedias(data.id)
       loadChallenges(data.id)
       subscribeRealtime(data.id)

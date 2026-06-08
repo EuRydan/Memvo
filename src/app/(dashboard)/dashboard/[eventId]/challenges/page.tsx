@@ -112,11 +112,13 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
     if (user) {
       const { data: planData } = await supabase
         .from('user_plans')
-        .select('plan_type')
+        .select('plan_id')
         .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
         .maybeSingle()
       
-      const type = planData?.plan_type || 'none'
+      const type = planData?.plan_id || 'none'
       if (type === 'essential') setChallengeLimit(5)
       else if (type === 'classic') setChallengeLimit(Infinity)
       else if (type === 'premium') setChallengeLimit(Infinity)

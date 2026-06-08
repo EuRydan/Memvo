@@ -103,14 +103,36 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Erro ao processar o resgate' }, { status: 500 })
     }
     
-    // 5. Salva o plano na conta do usuário
-    const { error: planError } = await supabaseAdmin
+    // 5. Salva o plano na conta do usuário usando o plano do VOUCHER, não o que ele clicou na tela
+    // Vamos primeiro verificar se já tem plano
+    const { data: existingPlan } = await supabaseAdmin
       .from('user_plans')
-      .insert({
-        user_id: user.id,
-        plan_id: plan,
-        payment_id: `voucher_${voucher.code}`
-      })
+      .select('id')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+
+    let planError
+    if (existingPlan) {
+      const { error } = await supabaseAdmin
+        .from('user_plans')
+        .update({
+          plan_id: voucher.plan_type,
+          payment_id: `voucher_${voucher.code}`
+        })
+        .eq('id', existingPlan.id)
+      planError = error
+    } else {
+      const { error } = await supabaseAdmin
+        .from('user_plans')
+        .insert({
+          user_id: user.id,
+          plan_id: voucher.plan_type,
+          payment_id: `voucher_${voucher.code}`
+        })
+      planError = error
+    }
       
     if (planError) {
       console.error('Erro ao salvar plano do usuário:', planError)
