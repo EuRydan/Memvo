@@ -53,3 +53,31 @@ export function getPhotoLimit(planId: string): number {
   if (plan === 'classic' || plan === 'premium') return Infinity
   return 0 // none
 }
+
+/**
+ * Checks if a specific event is locked (exceeds the user's plan limits).
+ * Sorts all active events by creation date and verifies the index.
+ */
+export function isEventLocked(
+  eventId: string,
+  allEvents: Pick<Event, 'id' | 'date' | 'active' | 'created_at'>[],
+  planId: string
+): boolean {
+  const plan = (planId as PlanTier) || 'none'
+  const limit = plan === 'none' ? 0 : (PLAN_LIMITS[plan] || 0)
+
+  if (limit === Infinity) return false
+
+  // Filter only active events and sort by created_at ascending (oldest first)
+  const activeEvents = allEvents
+    .filter(isEventActive)
+    .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+
+  const index = activeEvents.findIndex((e) => e.id === eventId)
+
+  // If not found in active events, it's either archived or doesn't exist.
+  // We do not lock archived events (they are read-only anyway).
+  if (index === -1) return false
+
+  return index >= limit
+}

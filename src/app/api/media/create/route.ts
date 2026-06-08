@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
-import { getPhotoLimit } from '@/lib/limits'
+import { getPhotoLimit, isEventLocked } from '@/lib/limits'
 
 export async function POST(request: Request) {
   try {
@@ -52,31 +52,44 @@ export async function POST(request: Request) {
       .maybeSingle()
 
     const planId = planData?.plan_id || 'none'
-    const limit = getPhotoLimit(planId)
 
-    // 3. Checar limite se não for ilimitado
-    if (limit !== Infinity) {
-      // Conta as fotos enviadas por ESSE guest_id para ESTE challenge_id
-      let query = supabase
-        .from('media')
-        .select('*', { count: 'exact', head: true })
-        .eq('event_id', event_id)
-        .eq('guest_id', guestId)
-        
-      if (challenge_id) {
-        query = query.eq('challenge_id', challenge_id)
-      } else {
-        query = query.is('challenge_id', null)
-      }
-
-      const { count, error: countError } = await query
-
-      if (!countError && typeof count === 'number' && count >= limit) {
-        return NextResponse.json({ error: 'Limite do plano atingido' }, { status: 403 })
-      }
+    // 3. Checar se o evento está bloqueado por falta de pagamento
+    const { data: allEvents } = await supabase
+      .from('events')
+      .select('id, date, active, created_at')
+      .eq('owner_id', eventData.owner_id)
+      
+    if (allEvents && isEventLocked(event_id, allEvents, planId)) {
+      return NextResponse.json({ error: 'Evento bloqueado aguardando pagamento.' }, { status: 403 })
     }
 
-    // 4. Inserir a mídia
+    // 4. Checar limite de fotos por usuário (Rate Limit)
+    let limit = getPhotoLimit(planId)
+    // Anti-abuso para planos ilimitados: cap máximo de 50 fotos por convidado/desafio
+    if (limit === Infinity) {
+      limit = 50
+    }
+
+    // Conta as fotos enviadas por ESSE guest_id para ESTE challenge_id
+    let query = supabase
+      .from('media')
+      .select('*', { count: 'exact', head: true })
+      .eq('event_id', event_id)
+      .eq('guest_id', guestId)
+      
+    if (challenge_id) {
+      query = query.eq('challenge_id', challenge_id)
+    } else {
+      query = query.is('challenge_id', null)
+    }
+
+    const { count, error: countError } = await query
+
+    if (!countError && typeof count === 'number' && count >= limit) {
+      return NextResponse.json({ error: planId === 'premium' || planId === 'classic' ? 'Limite de segurança anti-abuso atingido' : 'Limite do plano atingido' }, { status: 403 })
+    }
+
+    // 5. Inserir a mídia
     const { data: newMedia, error: dbError } = await supabase.from('media').insert({
       event_id,
       storage_path,

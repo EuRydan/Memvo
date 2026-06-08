@@ -6,7 +6,7 @@ import { TiltedDock } from '@/components/TiltedDock'
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { isEventActive, countActiveEvents, PLAN_LIMITS, PlanTier } from '@/lib/limits'
+import { isEventActive, countActiveEvents, PLAN_LIMITS, PlanTier, isEventLocked } from '@/lib/limits'
 import { Event } from '@/types'
 import QRCodeGenerator from '@/components/QRCodeGenerator'
 
@@ -15,7 +15,6 @@ export default function DashboardPage() {
   const supabase = createClient()
   const [events, setEvents] = useState<Event[]>([])
   const [loading, setLoading] = useState(true)
-  const [hasPlan, setHasPlan] = useState<boolean>(true)
   const [planId, setPlanId] = useState<string>('none')
   const [showUpgradeModal, setShowUpgradeModal] = useState(false)
   const [userRole, setUserRole] = useState<'host' | 'partner'>('host')
@@ -52,9 +51,7 @@ export default function DashboardPage() {
         .limit(1)
         .maybeSingle()
 
-      if (!planData) {
-        setHasPlan(false)
-      } else {
+      if (planData) {
         setPlanId(planData.plan_id || 'none')
       }
       
@@ -253,7 +250,11 @@ export default function DashboardPage() {
                      </div>
                      {/* Badges */}
                      <div className="absolute top-4 left-4 flex flex-col gap-1">
-                       {new Date(event.date + 'T12:00:00') > new Date() ? (
+                       {isEventLocked(event.id, events, planId) ? (
+                         <div className="bg-red-500/95 backdrop-blur text-[9px] font-bold uppercase tracking-wider px-2.5 py-1.5 rounded-full text-white shadow-sm border border-red-600/20">
+                           Pagamento Pendente
+                         </div>
+                       ) : new Date(event.date + 'T12:00:00') > new Date() ? (
                          <div className="bg-yellow-400/95 backdrop-blur text-[9px] font-bold uppercase tracking-wider px-2.5 py-1.5 rounded-full text-yellow-900 shadow-sm border border-yellow-500/20">
                            Em breve
                          </div>
@@ -284,41 +285,45 @@ export default function DashboardPage() {
                      )}
                   </div>
 
-                  {/* Stats & Actions */}
                   <div className="w-full grid grid-cols-3 gap-1 pt-3 border-t border-gray-100/80">
-                     <button
-                       onClick={() => setShareModalEvent(event)}
-                       className="flex flex-col items-center justify-center p-2.5 rounded-[14px] hover:bg-gray-50 transition-colors group cursor-pointer"
-                     >
-                       <span className="text-[16px] font-bold text-gray-900 group-hover:text-black">
-                         QR
-                       </span>
-                       <span className="text-[11px] text-gray-500 font-medium tracking-wide">Compartilhar</span>
-                     </button>
-                     <button
-                       onClick={() => {
-                         if (hasPlan) router.push(`/dashboard/${event.id}`)
-                         else setShowUpgradeModal(true)
-                       }}
-                       className="flex flex-col items-center justify-center p-2.5 rounded-[14px] hover:bg-gray-50 transition-colors group cursor-pointer"
-                     >
-                       <span className="text-[16px] font-bold text-gray-900 group-hover:text-black">
-                         Álbum {!hasPlan && <span className="text-[10px] ml-1">🔒</span>}
-                       </span>
-                       <span className="text-[11px] text-gray-500 font-medium tracking-wide">Visualizar</span>
-                     </button>
-                     <button
-                       onClick={() => {
-                         if (hasPlan) router.push(`/dashboard/${event.id}/challenges`)
-                         else setShowUpgradeModal(true)
-                       }}
-                       className="flex flex-col items-center justify-center p-2.5 rounded-[14px] hover:bg-gray-50 transition-colors group cursor-pointer"
-                     >
-                       <span className="text-[16px] font-bold text-gray-900 group-hover:text-black">
-                         Desafios {!hasPlan && <span className="text-[10px] ml-1">🔒</span>}
-                       </span>
-                       <span className="text-[11px] text-gray-500 font-medium tracking-wide">Configurar</span>
-                     </button>
+                    {isEventLocked(event.id, events, planId) ? (
+                      <button
+                        onClick={() => router.push('/pricing')}
+                        className="col-span-3 flex items-center justify-center gap-2 p-2.5 rounded-[14px] bg-red-50 text-red-600 hover:bg-red-100 transition-colors font-semibold text-sm"
+                      >
+                        🔒 Desbloquear Evento
+                      </button>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => setShareModalEvent(event)}
+                          className="flex flex-col items-center justify-center p-2.5 rounded-[14px] hover:bg-gray-50 transition-colors group cursor-pointer"
+                        >
+                          <span className="text-[16px] font-bold text-gray-900 group-hover:text-black">
+                            QR
+                          </span>
+                          <span className="text-[11px] text-gray-500 font-medium tracking-wide">Compartilhar</span>
+                        </button>
+                        <button
+                          onClick={() => router.push(`/dashboard/${event.id}`)}
+                          className="flex flex-col items-center justify-center p-2.5 rounded-[14px] hover:bg-gray-50 transition-colors group cursor-pointer"
+                        >
+                          <span className="text-[16px] font-bold text-gray-900 group-hover:text-black">
+                            Álbum
+                          </span>
+                          <span className="text-[11px] text-gray-500 font-medium tracking-wide">Visualizar</span>
+                        </button>
+                        <button
+                          onClick={() => router.push(`/dashboard/${event.id}/challenges`)}
+                          className="flex flex-col items-center justify-center p-2.5 rounded-[14px] hover:bg-gray-50 transition-colors group cursor-pointer"
+                        >
+                          <span className="text-[16px] font-bold text-gray-900 group-hover:text-black">
+                            Desafios
+                          </span>
+                          <span className="text-[11px] text-gray-500 font-medium tracking-wide">Configurar</span>
+                        </button>
+                      </>
+                    )}
                   </div>
                 </div>
               ))}

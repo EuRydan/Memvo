@@ -2,7 +2,7 @@
 
 import { use, useEffect, useRef, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { isEventActive } from '@/lib/limits'
+import { isEventActive, isEventLocked } from '@/lib/limits'
 import { Media, Challenge } from '@/types'
 import StoryCamera from '@/components/StoryCamera'
 import MediaViewer from '@/components/MediaViewer'
@@ -21,7 +21,8 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
   const [viewingMedia, setViewingMedia] = useState<Media | null>(null)
   const [myUploads, setMyUploads] = useState<string[]>([])
   const [notFound, setNotFound] = useState(false)
-  const [planType, setPlanType] = useState<string>('essential')
+  const [isLocked, setIsLocked] = useState(false)
+  const [planType, setPlanType] = useState<string>('none')
   const fileRefs = useRef<Record<string, HTMLInputElement | null>>({})
   const freeUploadRef = useRef<HTMLInputElement | null>(null)
 
@@ -40,7 +41,20 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
         .order('created_at', { ascending: false })
         .limit(1)
         .maybeSingle()
-      setPlanType(planData?.plan_id || 'essential')
+      
+      const plan = planData?.plan_id || 'none'
+      setPlanType(plan)
+
+      const { data: allEvents } = await supabase
+        .from('events')
+        .select('id, date, active, created_at')
+        .eq('owner_id', data.owner_id)
+        
+      if (allEvents && isEventLocked(data.id, allEvents, plan)) {
+        setIsLocked(true)
+        return
+      }
+
       loadMedias(data.id)
       loadChallenges(data.id)
       subscribeRealtime(data.id)
@@ -183,6 +197,25 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
           Evento não encontrado
         </h1>
         <p className="text-sm text-slate">O link pode estar incorreto ou o evento foi encerrado.</p>
+      </div>
+    </div>
+  )
+
+  // ── Locked ──
+  if (isLocked) return (
+    <div className="min-h-screen flex items-center justify-center bg-[#fafafa] px-5">
+      <div
+        className="text-center rounded-[20px] p-10 max-w-sm w-full"
+        style={{ background: '#fff', boxShadow: '0 8px 40px rgba(0,0,0,0.08)' }}
+      >
+        <p className="text-5xl mb-4">🚧</p>
+        <h1
+          style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+          className="text-xl font-bold text-ink mb-2"
+        >
+          Evento não ativado
+        </h1>
+        <p className="text-sm text-slate">O anfitrião precisa concluir a configuração no painel para receber fotos.</p>
       </div>
     </div>
   )
