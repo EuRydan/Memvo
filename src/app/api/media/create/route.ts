@@ -13,7 +13,7 @@ export async function POST(request: Request) {
     }
 
     // Gerenciar guest_id
-    const cookieStore = cookies()
+    const cookieStore = await cookies()
     let guestId = cookieStore.get('memvor_guest_id')?.value
 
     if (!guestId) {
