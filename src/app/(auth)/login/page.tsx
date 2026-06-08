@@ -1,12 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Logo } from '@/components/Logo'
 
-export default function LoginPage() {
+export default function LoginContent() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const supabase = createClient()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -24,7 +25,12 @@ export default function LoginPage() {
       setLoading(false)
       return
     }
-    router.push('/dashboard')
+    const redirectTo = searchParams.get('redirect')
+    if (redirectTo) {
+      router.push(redirectTo)
+    } else {
+      router.push('/dashboard')
+    }
   }
 
   return (
@@ -191,7 +197,7 @@ export default function LoginPage() {
 
             {/* Create Account */}
             <a
-              href="/register"
+              href={`/register${searchParams.toString() ? `?${searchParams.toString()}` : ''}`}
               className="block w-full text-center border-2 border-hairline text-ink py-4 rounded-full text-sm font-semibold hover:bg-[#f5f5f5] hover:border-hairline-soft active:scale-[0.98] transition-all duration-200"
             >
               Criar conta
@@ -206,5 +212,22 @@ export default function LoginPage() {
         </p>
       </div>
     </div>
+  )
+}
+
+import { Suspense } from 'react'
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-[#fafafa]">
+        <svg className="animate-spin text-stone" width="24" height="24" fill="none" viewBox="0 0 24 24">
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+        </svg>
+      </div>
+    }>
+      <LoginContent />
+    </Suspense>
   )
 }

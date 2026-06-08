@@ -357,7 +357,7 @@ function RegisterContent() {
         {/* Footer link */}
         <p className="text-center text-sm text-slate mt-8">
           Já tem uma conta?{' '}
-          <a href="/login" className="text-ink font-semibold hover:underline transition-colors">
+          <a href={`/login${searchParams.toString() ? `?${searchParams.toString()}` : ''}`} className="text-ink font-semibold hover:underline transition-colors">
             Entrar
           </a>
         </p>
