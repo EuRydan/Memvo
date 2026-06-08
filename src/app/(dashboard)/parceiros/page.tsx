@@ -14,6 +14,12 @@ export default function ParceirosDashboard() {
       
       if (!user) {
         setIsLoading(false)
+        window.location.href = '/login'
+        return
+      }
+
+      if (user.user_metadata?.role !== 'partner') {
+        window.location.href = '/dashboard'
         return
       }
 

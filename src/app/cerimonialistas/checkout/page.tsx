@@ -33,16 +33,17 @@ function CheckoutContent() {
   const [pixData, setPixData] = useState<{ encodedImage: string, payload: string } | null>(null)
   
   const [userId, setUserId] = useState<string | null>(null)
+  const [userRole, setUserRole] = useState<string | null>(null)
   const supabase = createClient()
 
   useEffect(() => {
-    // Pegar o ID do usuário logado ao carregar a página
+    // Pegar o ID e a role do usuário logado ao carregar a página
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
         setUserId(user.id)
         setEmail(user.email || '')
-        // Pode buscar o perfil do parceiro também se existir
+        setUserRole(user.user_metadata?.role || 'host')
       }
     }
     getUser()
@@ -129,9 +130,18 @@ function CheckoutContent() {
           <div className="text-center p-12 bg-white rounded-2xl shadow-sm border border-stone-100">
             <div className="text-4xl mb-4">🔒</div>
             <h2 className="text-xl font-bold mb-2">Acesso Restrito</h2>
-            <p className="text-[#676f7b] mb-6">Você precisa estar logado na sua conta de Cerimonialista para adquirir pacotes.</p>
+            <p className="text-[#676f7b] mb-6">Você precisa estar logado na sua conta de Parceiro/Cerimonialista para adquirir pacotes.</p>
             <Link href="/login" className="bg-[#0a0a0a] text-white px-6 py-3 rounded-full font-semibold">
               Fazer Login / Criar Conta
+            </Link>
+          </div>
+        ) : userRole !== 'partner' ? (
+          <div className="text-center p-12 bg-white rounded-2xl shadow-sm border border-stone-100">
+            <div className="text-4xl mb-4">🚫</div>
+            <h2 className="text-xl font-bold mb-2">Conta Não Autorizada</h2>
+            <p className="text-[#676f7b] mb-6">Sua conta está cadastrada como Anfitrião. Apenas Parceiros credenciados podem comprar pacotes B2B.</p>
+            <Link href="/dashboard" className="bg-stone-100 hover:bg-stone-200 text-[#0a0a0a] px-6 py-3 rounded-full font-semibold transition-colors">
+              Voltar ao Meu Painel
             </Link>
           </div>
         ) : pixData ? (

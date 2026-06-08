@@ -47,6 +47,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Usuário não autenticado. Crie sua conta primeiro.' }, { status: 401 })
     }
 
+    // Check user role
+    const { data: { user } } = await supabase.auth.admin.getUserById(purchaserId)
+    if (user?.user_metadata?.role !== 'partner') {
+      return NextResponse.json({ error: 'Conta não autorizada. Apenas parceiros podem comprar lotes B2B.' }, { status: 403 })
+    }
+
     const packData = PACKAGES[pack as keyof typeof PACKAGES]
 
     const baseUrl = asaasKey.includes('sandbox') || process.env.NODE_ENV !== 'production'
