@@ -485,10 +485,7 @@ export function CalendarCrest({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: direction > 0 ? -12 : 12 }}
             transition={{ duration: 0.18, ease: "easeOut" }}
-            style={{
-              display: "flex",
-              gap: 24,
-            }}
+            className="flex flex-col md:flex-row gap-6"
           >
             {renderMonth(baseYear, baseMonth)}
             {renderMonth(year2, month2)}
