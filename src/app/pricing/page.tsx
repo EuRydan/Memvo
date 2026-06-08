@@ -299,29 +299,30 @@ export default function PricingPage() {
               </span>
             ))}
           </div>
-          <div className="flex justify-center items-center -space-x-3 mb-3">
-            {['A', 'J', 'M', 'C'].map((letter, i) => (
-              <Avatar key={i} className="rounded-full border-2 border-[#fafafa] bg-transparent hover:-translate-y-1 transition-transform cursor-pointer">
-                <AvatarFallback 
-                  className="text-white font-bold border-none"
-                  style={{
-                    background: [
-                      'linear-gradient(135deg, #f4c5a8, #e0a888)',
-                      'linear-gradient(135deg, #c8b8e0, #a898c8)',
-                      'linear-gradient(135deg, #b8d4f0, #98b8d8)',
-                      'linear-gradient(135deg, #f4c5a8, #c8b8e0)',
-                    ][i],
-                  }}
-                >
-                  {letter}
-                </AvatarFallback>
-              </Avatar>
-            ))}
+          <div className="flex items-center justify-center w-fit mx-auto rounded-full p-1 bg-white border border-gray-200 shadow-sm mb-12">
+            <div className="flex -space-x-2">
+              {['A', 'J', 'M', 'C'].map((letter, i) => (
+                <Avatar key={i} className="size-8 border-2 border-white hover:-translate-y-1 transition-transform cursor-pointer rounded-full">
+                  <AvatarFallback 
+                    className="text-white font-bold border-none text-[10px]"
+                    style={{
+                      background: [
+                        'linear-gradient(135deg, #f4c5a8, #e0a888)',
+                        'linear-gradient(135deg, #c8b8e0, #a898c8)',
+                        'linear-gradient(135deg, #b8d4f0, #98b8d8)',
+                        'linear-gradient(135deg, #f4c5a8, #c8b8e0)',
+                      ][i],
+                    }}
+                  >
+                    {letter}
+                  </AvatarFallback>
+                </Avatar>
+              ))}
+            </div>
+            <p className="text-xs text-[#676f7b] ms-2 pe-3">
+              Confiado por <span className="font-semibold text-[#0a0a0a]">+10.000</span> anfitriões
+            </p>
           </div>
-          <p className="text-xs font-semibold text-[#676f7b] italic">
-            Confiado por +10.000 anfitriões em todo o mundo
-          </p>
-        </div>
 
         {/* ── Comparison table ── */}
         <section className="mb-14">
