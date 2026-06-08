@@ -6,7 +6,7 @@ import { TiltedDock } from '@/components/TiltedDock'
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { isEventActive } from '@/lib/limits'
+import { isEventActive, countActiveEvents, PLAN_LIMITS, PlanTier } from '@/lib/limits'
 import { Event } from '@/types'
 import QRCodeGenerator from '@/components/QRCodeGenerator'
 
@@ -16,8 +16,11 @@ export default function DashboardPage() {
   const [events, setEvents] = useState<Event[]>([])
   const [loading, setLoading] = useState(true)
   const [hasPlan, setHasPlan] = useState<boolean>(true)
+  const [planId, setPlanId] = useState<string>('none')
   const [showUpgradeModal, setShowUpgradeModal] = useState(false)
   const [userRole, setUserRole] = useState<'host' | 'partner'>('host')
+  const [mediaStats, setMediaStats] = useState<Record<string, { photos: number, guests: number }>>({})
+  const [shareModalEvent, setShareModalEvent] = useState<Event | null>(null)
   const orb1Ref = useRef<HTMLDivElement>(null)
   const orb2Ref = useRef<HTMLDivElement>(null)
 
@@ -51,24 +54,57 @@ export default function DashboardPage() {
 
       if (!planData) {
         setHasPlan(false)
+      } else {
+        setPlanId(planData.plan_id || 'none')
       }
       
       // Sempre carrega os eventos, mesmo se não tiver plano
-      // para caso o usuário tenha eventos antigos ou para deixar a interface visível
       const { data } = await supabase
         .from('events')
         .select('*')
         .eq('owner_id', user.id)
         .order('created_at', { ascending: false })
 
-      if (data) setEvents(data)
+      if (data) {
+        setEvents(data)
+        
+        // Buscar estatísticas de fotos
+        if (data.length > 0) {
+          const { data: medias } = await supabase
+            .from('media')
+            .select('event_id, guest_id, uploader_name')
+            .in('event_id', data.map(e => e.id))
+            .limit(10000)
+            
+          if (medias) {
+            const stats: Record<string, { photos: number, guests: number }> = {}
+            data.forEach(e => {
+              const eventMedias = medias.filter(m => m.event_id === e.id)
+              const uniqueGuests = new Set(eventMedias.map(m => m.guest_id || m.uploader_name || 'unknown')).size
+              stats[e.id] = { photos: eventMedias.length, guests: uniqueGuests }
+            })
+            setMediaStats(stats)
+          }
+        }
+      }
       
-      // Guardar o papel do usuário no estado (host vs partner)
       setUserRole(user.user_metadata?.role || 'host')
       setLoading(false)
     }
     load()
   }, [])
+
+  // Helper to format plan name
+  const planNames: Record<string, string> = {
+    freemium: 'Free',
+    essential: 'Essencial',
+    classic: 'Clássico',
+    premium: 'Premium'
+  }
+  
+  const displayPlanName = planNames[planId] || 'Nenhum'
+  const maxEvents = planId !== 'none' && PLAN_LIMITS[planId as PlanTier] ? PLAN_LIMITS[planId as PlanTier] : (planId === 'freemium' ? 1 : 0)
+  const activeCount = countActiveEvents(events)
 
   if (loading) {
     return (
@@ -148,6 +184,13 @@ export default function DashboardPage() {
             >
               Suas celebrações
             </h2>
+            {planId !== 'none' && (
+              <p className="text-xs font-medium text-slate mt-1.5 flex items-center gap-1.5">
+                Plano {displayPlanName}
+                <span className="w-1 h-1 rounded-full bg-stone-300"></span>
+                {maxEvents === Infinity ? 'Eventos Ilimitados' : `${activeCount} de ${maxEvents} eventos usados`}
+              </p>
+            )}
           </div>
           <div className="flex items-center gap-3">
             {userRole === 'partner' && (
@@ -189,7 +232,13 @@ export default function DashboardPage() {
               >
                 <p className="text-3xl mb-3">🎉</p>
                 <p className="text-sm font-semibold text-ink mb-1">Nenhum evento ainda</p>
-                <p className="text-xs text-slate">Crie seu primeiro evento e compartilhe memórias.</p>
+                <p className="text-xs text-slate mb-5">Crie seu primeiro evento e compartilhe memórias.</p>
+                <button
+                  onClick={() => router.push('/dashboard/new')}
+                  className="bg-ink text-white text-sm font-semibold px-6 py-2.5 rounded-full hover:opacity-85 transition-opacity"
+                >
+                  Criar meu primeiro evento
+                </button>
               </div>
             )}
 
@@ -209,11 +258,22 @@ export default function DashboardPage() {
                          <QRCodeGenerator slug={event.slug} eventName={event.name} eventDate={event.date} size={400} variant="cover" />
                        )}
                      </div>
-                     {!isEventActive(event) && (
-                       <div className="absolute top-4 left-4 bg-white/95 backdrop-blur text-[9px] font-bold uppercase tracking-wider px-2.5 py-1.5 rounded-full text-stone-600 shadow-sm border border-black/5">
-                         Arquivado
-                       </div>
-                     )}
+                     {/* Badges */}
+                     <div className="absolute top-4 left-4 flex flex-col gap-1">
+                       {new Date(event.date + 'T12:00:00') > new Date() ? (
+                         <div className="bg-yellow-400/95 backdrop-blur text-[9px] font-bold uppercase tracking-wider px-2.5 py-1.5 rounded-full text-yellow-900 shadow-sm border border-yellow-500/20">
+                           Em breve
+                         </div>
+                       ) : isEventActive(event) ? (
+                         <div className="bg-emerald-500/95 backdrop-blur text-[9px] font-bold uppercase tracking-wider px-2.5 py-1.5 rounded-full text-white shadow-sm border border-emerald-600/20">
+                           Ativo
+                         </div>
+                       ) : (
+                         <div className="bg-white/95 backdrop-blur text-[9px] font-bold uppercase tracking-wider px-2.5 py-1.5 rounded-full text-stone-600 shadow-sm border border-black/5">
+                           Arquivado
+                         </div>
+                       )}
+                     </div>
                   </div>
 
                   {/* Text Info */}
@@ -224,10 +284,24 @@ export default function DashboardPage() {
                      <p className="text-[13px] text-gray-500 mt-1 font-medium">
                        {new Date(event.date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
                      </p>
+                     {mediaStats[event.id] && (
+                       <p className="text-[11px] text-stone font-semibold mt-1.5 flex items-center gap-1.5">
+                         {mediaStats[event.id].photos} fotos <span className="w-0.5 h-0.5 rounded-full bg-slate"></span> {mediaStats[event.id].guests} convidados
+                       </p>
+                     )}
                   </div>
 
                   {/* Stats & Actions */}
-                  <div className="w-full grid grid-cols-2 gap-1 pt-3 border-t border-gray-100/80">
+                  <div className="w-full grid grid-cols-3 gap-1 pt-3 border-t border-gray-100/80">
+                     <button
+                       onClick={() => setShareModalEvent(event)}
+                       className="flex flex-col items-center justify-center p-2.5 rounded-[14px] hover:bg-gray-50 transition-colors group cursor-pointer"
+                     >
+                       <span className="text-[16px] font-bold text-gray-900 group-hover:text-black">
+                         QR
+                       </span>
+                       <span className="text-[11px] text-gray-500 font-medium tracking-wide">Compartilhar</span>
+                     </button>
                      <button
                        onClick={() => {
                          if (hasPlan) router.push(`/dashboard/${event.id}`)
@@ -291,6 +365,54 @@ export default function DashboardPage() {
             </button>
             <p className="text-xs text-stone text-center mt-4">
               Cancele a qualquer momento.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Share Modal */}
+      {shareModalEvent && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-5">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShareModalEvent(null)} />
+          <div className="relative bg-white rounded-[2rem] p-8 max-w-sm w-full shadow-[0_20px_60px_rgba(0,0,0,0.15)] animate-in fade-in zoom-in-95 duration-200 flex flex-col items-center">
+            <button 
+              onClick={() => setShareModalEvent(null)}
+              className="absolute top-4 right-4 text-stone hover:text-ink transition-colors p-2"
+            >
+              <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            <h3 className="text-xl font-bold text-ink mb-6 text-center" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
+              Compartilhar Evento
+            </h3>
+            
+            <div className="w-48 h-48 rounded-[24px] overflow-hidden mb-6 p-2 bg-gradient-to-br from-[#f4c5a8] to-[#d4bde8] shadow-sm">
+              <div className="w-full h-full rounded-[18px] overflow-hidden bg-white">
+                <QRCodeGenerator slug={shareModalEvent.slug} eventName={shareModalEvent.name} eventDate={shareModalEvent.date} size={250} variant="cover" />
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-3 w-full">
+              <button
+                onClick={() => {
+                  const link = `https://memvor.app/e/${shareModalEvent.slug}`
+                  navigator.clipboard.writeText(link)
+                  alert('Link copiado para a área de transferência!')
+                }}
+                className="w-full bg-[#f4f4f4] text-ink font-semibold py-3.5 rounded-full hover:bg-[#eaeaea] active:scale-95 transition-all duration-200 flex items-center justify-center gap-2"
+              >
+                <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                </svg>
+                Copiar link do evento
+              </button>
+            </div>
+            
+            <p className="text-xs text-stone text-center mt-6">
+              Os convidados escaneiam o QR Code para acessar o álbum sem precisar de app.
             </p>
           </div>
         </div>

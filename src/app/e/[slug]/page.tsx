@@ -89,13 +89,27 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
         .from('media').upload(fileName, file, { cacheControl: '3600', upsert: false })
       if (storageError) { console.error(storageError); continue }
       const isVideo = file.type.startsWith('video/')
-      const { data: newMedia, error: dbError } = await supabase.from('media').insert({
-        event_id: event.id,
-        storage_path: fileName,
-        uploader_name: uploaderName || null,
-        type: isVideo ? 'video' : 'photo',
-        challenge_id: challengeId || null,
-      }).select().single()
+      
+      const res = await fetch('/api/media/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event_id: event.id,
+          storage_path: fileName,
+          uploader_name: uploaderName || null,
+          type: isVideo ? 'video' : 'photo',
+          challenge_id: challengeId || null,
+        })
+      })
+
+      const data = await res.json()
+      
+      if (!res.ok) {
+        alert(data.error || 'Erro ao enviar mídia. Você pode ter atingido o limite do seu plano.')
+        continue
+      }
+      
+      const newMedia = data.media
       
       if (newMedia) {
         const updatedUploads = [...myUploads, newMedia.id]
@@ -104,7 +118,7 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
       }
       
       // Trigger background upload to Google Drive
-      if (!dbError && !isVideo) {
+      if (res.ok && !isVideo) {
         fetch('/api/drive/upload', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

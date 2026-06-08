@@ -18,6 +18,7 @@ export type Media = {
   uploader_name: string | null
   type: 'photo' | 'video'
   challenge_id: string | null
+  guest_id?: string
 }
 
 export type Challenge = {

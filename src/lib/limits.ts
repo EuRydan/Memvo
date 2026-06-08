@@ -42,3 +42,14 @@ export function canCreateEvent(planId: string, events: Pick<Event, 'date' | 'act
   
   return countActiveEvents(events) < limit
 }
+
+/**
+ * Returns the maximum number of photos a guest can upload per challenge
+ */
+export function getPhotoLimit(planId: string): number {
+  const plan = planId as PlanTier | 'freemium' | 'none'
+  if (plan === 'freemium') return 1
+  if (plan === 'essential') return 3
+  if (plan === 'classic' || plan === 'premium') return Infinity
+  return 0 // none
+}
