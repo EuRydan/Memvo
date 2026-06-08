@@ -8,6 +8,10 @@ export type Event = {
   cover_url?: string
   slug: string
   active: boolean
+  event_type?: string
+  time?: string
+  location?: string
+  additional_info?: string
 }
 
 export type Media = {

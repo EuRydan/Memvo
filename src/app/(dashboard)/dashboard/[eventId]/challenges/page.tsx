@@ -271,22 +271,26 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
             <p className="text-2xl mb-2">🎯</p>
             <p className="text-sm font-semibold text-ink mb-1">Nenhum desafio ainda</p>
             <p className="text-xs text-slate mb-5">Adicione desafios personalizados ou use os padrão.</p>
-            <div className="flex flex-col gap-3 max-w-[240px] mx-auto mt-4">
-              <SelectNative 
-                value={selectedCategory} 
-                onChange={e => setSelectedCategory(e.target.value as EventCategory)}
-                disabled={saving}
-              >
-                {(Object.entries(EVENT_TYPES) as [EventCategory, string][]).map(([key, label]) => (
-                  <option key={key} value={key}>{label}</option>
-                ))}
-              </SelectNative>
-              <ButtonColorful
-                onClick={loadDefaults}
-                disabled={saving || challengeLimit === 0}
-                label={saving ? 'Carregando...' : 'Carregar desafios'}
-                className="w-full"
-              />
+            <div className="flex flex-col sm:flex-row gap-3 max-w-[340px] mx-auto mt-4">
+              <div className="w-full sm:flex-1">
+                <SelectNative 
+                  value={selectedCategory} 
+                  onChange={e => setSelectedCategory(e.target.value as EventCategory)}
+                  disabled={saving}
+                >
+                  {(Object.entries(EVENT_TYPES) as [EventCategory, string][]).map(([key, label]) => (
+                    <option key={key} value={key}>{label}</option>
+                  ))}
+                </SelectNative>
+              </div>
+              <div className="w-full sm:w-auto">
+                <ButtonColorful
+                  onClick={loadDefaults}
+                  disabled={saving || challengeLimit === 0}
+                  label={saving ? 'Carregando...' : 'Carregar'}
+                  className="w-full h-full"
+                />
+              </div>
             </div>
             {challengeLimit === 0 && <p className="text-xs text-red-500 mt-3 font-semibold">Você precisa de um plano para adicionar desafios.</p>}
           </div>
@@ -295,7 +299,7 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
         {/* Add challenge input */}
         <div className="mb-4">
           <div
-            className={`rounded-[18px] px-5 py-4 flex items-center gap-3 ${challenges.length >= challengeLimit ? 'opacity-50 pointer-events-none' : ''}`}
+            className={`rounded-[18px] px-4 sm:px-5 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center gap-3 ${challenges.length >= challengeLimit ? 'opacity-50 pointer-events-none' : ''}`}
             style={{
               background: 'rgba(255,255,255,0.95)',
               boxShadow: '0 4px 24px rgba(0,0,0,0.05)',
@@ -308,12 +312,12 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
               onChange={e => setNewTitle(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && addChallenge(newTitle)}
               disabled={challenges.length >= challengeLimit}
-              className="flex-1 text-sm text-ink bg-transparent outline-none placeholder:text-stone"
+              className="w-full sm:flex-1 text-sm text-ink bg-transparent outline-none placeholder:text-stone py-1"
             />
             <button
               onClick={() => addChallenge(newTitle)}
               disabled={!newTitle.trim() || challenges.length >= challengeLimit}
-              className="bg-ink text-white text-xs font-semibold px-4 py-2 rounded-full hover:opacity-85 transition disabled:opacity-30 cursor-pointer flex-shrink-0"
+              className="w-full sm:w-auto bg-ink text-white text-xs font-semibold px-4 py-2.5 sm:py-2 rounded-full hover:opacity-85 transition disabled:opacity-30 cursor-pointer flex-shrink-0"
             >
               Adicionar
             </button>
@@ -329,21 +333,23 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
         {challenges.length > 0 && (
           <div className="text-center flex flex-col items-center gap-3 mt-4 pt-4 border-t border-slate/10">
             <p className="text-xs font-semibold text-slate uppercase tracking-wider">Substituir todos por padrão</p>
-            <div className="flex items-center gap-2 max-w-[300px] w-full">
-              <SelectNative 
-                value={selectedCategory} 
-                onChange={e => setSelectedCategory(e.target.value as EventCategory)}
-                disabled={saving}
-                className="flex-1"
-              >
-                {(Object.entries(EVENT_TYPES) as [EventCategory, string][]).map(([key, label]) => (
-                  <option key={key} value={key}>{label}</option>
-                ))}
-              </SelectNative>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 max-w-[340px] w-full mx-auto">
+              <div className="w-full sm:flex-1">
+                <SelectNative 
+                  value={selectedCategory} 
+                  onChange={e => setSelectedCategory(e.target.value as EventCategory)}
+                  disabled={saving}
+                  className="w-full"
+                >
+                  {(Object.entries(EVENT_TYPES) as [EventCategory, string][]).map(([key, label]) => (
+                    <option key={key} value={key}>{label}</option>
+                  ))}
+                </SelectNative>
+              </div>
               <button
                 onClick={loadDefaults}
                 disabled={saving}
-                className="bg-[#f0f0f0] text-ink text-sm px-4 h-9 rounded-lg font-semibold hover:bg-hairline transition disabled:opacity-50 cursor-pointer whitespace-nowrap"
+                className="w-full sm:w-auto bg-[#f0f0f0] text-ink text-sm px-4 h-10 sm:h-9 rounded-lg font-semibold hover:bg-hairline transition disabled:opacity-50 cursor-pointer whitespace-nowrap"
               >
                 {saving ? '...' : 'Restaurar'}
               </button>

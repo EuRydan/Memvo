@@ -125,7 +125,7 @@ export default function CheckoutForm({ planId, planPrice, returnUrl }: { planId:
       {useVoucher ? (
         <div className="flex-1 flex flex-col justify-center items-center py-8">
           <label className="block text-sm font-semibold text-[#676f7b] mb-4 text-center">Digite o código fornecido pelo seu Cerimonialista/Parceiro</label>
-          <input required type="text" value={voucherCode} onChange={e => setVoucherCode(e.target.value.toLowerCase())} className="w-full text-center bg-stone-50 border border-stone-200 rounded-xl px-4 py-4 text-xl font-bold tracking-widest lowercase focus:outline-none focus:border-[#0a0a0a] focus:ring-2 focus:ring-[#0a0a0a]/20 transition-all" placeholder="me_3542-5193" />
+          <input required type="text" value={voucherCode} onChange={e => setVoucherCode(e.target.value)} className="w-full text-center bg-stone-50 border border-stone-200 rounded-xl px-4 py-4 text-xl font-bold tracking-widest focus:outline-none focus:border-[#0a0a0a] focus:ring-2 focus:ring-[#0a0a0a]/20 transition-all" placeholder="aBcD1234XYZ" />
         </div>
       ) : (
         <div className="flex-1 overflow-y-auto pr-2 -mr-2 mb-6" style={{ maxHeight: '400px' }}>

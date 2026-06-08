@@ -1,9 +1,10 @@
 export function generateVoucherCode(): string {
-  // Gera 4 números aleatórios (0000 a 9999) garantindo o padding com zeros
-  const part1 = Math.floor(Math.random() * 10000).toString().padStart(4, '0')
-  const part2 = Math.floor(Math.random() * 10000).toString().padStart(4, '0')
-  
-  return `me_${part1}-${part2}`
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  let result = ''
+  for (let i = 0; i < 11; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length))
+  }
+  return result
 }
 
 /**

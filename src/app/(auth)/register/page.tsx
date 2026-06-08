@@ -90,7 +90,7 @@ function RegisterContent() {
     if (redirectTo) {
       router.push(redirectTo)
     } else {
-      router.push('/dashboard')
+      router.push('/onboarding')
     }
   }
 

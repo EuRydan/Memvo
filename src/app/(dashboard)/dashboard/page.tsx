@@ -175,7 +175,7 @@ export default function DashboardPage() {
       <main className="relative z-10 pt-24 pb-28 px-6 max-w-3xl mx-auto">
 
         {/* Section header */}
-        <div className="flex items-end justify-between mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
           <div>
             <p className="text-[11px] font-semibold tracking-[0.16em] text-stone uppercase mb-1">Painel</p>
             <h2
@@ -202,20 +202,13 @@ export default function DashboardPage() {
               </button>
             )}
             <button
-              onClick={() => {
-                if (hasPlan) router.push('/dashboard/new')
-                else setShowUpgradeModal(true)
-              }}
+              onClick={() => router.push('/onboarding')}
               className="bg-ink text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:opacity-85 active:scale-95 transition-all duration-200 cursor-pointer flex-shrink-0 relative overflow-hidden group"
               style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.16)' }}
             >
               <span className="relative z-10 flex items-center gap-2">
                 Novo evento
-                {!hasPlan && <span className="text-[10px] bg-white/20 px-1.5 py-0.5 rounded-full">🔒</span>}
               </span>
-              {!hasPlan && (
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
-              )}
             </button>
           </div>
         </div>
@@ -234,7 +227,7 @@ export default function DashboardPage() {
                 <p className="text-sm font-semibold text-ink mb-1">Nenhum evento ainda</p>
                 <p className="text-xs text-slate mb-5">Crie seu primeiro evento e compartilhe memórias.</p>
                 <button
-                  onClick={() => router.push('/dashboard/new')}
+                  onClick={() => router.push('/onboarding')}
                   className="bg-ink text-white text-sm font-semibold px-6 py-2.5 rounded-full hover:opacity-85 transition-opacity"
                 >
                   Criar meu primeiro evento
@@ -243,11 +236,11 @@ export default function DashboardPage() {
             )}
 
             {/* Event Cards */}
-            <div className="flex flex-wrap justify-center" style={{ gap: '48px' }}>
+            <div className="flex flex-wrap justify-center gap-6 sm:gap-8 md:gap-12">
               {events.map(event => (
                 <div
                   key={event.id}
-                  className="flex flex-col items-center w-[280px] bg-white rounded-[32px] overflow-hidden border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] hover:-translate-y-1 p-5"
+                  className="flex flex-col items-center w-full max-w-[280px] sm:w-[280px] bg-white rounded-[32px] overflow-hidden border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] hover:-translate-y-1 p-5"
                 >
                   {/* Image / QR Code Container (Gradient Border) */}
                   <div className="w-full aspect-square rounded-[24px] relative overflow-hidden mb-5 p-1.5 bg-gradient-to-br from-[#f4c5a8] to-[#d4bde8] shadow-sm">

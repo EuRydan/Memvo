@@ -106,20 +106,22 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
       </div>
 
       {/* Header */}
-      <div className="px-6 py-5 border-b border-gray-200/50 flex items-center gap-4 relative z-10 bg-white/40 backdrop-blur-xl">
-        <button
-          onClick={() => router.push('/dashboard')}
-          className="text-gray-500 hover:text-gray-900 transition text-lg"
-        >
-          ←
-        </button>
-        <div>
-          <h1 className="text-lg font-semibold text-gray-900">{event?.name}</h1>
-          <p className="text-xs text-gray-500">
-            {event && new Date(event.date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
-          </p>
+      <div className="px-4 md:px-6 py-5 border-b border-gray-200/50 flex flex-wrap md:flex-nowrap items-center justify-between gap-4 relative z-10 bg-white/40 backdrop-blur-xl">
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => router.push('/dashboard')}
+            className="text-gray-500 hover:text-gray-900 transition text-lg"
+          >
+            ←
+          </button>
+          <div>
+            <h1 className="text-lg font-semibold text-gray-900">{event?.name}</h1>
+            <p className="text-xs text-gray-500">
+              {event && new Date(event.date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
+            </p>
+          </div>
         </div>
-        <div className="ml-auto flex gap-3">
+        <div className="w-full md:w-auto flex flex-wrap gap-2 md:ml-auto">
           <button
             onClick={() => router.push(`/dashboard/${eventId}/challenges`)}
             className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm"
@@ -222,13 +224,13 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
       )}
 
       {/* Grid */}
-      <div className="flex-1 p-2 md:p-4 relative z-10 max-w-6xl mx-auto w-full">
+      <div className="flex-1 p-4 sm:p-6 md:p-8 relative z-10 max-w-6xl mx-auto w-full">
         {filteredMedias().length === 0 ? (
           <div className="flex items-center justify-center h-64">
             <p className="text-gray-500 text-sm font-medium">Nenhuma foto ainda neste desafio</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
             {filteredMedias().map(media => (
               <div key={media.id} className="relative aspect-[9/16] bg-gray-100 group rounded-2xl overflow-hidden shadow-sm border border-gray-200/50">
                 
