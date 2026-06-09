@@ -1,7 +1,6 @@
 'use client'
 
 import { Logo } from '@/components/Logo'
-import { TiltedDock } from '@/components/TiltedDock'
 
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -138,38 +137,8 @@ export default function DashboardPage() {
         }}
       />
 
-      {/* ── Top App Bar ── */}
-      <header
-        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-5 h-16"
-        style={{
-          background: 'rgba(250,250,250,0.82)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          borderBottom: '1px solid rgba(0,0,0,0.06)',
-        }}
-      >
-        {/* Left spacer for balance */}
-        <div className="w-8" />
-
-        {/* Logo */}
-        <Logo className="h-6 w-auto text-ink" />
-
-        {/* Right: sign out */}
-        <button
-          onClick={async () => { await supabase.auth.signOut(); router.push('/login') }}
-          className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-hairline transition-colors text-slate hover:text-ink"
-          title="Sair"
-        >
-          <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-            <polyline points="16 17 21 12 16 7"/>
-            <line x1="21" y1="12" x2="9" y2="12"/>
-          </svg>
-        </button>
-      </header>
-
       {/* ── Main Content ── */}
-      <main className="relative z-10 pt-24 pb-28 px-6 max-w-3xl mx-auto">
+      <main className="relative z-10 pt-10 pb-16 px-6 max-w-3xl mx-auto">
 
         {/* Section header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
@@ -426,11 +395,6 @@ export default function DashboardPage() {
       )}
 
       </main>
-
-      {/* ── Bottom Nav Bar ── */}
-      {/* ── Floating 3D Bottom Nav ── */}
-      <TiltedDock />
-
     </div>
   )
 }

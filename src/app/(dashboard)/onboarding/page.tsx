@@ -39,6 +39,7 @@ export default function OnboardingWizard() {
   const [error, setError] = useState('')
   const [savingEvent, setSavingEvent] = useState(false)
   const [savedEventId, setSavedEventId] = useState<string | null>(null)
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -47,21 +48,27 @@ export default function OnboardingWizard() {
     async function init() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { router.push('/login'); return }
+      setCurrentUserId(user.id)
 
       // Load draft from localStorage
       const draft = localStorage.getItem('memvor_onboarding_draft')
       if (draft) {
         try {
           const parsed = JSON.parse(draft)
-          if (parsed.step) setStep(parsed.step)
-          if (parsed.eventType) setEventType(parsed.eventType)
-          if (parsed.name) setName(parsed.name)
-          if (parsed.date) setDate(parsed.date)
-          if (parsed.endDate) setEndDate(parsed.endDate)
-          if (parsed.time) setTime(parsed.time)
-          if (parsed.location) setLocation(parsed.location)
-          if (parsed.additionalInfo) setAdditionalInfo(parsed.additionalInfo)
-          if (parsed.selectedChallenges) setSelectedChallenges(parsed.selectedChallenges)
+          if (parsed.userId === user.id) {
+            if (parsed.step) setStep(parsed.step)
+            if (parsed.eventType) setEventType(parsed.eventType)
+            if (parsed.name) setName(parsed.name)
+            if (parsed.date) setDate(parsed.date)
+            if (parsed.endDate) setEndDate(parsed.endDate)
+            if (parsed.time) setTime(parsed.time)
+            if (parsed.location) setLocation(parsed.location)
+            if (parsed.additionalInfo) setAdditionalInfo(parsed.additionalInfo)
+            if (parsed.selectedChallenges) setSelectedChallenges(parsed.selectedChallenges)
+          } else {
+            // Draft belongs to another user
+            localStorage.removeItem('memvor_onboarding_draft')
+          }
         } catch (err) {}
       }
       setLoading(false)
@@ -71,12 +78,13 @@ export default function OnboardingWizard() {
 
   // 2. Save draft on change
   useEffect(() => {
-    if (loading) return
+    if (loading || !currentUserId) return
     const draft = {
+      userId: currentUserId,
       step, eventType, name, date, endDate, time, location, additionalInfo, selectedChallenges
     }
     localStorage.setItem('memvor_onboarding_draft', JSON.stringify(draft))
-  }, [step, eventType, name, date, endDate, time, location, additionalInfo, selectedChallenges, loading])
+  }, [step, eventType, name, date, endDate, time, location, additionalInfo, selectedChallenges, loading, currentUserId])
 
   // 3. Fetch Challenges when eventType changes
   useEffect(() => {
