@@ -63,9 +63,10 @@ export async function POST(request: Request) {
       })
     }
 
-    // Em produção, deve ser https://api.asaas.com/v3
-    // Como padrão, usaremos a Sandbox ou verificaremos pelo tamanho da chave
-    const baseUrl = asaasKey.includes('sandbox') || process.env.NODE_ENV !== 'production'
+    // A chave de Sandbox (Homologação) do Asaas sempre contém "hmlg"
+    const isSandbox = asaasKey.includes('sandbox') || asaasKey.includes('hmlg') || process.env.NODE_ENV !== 'production'
+    
+    const baseUrl = isSandbox
       ? 'https://sandbox.asaas.com/api/v3'
       : 'https://api.asaas.com/v3'
 
