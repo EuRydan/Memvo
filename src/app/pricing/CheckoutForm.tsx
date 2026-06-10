@@ -132,9 +132,31 @@ export default function CheckoutForm({ planId, planPrice, userId, returnUrl }: {
                    <Payment
                       initialization={initialization!}
                       customization={customization}
-                      onSubmit={async () => {
-                        // Com a preferência, o Mercado Pago resolve o pagamento.
-                        // Só precisamos redirecionar para o painel na conclusão ou o brick mostrará a tela de sucesso.
+                      onSubmit={async ({ selectedPaymentMethod, formData }: any) => {
+                        return new Promise<void>((resolve, reject) => {
+                          fetch('/api/process-payment', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ formData, userId, planId })
+                          })
+                          .then(res => res.json())
+                          .then(data => {
+                            if (data.success && data.paymentId) {
+                              const separator = returnUrl.includes('?') ? '&' : '?';
+                              window.location.href = `${returnUrl}${separator}session_id=${data.paymentId}`;
+                              resolve();
+                            } else {
+                              console.error(data.error);
+                              setBrickStatus('erro');
+                              reject();
+                            }
+                          })
+                          .catch(err => {
+                            console.error(err);
+                            setBrickStatus('erro');
+                            reject();
+                          });
+                        });
                       }}
                       onError={(error) => {
                         console.error('Erro no Checkout Brick:', error);
