@@ -1,7 +1,7 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Logo } from '@/components/Logo'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
@@ -40,7 +40,7 @@ function CheckoutContent() {
     getUser()
   }, [supabase])
 
-  const initialization = React.useMemo(() => {
+  const initialization = useMemo(() => {
     if (!preferenceId) return undefined;
     return {
       amount: packInfo.rawPrice,
@@ -48,14 +48,14 @@ function CheckoutContent() {
     }
   }, [packInfo.rawPrice, preferenceId]);
 
-  const customization = React.useMemo(() => ({
+  const customization = useMemo(() => ({
     paymentMethods: {
       ticket: 'all',
       bankTransfer: 'all',
       creditCard: 'all',
       mercadoPago: 'all',
     },
-  }), []);
+  } as any), []);
 
   useEffect(() => {
     if (process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY) {

@@ -28,7 +28,7 @@ export default function CheckoutForm({ planId, planPrice, userId, returnUrl }: {
       creditCard: 'all',
       mercadoPago: 'all',
     },
-  }), []);
+  } as any), []);
 
   React.useEffect(() => {
     if (process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY) {
