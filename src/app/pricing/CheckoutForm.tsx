@@ -10,6 +10,7 @@ if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_
 export default function CheckoutForm({ planId, planPrice, returnUrl }: { planId: string, planPrice: string, returnUrl: string }) {
   const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
+  const [brickStatus, setBrickStatus] = useState<string>('carregando')
   
   // Voucher state
   const [useVoucher, setUseVoucher] = useState(false)
@@ -70,14 +71,29 @@ export default function CheckoutForm({ planId, planPrice, returnUrl }: { planId:
                Erro: Chave pública do Mercado Pago não encontrada. Certifique-se de configurar o arquivo .env.local e reiniciar o servidor.
              </div>
            ) : (
-             <Payment
-                initialization={{
-                  amount: numericPrice,
-                }}
+             <>
+               {brickStatus === 'carregando' && (
+                 <div className="flex flex-col items-center justify-center h-48 space-y-4">
+                   <div className="w-8 h-8 border-4 border-[#0a0a0a]/20 border-t-[#0a0a0a] rounded-full animate-spin"></div>
+                   <p className="text-sm text-stone-500 font-medium">Conectando ao Mercado Pago...</p>
+                 </div>
+               )}
+               {brickStatus === 'erro' && (
+                 <div className="p-4 text-center text-red-500 bg-red-50 rounded-xl mt-4">
+                   Erro ao conectar com o Mercado Pago. Verifique sua conexão ou tente recarregar a página.
+                 </div>
+               )}
+               <div style={{ display: brickStatus === 'erro' ? 'none' : 'block' }}>
+                 <Payment
+                    initialization={{
+                      amount: numericPrice,
+                    }}
               customization={{
                 paymentMethods: {
+                  ticket: 'all',
                   bankTransfer: 'all',
-                  creditCard: 'all'
+                  creditCard: 'all',
+                  mercadoPago: 'all',
                 },
               }}
               onSubmit={async (param) => {
@@ -108,11 +124,17 @@ export default function CheckoutForm({ planId, planPrice, returnUrl }: { planId:
                   setIsLoading(false);
                 }
               }}
-              onError={(error) => {
-                console.error('Erro no Checkout Brick:', error);
-                setMessage('Não foi possível carregar as opções de pagamento.');
-              }}
-             />
+                  onError={(error) => {
+                    console.error('Erro no Checkout Brick:', error);
+                    setBrickStatus('erro');
+                    setMessage('Não foi possível carregar as opções de pagamento.');
+                  }}
+                  onReady={() => {
+                    setBrickStatus('pronto');
+                  }}
+                 />
+               </div>
+             </>
            )}
         </div>
       )}
