@@ -72,7 +72,7 @@ export default function CheckoutForm({ planId, planPrice, returnUrl }: { planId:
               }}
               customization={{
                 paymentMethods: {
-                  pix: 'all',
+                  bankTransfer: 'all',
                   creditCard: 'all'
                 },
               }}

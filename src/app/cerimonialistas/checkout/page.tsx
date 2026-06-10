@@ -99,7 +99,7 @@ function CheckoutContent() {
               }}
               customization={{
                 paymentMethods: {
-                  pix: 'all',
+                  bankTransfer: 'all',
                   creditCard: 'all',
                 },
               }}
