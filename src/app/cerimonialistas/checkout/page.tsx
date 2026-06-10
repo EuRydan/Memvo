@@ -140,6 +140,7 @@ function CheckoutContent() {
                   <div style={{ display: brickStatus === 'erro' ? 'none' : 'block' }}>
                     <Payment
                       initialization={{
+                        amount: packInfo.rawPrice,
                         preferenceId: preferenceId,
                       }}
                       customization={{

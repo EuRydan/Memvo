@@ -114,6 +114,7 @@ export default function CheckoutForm({ planId, planPrice, userId, returnUrl }: {
                  <div style={{ display: brickStatus === 'erro' ? 'none' : 'block' }}>
                    <Payment
                       initialization={{
+                        amount: numericPrice,
                         preferenceId: preferenceId,
                       }}
                       customization={{
