@@ -40,7 +40,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob:; font-src 'self' data:; connect-src 'self' https://zqregyrsmxdeurcxtjva.supabase.co wss://zqregyrsmxdeurcxtjva.supabase.co https://api.stripe.com; frame-src 'self' https://js.stripe.com;"
+            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com https://sdk.mercadopago.com https://*.mercadopago.com https://*.mlstatic.com https://*.mercadolibre.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob:; font-src 'self' data:; connect-src 'self' https://zqregyrsmxdeurcxtjva.supabase.co wss://zqregyrsmxdeurcxtjva.supabase.co https://api.stripe.com https://*.mercadopago.com https://*.mlstatic.com https://*.mercadolibre.com; frame-src 'self' https://js.stripe.com https://*.mercadopago.com https://*.mlstatic.com https://*.mercadolibre.com;"
           }
         ]
       }
