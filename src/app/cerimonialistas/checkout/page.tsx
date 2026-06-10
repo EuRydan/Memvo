@@ -4,10 +4,14 @@ import { useSearchParams } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { Logo } from '@/components/Logo'
 import Link from 'next/link'
-// Import supabase client for fetching the user ID
 import { createClient } from '@/lib/supabase/client'
-
 import { Suspense } from 'react'
+import { initMercadoPago, Payment } from '@mercadopago/sdk-react'
+
+// Inicializa o Mercado Pago
+if (process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY) {
+  initMercadoPago(process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY, { locale: 'pt-BR' })
+}
 
 const PACKAGES = {
   pack_5: { name: 'Pacote Starter', count: 5, price: 'R$ 590,00', rawPrice: 590 },
@@ -20,82 +24,23 @@ function CheckoutContent() {
   const packId = searchParams?.get('pack') || 'pack_10'
   const packInfo = PACKAGES[packId as keyof typeof PACKAGES]
 
-  const [paymentMethod, setPaymentMethod] = useState<'PIX' | 'CREDIT_CARD'>('PIX')
-  const [name, setName] = useState('')
-  const [cpf, setCpf] = useState('')
-  const [email, setEmail] = useState('')
-  const [cardNumber, setCardNumber] = useState('')
-  const [cardExpiry, setCardExpiry] = useState('')
-  const [cardCvv, setCardCvv] = useState('')
-
   const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
-  const [pixData, setPixData] = useState<{ encodedImage: string, payload: string } | null>(null)
   
   const [userId, setUserId] = useState<string | null>(null)
   const [userRole, setUserRole] = useState<string | null>(null)
   const supabase = createClient()
 
   useEffect(() => {
-    // Pegar o ID e a role do usuário logado ao carregar a página
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
         setUserId(user.id)
-        setEmail(user.email || '')
         setUserRole(user.user_metadata?.role || 'host')
       }
     }
     getUser()
   }, [supabase])
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!userId) {
-      setMessage('Você precisa estar logado para comprar pacotes.')
-      return
-    }
-
-    setIsLoading(true)
-    setMessage(null)
-
-    try {
-      const response = await fetch('/api/b2b/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          pack: packId,
-          userId,
-          paymentMethod,
-          customer: { name, cpf, email },
-          card: paymentMethod === 'CREDIT_CARD' ? {
-            holderName: name,
-            number: cardNumber.replace(/\D/g, ''),
-            expiryMonth: cardExpiry.split('/')[0]?.trim(),
-            expiryYear: cardExpiry.split('/')[1]?.trim(),
-            ccv: cardCvv,
-          } : undefined
-        }),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Erro ao processar pagamento')
-      }
-
-      if (paymentMethod === 'PIX' && data.pix) {
-        setPixData(data.pix)
-      } else if (paymentMethod === 'CREDIT_CARD') {
-        // Redireciona para o dashboard parceiro
-        window.location.href = '/parceiros'
-      }
-    } catch (err: any) {
-      setMessage(err.message)
-    } finally {
-      setIsLoading(false)
-    }
-  }
 
   if (!packInfo) return <div className="p-10 text-center">Pacote não encontrado.</div>
 
@@ -144,83 +89,61 @@ function CheckoutContent() {
               Voltar ao Meu Painel
             </Link>
           </div>
-        ) : pixData ? (
-          <div className="bg-white p-10 rounded-3xl shadow-sm border border-stone-100 text-center animate-fade-in max-w-sm mx-auto">
-            <h4 className="text-xl font-bold text-[#0a0a0a] mb-2">Finalize no PIX</h4>
-            <p className="text-sm text-[#676f7b] mb-6">Escaneie o QR Code abaixo para pagar seu lote.</p>
-            <img src={`data:image/jpeg;base64,${pixData.encodedImage}`} alt="QR Code PIX" className="w-48 h-48 mb-6 mx-auto rounded-xl border border-stone-200 p-2" />
-            <button 
-              onClick={() => {
-                navigator.clipboard.writeText(pixData.payload)
-                alert('PIX copiado!')
-              }}
-              className="w-full bg-stone-100 hover:bg-stone-200 text-[#0a0a0a] font-semibold text-sm px-6 py-3 rounded-full mb-4 transition-colors"
-            >
-              Copiar código PIX
-            </button>
-            <p className="text-xs text-[#939393]">
-              Suas chaves aparecerão no seu Painel de Parceiros assim que o banco confirmar.
-            </p>
-          </div>
         ) : (
-          <form onSubmit={handleSubmit} className="bg-white p-8 md:p-12 rounded-[24px] shadow-sm border border-stone-100">
+          <div className="bg-white p-8 md:p-12 rounded-[24px] shadow-sm border border-stone-100">
             <h2 className="text-2xl font-bold text-[#0a0a0a] mb-8">Informações de Pagamento</h2>
             
-            <div className="flex bg-stone-100 p-1 rounded-xl mb-8">
-              <button type="button" onClick={() => setPaymentMethod('PIX')} className={`flex-1 text-sm font-semibold py-3 rounded-lg transition-all ${paymentMethod === 'PIX' ? 'bg-white text-[#0a0a0a] shadow-sm' : 'text-[#676f7b] hover:text-[#0a0a0a]'}`}>
-                PIX
-              </button>
-              <button type="button" onClick={() => setPaymentMethod('CREDIT_CARD')} className={`flex-1 text-sm font-semibold py-3 rounded-lg transition-all ${paymentMethod === 'CREDIT_CARD' ? 'bg-white text-[#0a0a0a] shadow-sm' : 'text-[#676f7b] hover:text-[#0a0a0a]'}`}>
-                Cartão de Crédito
-              </button>
-            </div>
+            <Payment
+              initialization={{
+                amount: packInfo.rawPrice,
+              }}
+              customization={{
+                paymentMethods: {
+                  pix: 'all',
+                  creditCard: 'all',
+                },
+              }}
+              onSubmit={async (param) => {
+                setIsLoading(true);
+                setMessage(null);
+                try {
+                  const response = await fetch('/api/b2b/checkout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      ...param,
+                      pack: packId,
+                      userId,
+                    })
+                  });
+                  const data = await response.json();
+                  
+                  if (!response.ok) {
+                    throw new Error(data.error || 'Erro ao processar pagamento');
+                  }
+                  
+                  window.location.href = '/parceiros';
+                  
+                } catch (error: any) {
+                  setMessage(error.message);
+                } finally {
+                  setIsLoading(false);
+                }
+              }}
+              onError={(error) => {
+                console.error(error);
+                setMessage('Erro ao carregar opções de pagamento.');
+              }}
+            />
 
-            <div className="flex flex-col gap-5 mb-8">
-              <div>
-                <label className="block text-xs font-semibold text-[#676f7b] mb-1.5">Nome no Documento</label>
-                <input required type="text" value={name} onChange={e => setName(e.target.value)} className="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-[#0a0a0a] focus:ring-1 focus:ring-[#0a0a0a]" placeholder="Seu nome" />
-              </div>
-              <div className="grid grid-cols-2 gap-5">
-                <div>
-                  <label className="block text-xs font-semibold text-[#676f7b] mb-1.5">CPF ou CNPJ</label>
-                  <input required type="text" value={cpf} onChange={e => setCpf(e.target.value)} className="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-[#0a0a0a] focus:ring-1 focus:ring-[#0a0a0a]" placeholder="000.000.000-00" />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-[#676f7b] mb-1.5">E-mail</label>
-                  <input required type="email" value={email} onChange={e => setEmail(e.target.value)} className="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-[#0a0a0a] focus:ring-1 focus:ring-[#0a0a0a]" placeholder="seu@email.com" />
-                </div>
-              </div>
-
-              {paymentMethod === 'CREDIT_CARD' && (
-                <>
-                  <div className="mt-4 pt-4 border-t border-stone-100">
-                    <label className="block text-xs font-semibold text-[#676f7b] mb-1.5">Número do Cartão</label>
-                    <input required type="text" value={cardNumber} onChange={e => setCardNumber(e.target.value)} className="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-[#0a0a0a] focus:ring-1 focus:ring-[#0a0a0a]" placeholder="0000 0000 0000 0000" />
-                  </div>
-                  <div className="grid grid-cols-2 gap-5">
-                    <div>
-                      <label className="block text-xs font-semibold text-[#676f7b] mb-1.5">Validade</label>
-                      <input required type="text" value={cardExpiry} onChange={e => setCardExpiry(e.target.value)} className="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-[#0a0a0a] focus:ring-1 focus:ring-[#0a0a0a]" placeholder="MM/AA" />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-[#676f7b] mb-1.5">CVV</label>
-                      <input required type="text" value={cardCvv} onChange={e => setCardCvv(e.target.value)} className="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-[#0a0a0a] focus:ring-1 focus:ring-[#0a0a0a]" placeholder="123" />
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
-
-            <button disabled={isLoading} type="submit" className="w-full bg-[#0a0a0a] text-white py-4 rounded-full font-bold text-sm hover:opacity-90 transition-opacity disabled:opacity-50">
-              {isLoading ? 'Processando...' : `Confirmar Pagamento de ${packInfo.price}`}
-            </button>
+            {isLoading && <p className="text-center text-sm text-stone-500 mt-4">Processando...</p>}
 
             {message && (
               <div className="mt-4 text-sm text-red-600 font-semibold text-center bg-red-50 p-4 rounded-xl border border-red-100">
                 {message}
               </div>
             )}
-          </form>
+          </div>
         )}
       </div>
     </div>
