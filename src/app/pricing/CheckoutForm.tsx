@@ -3,14 +3,17 @@
 import React, { useState } from 'react'
 import { initMercadoPago, Payment } from '@mercadopago/sdk-react'
 
-// Inicializa o Mercado Pago (certifique-se de ter a variável no .env.local)
-if (process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY) {
-  initMercadoPago(process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY, { locale: 'pt-BR' })
-}
+
 
 export default function CheckoutForm({ planId, planPrice, returnUrl }: { planId: string, planPrice: string, returnUrl: string }) {
   const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
+  
+  React.useEffect(() => {
+    if (process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY) {
+      initMercadoPago(process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY, { locale: 'pt-BR' })
+    }
+  }, [])
   
   // Voucher state
   const [useVoucher, setUseVoucher] = useState(false)
@@ -66,10 +69,15 @@ export default function CheckoutForm({ planId, planPrice, returnUrl }: { planId:
         </form>
       ) : (
         <div className="flex-1 min-h-[400px]">
-           <Payment
-              initialization={{
-                amount: numericPrice,
-              }}
+           {!process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY ? (
+             <div className="p-4 text-center text-red-500 bg-red-50 rounded-xl mt-4">
+               Erro: Chave pública do Mercado Pago não encontrada. Certifique-se de configurar o arquivo .env.local e reiniciar o servidor.
+             </div>
+           ) : (
+             <Payment
+                initialization={{
+                  amount: numericPrice,
+                }}
               customization={{
                 paymentMethods: {
                   bankTransfer: 'all',
@@ -108,7 +116,8 @@ export default function CheckoutForm({ planId, planPrice, returnUrl }: { planId:
                 console.error('Erro no Checkout Brick:', error);
                 setMessage('Não foi possível carregar as opções de pagamento.');
               }}
-           />
+             />
+           )}
         </div>
       )}
 

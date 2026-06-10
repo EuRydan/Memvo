@@ -8,10 +8,7 @@ import { createClient } from '@/lib/supabase/client'
 import { Suspense } from 'react'
 import { initMercadoPago, Payment } from '@mercadopago/sdk-react'
 
-// Inicializa o Mercado Pago
-if (process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY) {
-  initMercadoPago(process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY, { locale: 'pt-BR' })
-}
+
 
 const PACKAGES = {
   pack_5: { name: 'Pacote Starter', count: 5, price: 'R$ 590,00', rawPrice: 590 },
@@ -30,6 +27,12 @@ function CheckoutContent() {
   const [userId, setUserId] = useState<string | null>(null)
   const [userRole, setUserRole] = useState<string | null>(null)
   const supabase = createClient()
+
+  useEffect(() => {
+    if (process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY) {
+      initMercadoPago(process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY, { locale: 'pt-BR' })
+    }
+  }, [])
 
   useEffect(() => {
     const getUser = async () => {
@@ -93,10 +96,15 @@ function CheckoutContent() {
           <div className="bg-white p-8 md:p-12 rounded-[24px] shadow-sm border border-stone-100">
             <h2 className="text-2xl font-bold text-[#0a0a0a] mb-8">Informações de Pagamento</h2>
             
-            <Payment
-              initialization={{
-                amount: packInfo.rawPrice,
-              }}
+            {!process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY ? (
+               <div className="p-4 text-center text-red-500 bg-red-50 rounded-xl mt-4">
+                 Erro: Chave pública do Mercado Pago não encontrada. Certifique-se de configurar o arquivo .env.local e reiniciar o servidor.
+               </div>
+            ) : (
+              <Payment
+                initialization={{
+                  amount: packInfo.rawPrice,
+                }}
               customization={{
                 paymentMethods: {
                   bankTransfer: 'all',
@@ -135,6 +143,7 @@ function CheckoutContent() {
                 setMessage('Erro ao carregar opções de pagamento.');
               }}
             />
+            )}
 
             {isLoading && <p className="text-center text-sm text-stone-500 mt-4">Processando...</p>}
 
