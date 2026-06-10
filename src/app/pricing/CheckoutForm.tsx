@@ -7,11 +7,40 @@ if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_
   initMercadoPago(process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY, { locale: 'pt-BR' })
 }
 
-export default function CheckoutForm({ planId, planPrice, returnUrl }: { planId: string, planPrice: string, returnUrl: string }) {
+export default function CheckoutForm({ planId, planPrice, userId, returnUrl }: { planId: string, planPrice: string, userId: string, returnUrl: string }) {
   const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
   const [brickStatus, setBrickStatus] = useState<string>('carregando')
+  const [preferenceId, setPreferenceId] = useState<string | null>(null)
   
+  const numericPrice = parseFloat(planPrice.replace('R$', '').replace(',', '.')) || 0
+
+  React.useEffect(() => {
+    async function createPreference() {
+      try {
+        const response = await fetch('/api/create-payment-preference', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ plan: planId, userId, price: numericPrice })
+        })
+        const data = await response.json()
+        if (response.ok && data.preferenceId) {
+          setPreferenceId(data.preferenceId)
+        } else {
+          console.error(data.error)
+          setBrickStatus('erro')
+        }
+      } catch (err) {
+        console.error(err)
+        setBrickStatus('erro')
+      }
+    }
+    
+    if (userId) {
+      createPreference()
+    }
+  }, [planId, userId, numericPrice])
+
   // Voucher state
   const [useVoucher, setUseVoucher] = useState(false)
   const [voucherCode, setVoucherCode] = useState('')
@@ -37,8 +66,6 @@ export default function CheckoutForm({ planId, planPrice, returnUrl }: { planId:
       setIsLoading(false)
     }
   }
-
-  const numericPrice = parseFloat(planPrice.replace('R$', '').replace(',', '.')) || 0
 
   return (
     <div className="flex flex-col w-full h-full">
@@ -83,57 +110,35 @@ export default function CheckoutForm({ planId, planPrice, returnUrl }: { planId:
                    Erro ao conectar com o Mercado Pago. Verifique sua conexão ou tente recarregar a página.
                  </div>
                )}
-               <div style={{ display: brickStatus === 'erro' ? 'none' : 'block' }}>
-                 <Payment
-                    initialization={{
-                      amount: numericPrice,
-                    }}
-              customization={{
-                paymentMethods: {
-                  ticket: 'all',
-                  bankTransfer: 'all',
-                  creditCard: 'all',
-                  mercadoPago: 'all',
-                },
-              }}
-              onSubmit={async (param) => {
-                setIsLoading(true);
-                setMessage(null);
-                try {
-                  const response = await fetch('/api/create-checkout-session', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                      ...param,
-                      plan: planId,
-                    })
-                  });
-                  const data = await response.json();
-                  
-                  if (!response.ok) {
-                    throw new Error(data.error || 'Erro ao processar pagamento');
-                  }
-                  
-                  // Se for sucesso, redireciona
-                  const separator = returnUrl.includes('?') ? '&' : '?';
-                  window.location.href = `${returnUrl}${separator}session_id=${data.paymentId}`;
-                  
-                } catch (error: any) {
-                  setMessage(error.message);
-                } finally {
-                  setIsLoading(false);
-                }
-              }}
-                  onError={(error) => {
-                    console.error('Erro no Checkout Brick:', error);
-                    setBrickStatus('erro');
-                    setMessage('Não foi possível carregar as opções de pagamento.');
-                  }}
-                  onReady={() => {
-                    setBrickStatus('pronto');
-                  }}
-                 />
-               </div>
+               {preferenceId && (
+                 <div style={{ display: brickStatus === 'erro' ? 'none' : 'block' }}>
+                   <Payment
+                      initialization={{
+                        preferenceId: preferenceId,
+                      }}
+                      customization={{
+                        paymentMethods: {
+                          ticket: 'all',
+                          bankTransfer: 'all',
+                          creditCard: 'all',
+                          mercadoPago: 'all',
+                        },
+                      }}
+                      onSubmit={async () => {
+                        // Com a preferência, o Mercado Pago resolve o pagamento.
+                        // Só precisamos redirecionar para o painel na conclusão ou o brick mostrará a tela de sucesso.
+                      }}
+                      onError={(error) => {
+                        console.error('Erro no Checkout Brick:', error);
+                        setBrickStatus('erro');
+                        setMessage('Não foi possível carregar as opções de pagamento.');
+                      }}
+                      onReady={() => {
+                        setBrickStatus('pronto');
+                      }}
+                   />
+                 </div>
+               )}
              </>
            )}
         </div>

@@ -44,12 +44,56 @@ export async function POST(request: Request) {
         const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey)
 
         if (planIdRaw.startsWith('b2b_')) {
-          // Já lidamos com os vouchers na rota síncrona se for cartão, mas para PIX o webhook precisa criar
-          // Vamos verificar se já existe voucher para esse paymentId
-          // Nota: a lógica atual do b2b/checkout/route.ts cria os vouchers no momento se for approved.
-          // Se for PIX e aprovar depois, o webhook deve gerar.
-          // Por simplicidade, assumiremos que B2B lida com a inserção dos vouchers aqui se não existirem
-          // Mas como o plano é simplificar, se for PIX B2B será resolvido aqui
+          // Geração de Vouchers para parceiros
+          const pack = planIdRaw.replace('b2b_', '')
+          const PACKAGES: Record<string, { count: number, plan: string }> = {
+            pack_5: { count: 5, plan: 'classic' },
+            pack_10: { count: 10, plan: 'classic' },
+            pack_20: { count: 20, plan: 'classic' }
+          }
+          const packData = PACKAGES[pack]
+
+          if (packData) {
+            // Verifica se já gerou vouchers para este pagamento
+            const { data: existingVouchers } = await supabaseAdmin
+              .from('vouchers')
+              .select('id')
+              .eq('payment_id', paymentId.toString())
+              .limit(1)
+
+            if (!existingVouchers || existingVouchers.length === 0) {
+              const { generateVoucherCode } = await import('@/lib/voucher-generator')
+              const newVouchers = []
+              
+              for (let i = 0; i < packData.count; i++) {
+                let isUnique = false
+                let newCode = ''
+                let attempts = 0
+                
+                while (!isUnique && attempts < 10) {
+                  newCode = generateVoucherCode()
+                  const { data } = await supabaseAdmin.from('vouchers').select('id').eq('code', newCode).maybeSingle()
+                  if (!data) isUnique = true
+                  attempts++
+                }
+
+                newVouchers.push({
+                  code: newCode,
+                  purchaser_id: userId,
+                  plan_type: packData.plan,
+                  status: 'available',
+                  payment_id: paymentId.toString() // para evitar duplicidade futuramente
+                })
+              }
+
+              const { error: insertError } = await supabaseAdmin.from('vouchers').insert(newVouchers)
+              if (insertError) {
+                console.error('Erro ao inserir vouchers no webhook:', insertError)
+              } else {
+                console.log(`Gerado ${packData.count} vouchers para o parceiro ${userId}`)
+              }
+            }
+          }
         } else {
           const planId = planIdRaw
 

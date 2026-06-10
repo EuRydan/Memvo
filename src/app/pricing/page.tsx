@@ -304,6 +304,7 @@ export default function PricingPage() {
               <CheckoutForm 
                 planId={selectedPlan.id} 
                 planPrice={selectedPlan.price} 
+                userId={user?.id}
                 returnUrl={`${typeof window !== 'undefined' ? window.location.origin : ''}/dashboard/success?plan=${selectedPlan.id}`} 
               />
             </div>

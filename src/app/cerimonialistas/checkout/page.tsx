@@ -24,6 +24,8 @@ function CheckoutContent() {
 
   const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
+  const [brickStatus, setBrickStatus] = useState<string>('carregando')
+  const [preferenceId, setPreferenceId] = useState<string | null>(null)
   
   const [userId, setUserId] = useState<string | null>(null)
   const [userRole, setUserRole] = useState<string | null>(null)
@@ -39,6 +41,32 @@ function CheckoutContent() {
     }
     getUser()
   }, [supabase])
+
+  useEffect(() => {
+    async function createPreference() {
+      try {
+        const response = await fetch('/api/create-payment-preference', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ plan: `b2b_${packId}`, userId, price: packInfo.rawPrice })
+        })
+        const data = await response.json()
+        if (response.ok && data.preferenceId) {
+          setPreferenceId(data.preferenceId)
+        } else {
+          console.error(data.error)
+          setBrickStatus('erro')
+        }
+      } catch (err) {
+        console.error(err)
+        setBrickStatus('erro')
+      }
+    }
+    
+    if (userId && userRole === 'partner' && packInfo) {
+      createPreference()
+    }
+  }, [packId, userId, userRole, packInfo])
 
   if (!packInfo) return <div className="p-10 text-center">Pacote não encontrado.</div>
 
@@ -96,48 +124,48 @@ function CheckoutContent() {
                  Erro: Chave pública do Mercado Pago não encontrada. Certifique-se de configurar o arquivo .env.local e reiniciar o servidor.
                </div>
             ) : (
-              <Payment
-                initialization={{
-                  amount: packInfo.rawPrice,
-                }}
-              customization={{
-                paymentMethods: {
-                  bankTransfer: 'all',
-                  creditCard: 'all',
-                },
-              }}
-              onSubmit={async (param) => {
-                setIsLoading(true);
-                setMessage(null);
-                try {
-                  const response = await fetch('/api/b2b/checkout', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                      ...param,
-                      pack: packId,
-                      userId,
-                    })
-                  });
-                  const data = await response.json();
-                  
-                  if (!response.ok) {
-                    throw new Error(data.error || 'Erro ao processar pagamento');
-                  }
-                  
-                  window.location.href = '/parceiros';
-                  
-                } catch (error: any) {
-                  setMessage(error.message);
-                } finally {
-                  setIsLoading(false);
-                }
-              }}
-              onError={(error) => {
-                console.error(error);
-                setMessage('Erro ao carregar opções de pagamento.');
-              }}
-            />
+              <>
+                {brickStatus === 'carregando' && (
+                  <div className="flex flex-col items-center justify-center h-48 space-y-4">
+                    <div className="w-8 h-8 border-4 border-[#0a0a0a]/20 border-t-[#0a0a0a] rounded-full animate-spin"></div>
+                    <p className="text-sm text-stone-500 font-medium">Conectando ao Mercado Pago...</p>
+                  </div>
+                )}
+                {brickStatus === 'erro' && (
+                  <div className="p-4 text-center text-red-500 bg-red-50 rounded-xl mt-4">
+                    Erro ao conectar com o Mercado Pago. Verifique sua conexão ou tente recarregar a página.
+                  </div>
+                )}
+                {preferenceId && (
+                  <div style={{ display: brickStatus === 'erro' ? 'none' : 'block' }}>
+                    <Payment
+                      initialization={{
+                        preferenceId: preferenceId,
+                      }}
+                      customization={{
+                        paymentMethods: {
+                          ticket: 'all',
+                          bankTransfer: 'all',
+                          creditCard: 'all',
+                          mercadoPago: 'all',
+                        },
+                      }}
+                      onSubmit={async () => {
+                        // Com a preferência, o Mercado Pago resolve o pagamento e chama o webhook.
+                        // O brick lida com sucesso automaticamente na tela ou redireciona.
+                      }}
+                      onError={(error) => {
+                        console.error('Erro no Checkout Brick:', error);
+                        setBrickStatus('erro');
+                        setMessage('Não foi possível carregar as opções de pagamento.');
+                      }}
+                      onReady={() => {
+                        setBrickStatus('pronto');
+                      }}
+                    />
+                  </div>
+                )}
+              </>
             )}
 
             {isLoading && <p className="text-center text-sm text-stone-500 mt-4">Processando...</p>}
