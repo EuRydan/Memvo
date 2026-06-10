@@ -3,7 +3,9 @@
 import React, { useState } from 'react'
 import { initMercadoPago, Payment } from '@mercadopago/sdk-react'
 
-
+if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY) {
+  initMercadoPago(process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY, { locale: 'pt-BR' })
+}
 
 export default function CheckoutForm({ planId, planPrice, userId, returnUrl }: { planId: string, planPrice: string, userId: string, returnUrl: string }) {
   const [isLoading, setIsLoading] = useState(false)
@@ -31,10 +33,6 @@ export default function CheckoutForm({ planId, planPrice, userId, returnUrl }: {
   } as any), []);
 
   React.useEffect(() => {
-    if (process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY) {
-      initMercadoPago(process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY, { locale: 'pt-BR' })
-    }
-
     async function createPreference() {
       try {
         const response = await fetch('/api/create-payment-preference', {
