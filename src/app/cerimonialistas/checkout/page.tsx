@@ -8,8 +8,9 @@ import { createClient } from '@/lib/supabase/client'
 import { Suspense } from 'react'
 import { initMercadoPago, Payment } from '@mercadopago/sdk-react'
 
-
-
+if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY) {
+  initMercadoPago(process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY, { locale: 'pt-BR' })
+}
 const PACKAGES = {
   pack_5: { name: 'Pacote Starter', count: 5, price: 'R$ 590,00', rawPrice: 590 },
   pack_10: { name: 'Pacote Pro', count: 10, price: 'R$ 990,00', rawPrice: 990 },
@@ -27,12 +28,6 @@ function CheckoutContent() {
   const [userId, setUserId] = useState<string | null>(null)
   const [userRole, setUserRole] = useState<string | null>(null)
   const supabase = createClient()
-
-  useEffect(() => {
-    if (process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY) {
-      initMercadoPago(process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY, { locale: 'pt-BR' })
-    }
-  }, [])
 
   useEffect(() => {
     const getUser = async () => {

@@ -3,17 +3,13 @@
 import React, { useState } from 'react'
 import { initMercadoPago, Payment } from '@mercadopago/sdk-react'
 
-
+if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY) {
+  initMercadoPago(process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY, { locale: 'pt-BR' })
+}
 
 export default function CheckoutForm({ planId, planPrice, returnUrl }: { planId: string, planPrice: string, returnUrl: string }) {
   const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
-  
-  React.useEffect(() => {
-    if (process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY) {
-      initMercadoPago(process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY, { locale: 'pt-BR' })
-    }
-  }, [])
   
   // Voucher state
   const [useVoucher, setUseVoucher] = useState(false)
