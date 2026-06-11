@@ -25,9 +25,14 @@ export function LoginContent() {
       setLoading(false)
       return
     }
+    const { data: { user } } = await supabase.auth.getUser()
+    const role = user?.user_metadata?.role
+
     const redirectTo = searchParams.get('redirect')
     if (redirectTo) {
       router.push(redirectTo)
+    } else if (role === 'affiliate') {
+      router.push('/parceiros/dashboard')
     } else {
       router.push('/dashboard')
     }
