@@ -234,7 +234,7 @@ function PricingContent() {
         {/* ── Pricing Cards / Gateway ── */}
         {!selectedPlan ? (
           <div className="flex flex-nowrap overflow-x-auto items-stretch justify-start xl:justify-center gap-6 lg:gap-8 mb-14 pt-16 pb-16 snap-x snap-mandatory px-6 sm:px-12" style={{ scrollbarWidth: 'none' }}>
-            {PLANS.map(plan => (
+            {PLANS.filter(plan => !(activeCoupon && plan.id === 'freemium')).map(plan => (
               <div key={plan.id}
                 className={`shrink-0 snap-center w-full max-w-[320px] md:w-80 relative text-center border p-8 pb-14 rounded-2xl transition-all duration-300 hover:-translate-y-1 flex flex-col ${
                   plan.popular 
