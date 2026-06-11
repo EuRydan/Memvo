@@ -59,3 +59,4 @@ drop trigger if exists update_onboarding_drafts_modtime on onboarding_drafts;
 create trigger update_onboarding_drafts_modtime
 before update on onboarding_drafts
 for each row execute function update_modified_column();
+alter table events add column if not exists status text default 'published';
