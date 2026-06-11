@@ -1,11 +1,26 @@
 import Link from 'next/link'
 import { Logo } from '@/components/Logo'
 import { WordmarkFooter } from '@/components/WordmarkFooter'
+import { GooeyText } from '@/components/ui/gooey-text'
 
 export default function ParceirosLandingPage() {
   return (
-    <div className="min-h-screen bg-[#fafafa] overflow-clip">
-      
+    <div className="min-h-screen bg-[#fafafa] overflow-clip relative">
+      {/* Background orbs */}
+      <div className="fixed top-[-80px] left-[-80px] w-[320px] h-[320px] rounded-full pointer-events-none z-0"
+        style={{
+          background: 'radial-gradient(circle, rgba(253,206,176,0.5) 0%, transparent 70%)',
+          filter: 'blur(90px)',
+          animation: 'drift 20s ease-in-out infinite alternate',
+        }} />
+      <div className="fixed top-[-60px] right-[-100px] w-[380px] h-[380px] rounded-full pointer-events-none z-0"
+        style={{
+          background: 'radial-gradient(circle, rgba(235,220,255,0.5) 0%, transparent 70%)',
+          filter: 'blur(100px)',
+          animationDelay: '-5s',
+          animation: 'drift2 18s ease-in-out infinite alternate',
+        }} />
+
       {/* ── Navbar ── */}
       <div className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
         <nav className="pointer-events-auto flex items-center justify-between px-6 h-14 rounded-full w-full max-w-3xl"
@@ -36,25 +51,30 @@ export default function ParceirosLandingPage() {
       </div>
 
       {/* ── HERO ── */}
-      <section className="relative w-full pt-32 pb-20 px-6">
-        <div className="text-center max-w-2xl mx-auto mt-10">
-          <p className="text-[11px] font-semibold tracking-[0.2em] text-[#939393] uppercase mb-4">Para Profissionais de Eventos</p>
-          <h1 style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
-            className="text-[2.5rem] md:text-[3.5rem] font-bold tracking-[-0.02em] text-[#0a0a0a] leading-tight mb-6">
-            Indique o Memvor e ganhe por cada celebração
-          </h1>
-          <p className="text-[16px] text-[#676f7b] leading-relaxed mb-10 max-w-lg mx-auto">
-            Cerimonialistas, fotógrafos e assessores: ofereça uma experiência inovadora para seus clientes e receba <strong>30% de comissão</strong> por cada plano vendido através do seu link exclusivo.
+      <section className="relative w-full min-h-[80vh] flex flex-col items-center justify-center pt-32 pb-20 px-6 z-10">
+        <div className="text-center max-w-3xl mx-auto flex flex-col items-center justify-center h-64">
+          <p className="text-[1.2rem] md:text-[1.5rem] font-medium tracking-wide text-[#676f7b] mb-4">
+            Suas melhores memórias
           </p>
-          <Link href="/parceiros/cadastro"
-            className="inline-block bg-[#0a0a0a] text-white text-sm font-bold px-8 py-4 rounded-full hover:opacity-90 transition-all active:scale-95 shadow-xl">
-            Quero ser parceiro
-          </Link>
+          
+          <div className="h-32 flex items-center justify-center w-full">
+            <GooeyText 
+              texts={["Casamentos", "Festas", "Eventos", "Inesquecíveis"]} 
+              textClassName="font-bold text-[#0a0a0a]"
+            />
+          </div>
+
+          <a href="#how-it-works" className="mt-12 text-sm font-semibold text-[#939393] uppercase tracking-widest hover:text-[#0a0a0a] transition-colors cursor-pointer flex flex-col items-center gap-2">
+            Clique para continuar
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="animate-bounce">
+              <path d="M12 5v14M19 12l-7 7-7-7"/>
+            </svg>
+          </a>
         </div>
       </section>
 
       {/* ── HOW IT WORKS ── */}
-      <section className="relative w-full py-20 bg-white">
+      <section id="how-it-works" className="relative w-full py-20 bg-white z-10">
         <div className="text-center mb-16 px-6 max-w-lg mx-auto">
           <h2 style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
             className="text-[2rem] font-bold tracking-[-0.02em] text-[#0a0a0a] leading-tight">
