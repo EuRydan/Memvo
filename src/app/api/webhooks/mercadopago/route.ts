@@ -98,6 +98,41 @@ export async function POST(request: Request) {
             .eq('id', eventId)
             
           console.log(`Plano ${planId} e evento ${eventId} ativados com sucesso via Webhook MercadoPago para o usuário ${userId}`)
+
+          // 4. Process Affiliate Commission
+          const { data: user } = await supabaseAdmin.auth.admin.getUserById(userId)
+          const affiliateCode = user?.user?.user_metadata?.affiliate_code
+
+          if (affiliateCode) {
+            // Find affiliate by code
+            const { data: affiliate } = await supabaseAdmin
+              .from('affiliates')
+              .select('id, user_id, commission_rate, status')
+              .eq('affiliate_code', affiliateCode)
+              .maybeSingle()
+
+            // Ensure affiliate is approved and the buyer is not the affiliate themselves
+            if (affiliate && affiliate.status === 'approved' && affiliate.user_id !== userId) {
+              const commissionAmount = paidAmount * Number(affiliate.commission_rate)
+              
+              await supabaseAdmin
+                .from('affiliate_commissions')
+                .insert({
+                  affiliate_id: affiliate.id,
+                  payment_intent_id: intentId,
+                  amount: commissionAmount,
+                  status: 'pending'
+                })
+                // Ignore conflicts (e.g. if verify already created it due to race condition)
+                .select()
+                .single()
+                .then(({ error }) => {
+                  if (error && error.code !== '23505') { // 23505 = unique_violation
+                    console.error('Error creating commission in webhook:', error)
+                  }
+                })
+            }
+          }
         }
 
         return NextResponse.json({ success: true, message: 'Processed successfully' })

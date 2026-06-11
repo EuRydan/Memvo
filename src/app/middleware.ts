@@ -44,19 +44,27 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
-  const isAuthRoute = request.nextUrl.pathname.startsWith('/login') || request.nextUrl.pathname.startsWith('/register')
+  // Route matchers
+  const isAuthRoute = request.nextUrl.pathname.startsWith('/login') || request.nextUrl.pathname.startsWith('/register') || request.nextUrl.pathname.startsWith('/afiliados/cadastro')
   const isDashboardRoute = request.nextUrl.pathname.startsWith('/dashboard')
   const isPricingRoute = request.nextUrl.pathname.startsWith('/pricing')
   const isOnboardingRoute = request.nextUrl.pathname.startsWith('/onboarding')
+  const isAffiliateDashboard = request.nextUrl.pathname.startsWith('/afiliados/dashboard')
 
   // Se não tem user logado e tentou acessar rota protegida
-  if (!user && (isDashboardRoute || isPricingRoute || isOnboardingRoute)) {
+  if (!user && (isDashboardRoute || isPricingRoute || isOnboardingRoute || isAffiliateDashboard)) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
+  // Affiliate Role Check
+  const role = user?.user_metadata?.role || 'host'
+  if (user && isAffiliateDashboard && role !== 'affiliate') {
+    return NextResponse.redirect(new URL('/dashboard', request.url))
+  }
+
   // Se tem user logado e tentou acessar login/register, manda pro lugar certo
-  // Se está acessando uma rota protegida (dashboard, pricing, onboarding), aplica o fluxo lógico
-  if (user && (isAuthRoute || isDashboardRoute || isPricingRoute || isOnboardingRoute)) {
+  // Se está acessando uma rota protegida de HOST (dashboard, pricing, onboarding), aplica o fluxo lógico
+  if (user && role !== 'affiliate' && (isAuthRoute || isDashboardRoute || isPricingRoute || isOnboardingRoute)) {
     
     // Obter plano do usuário
     const { data: planData } = await supabase
@@ -101,13 +109,16 @@ export async function middleware(request: NextRequest) {
        // Tem evento (que não é draft, ex: evento arquivado) e não tem plano, ou outro caso limite
        // Vamos permitir ir para dashboard ou pricing. Se tentar login/register, manda pro dashboard.
        if (isAuthRoute) {
-         targetUrl = '/dashboard'
-       }
+        targetUrl = '/dashboard'
+      }
     }
 
-    if (targetUrl && request.nextUrl.pathname !== targetUrl && !request.nextUrl.pathname.startsWith(targetUrl.split('?')[0])) {
-        return NextResponse.redirect(new URL(targetUrl, request.url))
+    if (targetUrl && request.nextUrl.pathname !== targetUrl) {
+      return NextResponse.redirect(new URL(targetUrl, request.url))
     }
+  } else if (user && role === 'affiliate' && isAuthRoute) {
+    // Affiliate logged in, trying to access auth routes
+    return NextResponse.redirect(new URL('/afiliados/dashboard', request.url))
   }
 
   return supabaseResponse

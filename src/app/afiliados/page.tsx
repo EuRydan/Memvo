@@ -1,0 +1,105 @@
+import Link from 'next/link'
+import { Logo } from '@/components/Logo'
+import { WordmarkFooter } from '@/components/WordmarkFooter'
+
+export default function AfiliadosLandingPage() {
+  return (
+    <div className="min-h-screen bg-[#fafafa] overflow-clip">
+      
+      {/* ── Navbar ── */}
+      <div className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
+        <nav className="pointer-events-auto flex items-center justify-between px-6 h-14 rounded-full w-full max-w-3xl"
+          style={{
+            background: 'rgba(255, 255, 255, 0.4)',
+            backdropFilter: 'blur(24px)',
+            WebkitBackdropFilter: 'blur(24px)',
+            border: '1px solid rgba(255, 255, 255, 0.4)',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.2)',
+          }}
+        >
+          <Link href="/" className="flex items-center gap-2" aria-label="Memvor Home">
+            <Logo className="h-6 w-auto text-black" />
+            <span className="sr-only">Memvor</span>
+          </Link>
+          <div className="flex items-center gap-4">
+            <Link href="/login"
+              className="text-sm font-semibold text-[#0a0a0a]/70 hover:text-[#0a0a0a] transition-colors">
+              Entrar
+            </Link>
+            <Link href="/afiliados/cadastro"
+              className="bg-[#0a0a0a] text-white text-xs font-bold px-4 py-2 rounded-full hover:bg-black/80 transition-all active:scale-95"
+              style={{ boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>
+              Quero ser afiliado
+            </Link>
+          </div>
+        </nav>
+      </div>
+
+      {/* ── HERO ── */}
+      <section className="relative w-full pt-32 pb-20 px-6">
+        <div className="text-center max-w-2xl mx-auto mt-10">
+          <p className="text-[11px] font-semibold tracking-[0.2em] text-[#939393] uppercase mb-4">Para Profissionais de Eventos</p>
+          <h1 style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
+            className="text-[2.5rem] md:text-[3.5rem] font-bold tracking-[-0.02em] text-[#0a0a0a] leading-tight mb-6">
+            Indique o Memvor e ganhe por cada celebração
+          </h1>
+          <p className="text-[16px] text-[#676f7b] leading-relaxed mb-10 max-w-lg mx-auto">
+            Cerimonialistas, fotógrafos e assessores: ofereça uma experiência inovadora para seus clientes e receba <strong>30% de comissão</strong> por cada plano vendido através do seu link exclusivo.
+          </p>
+          <Link href="/afiliados/cadastro"
+            className="inline-block bg-[#0a0a0a] text-white text-sm font-bold px-8 py-4 rounded-full hover:opacity-90 transition-all active:scale-95 shadow-xl">
+            Quero ser afiliado
+          </Link>
+        </div>
+      </section>
+
+      {/* ── HOW IT WORKS ── */}
+      <section className="relative w-full py-20 bg-white">
+        <div className="text-center mb-16 px-6 max-w-lg mx-auto">
+          <h2 style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
+            className="text-[2rem] font-bold tracking-[-0.02em] text-[#0a0a0a] leading-tight">
+            Como funciona em 3 passos
+          </h2>
+        </div>
+
+        <div className="max-w-4xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
+          {[
+            { step: '01', title: 'Cadastre-se', desc: 'Preencha o formulário e crie seu perfil de profissional parceiro.' },
+            { step: '02', title: 'Compartilhe seu link', desc: 'Receba seu link exclusivo e envie para os noivos ou debutantes.' },
+            { step: '03', title: 'Receba sua comissão', desc: 'Acompanhe as vendas no seu painel e receba 30% diretamente no seu PIX.' }
+          ].map((item, i) => (
+            <div key={i} className="text-center p-8 rounded-3xl bg-[#fafafa] border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 rounded-full bg-[#0a0a0a] text-white flex items-center justify-center font-bold mx-auto mb-6">
+                {item.step}
+              </div>
+              <h3 className="text-lg font-semibold text-[#0a0a0a] mb-3">{item.title}</h3>
+              <p className="text-sm text-[#676f7b]">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── FINAL CTA ── */}
+      <section className="relative px-6 py-20 overflow-hidden mx-5 mb-10 rounded-[28px] mt-10"
+        style={{
+          background: 'linear-gradient(160deg, #f4c5a8 0%, #c8b8e0 55%, #b8d0f0 100%)',
+        }}>
+        <div className="relative text-center max-w-md mx-auto">
+          <h2 style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
+            className="text-[2rem] font-bold tracking-[-0.02em] text-white leading-tight mb-4">
+            Aumente sua renda indicando tecnologia de ponta
+          </h2>
+          <p className="text-sm text-white/90 mb-8 leading-relaxed">
+            Seja um dos primeiros parceiros do Memvor e agregue valor aos seus pacotes de serviços.
+          </p>
+          <Link href="/afiliados/cadastro"
+            className="inline-block bg-white text-[#0a0a0a] text-sm font-bold px-8 py-4 rounded-full hover:bg-[#fafafa] transition-all active:scale-95 shadow-xl">
+            Fazer cadastro agora
+          </Link>
+        </div>
+      </section>
+
+      <WordmarkFooter />
+    </div>
+  )
+}

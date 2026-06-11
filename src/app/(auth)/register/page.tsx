@@ -21,6 +21,14 @@ function getStrength(pwd: string): { level: number; label: string; color: string
   return { level: 4, label: 'Forte', color: '#22c55e' }
 }
 
+function getCookie(name: string) {
+  if (typeof document === 'undefined') return null
+  const value = `; ${document.cookie}`
+  const parts = value.split(`; ${name}=`)
+  if (parts.length === 2) return parts.pop()?.split(';').shift()
+  return null
+}
+
 function RegisterContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -50,7 +58,11 @@ function RegisterContent() {
     setError('')
 
     // 1. Create the user with metadata
+    const affiliateCode = getCookie('affiliate_code')
     const metadata: any = { full_name: name, role: 'host' }
+    if (affiliateCode) {
+      metadata.affiliate_code = affiliateCode
+    }
 
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
