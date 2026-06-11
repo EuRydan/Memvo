@@ -495,9 +495,14 @@ function PricingContent() {
   )
 }
 
-export default function PricingPage() {
+export default function Pricing() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#fafafa] flex items-center justify-center"><div className="animate-spin text-stone-400">Carregando...</div></div>}>
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#fafafa] flex flex-col items-center justify-center space-y-4">
+        <div className="w-8 h-8 border-4 border-[#0a0a0a]/20 border-t-[#0a0a0a] rounded-full animate-spin"></div>
+        <div className="text-stone-500 font-medium text-sm">Carregando...</div>
+      </div>
+    }>
       <PricingContent />
     </Suspense>
   )
