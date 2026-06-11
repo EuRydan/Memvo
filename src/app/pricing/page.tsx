@@ -236,11 +236,19 @@ function PricingContent() {
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
           <Logo className="h-6 w-auto text-[#0a0a0a]" />
         </div>
-        <Link href="/register"
-          className="bg-[#0a0a0a] text-white text-xs font-semibold px-4 py-2 rounded-full hover:opacity-85 transition-all"
-          style={{ boxShadow: '0 4px 12px rgba(0,0,0,0.18)' }}>
-          Começar
-        </Link>
+        {user ? (
+          <Link href="/dashboard"
+            className="bg-[#0a0a0a] text-white text-xs font-semibold px-4 py-2 rounded-full hover:opacity-85 transition-all"
+            style={{ boxShadow: '0 4px 12px rgba(0,0,0,0.18)' }}>
+            Ir para o Painel
+          </Link>
+        ) : (
+          <Link href="/register"
+            className="bg-[#0a0a0a] text-white text-xs font-semibold px-4 py-2 rounded-full hover:opacity-85 transition-all"
+            style={{ boxShadow: '0 4px 12px rgba(0,0,0,0.18)' }}>
+            Começar
+          </Link>
+        )}
       </header>
 
       <main className={`relative z-10 pt-24 pb-20 px-5 mx-auto transition-all duration-500 ${selectedPlan ? 'max-w-5xl' : 'max-w-[1400px]'}`}>
