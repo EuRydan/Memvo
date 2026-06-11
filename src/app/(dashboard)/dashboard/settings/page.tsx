@@ -14,6 +14,7 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true)
   const [planId, setPlanId] = useState<string>('none')
   const [activeCount, setActiveCount] = useState(0)
+  const [latestEventId, setLatestEventId] = useState<string | null>(null)
 
   useEffect(() => {
     async function load() {
@@ -41,8 +42,9 @@ export default function SettingsPage() {
         .eq('owner_id', user.id)
         .order('created_at', { ascending: false })
 
-      if (events) {
+      if (events && events.length > 0) {
         setActiveCount(countActiveEvents(events))
+        setLatestEventId(events[0].id)
       }
       
       setLoading(false)
@@ -96,10 +98,16 @@ export default function SettingsPage() {
               </div>
             </div>
             <button
-              onClick={() => router.push('/dashboard')}
+              onClick={() => {
+                if (latestEventId) {
+                  router.push(`/pricing?eventId=${latestEventId}`)
+                } else {
+                  router.push('/dashboard')
+                }
+              }}
               className="bg-ink text-white font-semibold py-2.5 px-5 rounded-xl hover:opacity-90 active:scale-95 transition-all text-sm whitespace-nowrap"
             >
-              Gerenciar no Painel
+              Fazer Upgrade
             </button>
           </div>
 
