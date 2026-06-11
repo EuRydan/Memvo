@@ -1,13 +1,13 @@
 'use client'
 
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import CheckoutForm from './CheckoutForm'
 import { WordmarkFooter } from '@/components/WordmarkFooter'
 import { Logo } from '@/components/Logo'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { createClient } from '@/lib/supabase/client'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 const PLANS = [
   {
@@ -103,13 +103,16 @@ const FAQS = [
   },
 ]
 
-export default function PricingPage() {
+function PricingContent() {
   const [preferenceId, setPreferenceId] = useState<string | null>(null)
   const [intentId, setIntentId] = useState<string | null>(null)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [selectedPlan, setSelectedPlan] = useState<typeof PLANS[0] | null>(null)
   const [user, setUser] = useState<any>(null)
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const eventId = searchParams.get('eventId')
+  const voucher = searchParams.get('voucher')
 
   useEffect(() => {
     const checkUser = async () => {
@@ -125,13 +128,21 @@ export default function PricingPage() {
       router.push('/register?redirect=/pricing')
       return
     }
+    if (!eventId) {
+      alert("Nenhum evento associado. Por favor, crie um evento no Dashboard antes de assinar.")
+      return
+    }
     
     // Create payment intent
     const response = await fetch('/api/payment-intents/create', {
       method: 'POST',
-      body: JSON.stringify({ planId: plan.id }),
+      body: JSON.stringify({ plan: plan.id, eventId, voucher }),
     })
     const data = await response.json()
+    if (!data.success) {
+      alert('Erro ao criar pagamento: ' + (data.error || 'Desconhecido'))
+      return
+    }
     setIntentId(data.intentId)
     setPreferenceId(data.preferenceId)
     setSelectedPlan(plan)
@@ -437,5 +448,13 @@ export default function PricingPage() {
       <WordmarkFooter />
 
     </div>
+  )
+}
+
+export default function PricingPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#fafafa] flex items-center justify-center"><div className="animate-spin text-stone-400">Carregando...</div></div>}>
+      <PricingContent />
+    </Suspense>
   )
 }
