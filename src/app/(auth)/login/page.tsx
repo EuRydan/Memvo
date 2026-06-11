@@ -29,7 +29,7 @@ export function LoginContent() {
     if (redirectTo) {
       router.push(redirectTo)
     } else {
-      router.push('/onboarding')
+      router.push('/dashboard')
     }
   }
 

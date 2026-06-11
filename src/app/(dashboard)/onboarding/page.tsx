@@ -41,6 +41,7 @@ export default function OnboardingWizard() {
   const [savedEventId, setSavedEventId] = useState<string | null>(null)
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
   const [promoCode, setPromoCode] = useState('')
+  const [hasPlan, setHasPlan] = useState(false)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -50,6 +51,15 @@ export default function OnboardingWizard() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { router.push('/login'); return }
       setCurrentUserId(user.id)
+
+      const { data: planData } = await supabase
+        .from('user_plans')
+        .select('id')
+        .eq('user_id', user.id)
+        .limit(1)
+        .maybeSingle()
+        
+      setHasPlan(!!planData)
 
       // Load draft from backend
       try {
@@ -156,8 +166,8 @@ export default function OnboardingWizard() {
         name,
         date,
         owner_id: user.id,
-        active: false,
-        status: 'draft',
+        active: hasPlan ? true : false,
+        status: hasPlan ? 'published' : 'draft',
         event_type: eventType,
         time,
         location,
@@ -503,16 +513,20 @@ export default function OnboardingWizard() {
               else if (step === 5 && date) saveEventToDB() // Save before step 6/7
               else if (step === 6) handleNext()
               else if (step === 7) {
-                const query = new URLSearchParams()
-                if (savedEventId) query.append('eventId', savedEventId)
-                if (promoCode) query.append('voucher', promoCode)
-                router.push(`/pricing?${query.toString()}`)
+                if (hasPlan) {
+                  router.push(`/dashboard/${savedEventId || ''}`)
+                } else {
+                  const query = new URLSearchParams()
+                  if (savedEventId) query.append('eventId', savedEventId)
+                  if (promoCode) query.append('voucher', promoCode)
+                  router.push(`/pricing?${query.toString()}`)
+                }
               }
             }}
             disabled={savingEvent || (step === 2 && !eventType) || (step === 3 && !name) || (step === 5 && !date)}
             className="flex-1 bg-ink text-white py-4 rounded-full text-sm font-semibold hover:opacity-90 active:scale-95 transition-all shadow-lg flex justify-center items-center gap-2 disabled:opacity-50"
           >
-            {savingEvent ? 'Salvando evento...' : step === 5 ? 'Avançar' : step === 7 ? 'Ver Planos e Assinar' : 'Continuar'}
+            {savingEvent ? 'Salvando evento...' : step === 5 ? 'Avançar' : step === 7 ? (hasPlan ? 'Ir para o Painel' : 'Ver Planos e Assinar') : 'Continuar'}
             {!savingEvent && step !== 7 && <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>}
           </button>
         </div>
