@@ -4,9 +4,9 @@ import { MercadoPagoConfig, Preference } from 'mercadopago'
 
 const PLAN_PRICES = {
   freemium: 0,
-  essential: 59.90,
-  classic: 119.90,
-  premium: 169.90
+  essential: 79.00,
+  classic: 149.00,
+  premium: 249.00
 }
 
 const PLAN_NAMES = {
