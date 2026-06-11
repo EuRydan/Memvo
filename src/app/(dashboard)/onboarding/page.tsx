@@ -40,6 +40,7 @@ export default function OnboardingWizard() {
   const [savingEvent, setSavingEvent] = useState(false)
   const [savedEventId, setSavedEventId] = useState<string | null>(null)
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
+  const [promoCode, setPromoCode] = useState('')
 
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -443,32 +444,37 @@ export default function OnboardingWizard() {
         {step === 7 && (
           <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="text-center mb-8">
-              <div className="w-16 h-16 bg-stone-50 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl">🎁</div>
-              <h2 className="text-3xl font-bold text-ink mb-2" style={{ fontFamily: 'Georgia, serif' }}>Escolha o melhor plano</h2>
-              <p className="text-sm text-slate">Para celebrar este evento, preparamos benefícios exclusivos para você.</p>
+              <h2 className="text-3xl font-bold text-ink mb-2" style={{ fontFamily: 'Georgia, serif' }}>Tudo pronto para sua celebração</h2>
+              <p className="text-sm text-slate">Revise os detalhes abaixo antes de prosseguir.</p>
             </div>
 
-            <div className="bg-gradient-to-br from-[#fdf4ec] to-[#ede9f6] rounded-[24px] p-6 shadow-sm border border-white mb-6">
-               <h3 className="text-sm font-bold text-ink mb-4 uppercase tracking-widest">Seu presente inclui:</h3>
-               <ul className="flex flex-col gap-3">
-                 <li className="flex items-center gap-3 text-sm font-medium text-ink">
-                   <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-sm">✨</div> 1 ano de armazenamento
-                 </li>
-                 <li className="flex items-center gap-3 text-sm font-medium text-ink">
-                   <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-sm">☁️</div> Cópia segura na nuvem e Google Drive
-                 </li>
-                 <li className="flex items-center gap-3 text-sm font-medium text-ink">
-                   <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-sm">📦</div> Download das fotos em ZIP
-                 </li>
-               </ul>
+            <div className="bg-white rounded-[24px] p-6 shadow-sm border border-gray-100 mb-6 flex flex-col gap-4 text-sm">
+               <div className="flex justify-between items-center border-b border-gray-50 pb-3">
+                 <span className="text-slate">Nome do Evento</span>
+                 <span className={`font-semibold ${name ? 'text-ink' : 'text-slate opacity-60'}`}>{name || 'Não informado'}</span>
+               </div>
+               <div className="flex justify-between items-center border-b border-gray-50 pb-3">
+                 <span className="text-slate">Data</span>
+                 <span className={`font-semibold ${date ? 'text-ink' : 'text-slate opacity-60'}`}>
+                   {date ? new Date(date + 'T12:00:00').toLocaleDateString('pt-BR') : 'Não informado'}
+                 </span>
+               </div>
+               <div className="flex justify-between items-center border-b border-gray-50 pb-3">
+                 <span className="text-slate">Tipo</span>
+                 <span className={`font-semibold ${eventType ? 'text-ink' : 'text-slate opacity-60'}`}>{eventType || 'Não informado'}</span>
+               </div>
+               <div className="flex justify-between items-center">
+                 <span className="text-slate">Desafios</span>
+                 <span className={`font-semibold ${selectedChallenges.length > 0 ? 'text-ink' : 'text-slate opacity-60'}`}>
+                   {selectedChallenges.length > 0 ? `${selectedChallenges.length} selecionados` : 'Não informado'}
+                 </span>
+               </div>
             </div>
 
             <div className="floating-group mb-6">
-               <input id="promocode" type="text" placeholder=" " className="input-field w-full px-5 py-4 rounded-full text-sm text-ink bg-white border border-gray-200" />
+               <input id="promocode" type="text" placeholder=" " value={promoCode} onChange={(e) => setPromoCode(e.target.value)} className="input-field w-full px-5 py-4 rounded-full text-sm text-ink bg-white border border-gray-200" />
                <label htmlFor="promocode">Possui código promocional?</label>
             </div>
-            
-            <p className="text-xs text-stone text-center mb-2">Ajudaremos você a escolher a melhor opção baseada no seu número de convidados.</p>
           </div>
         )}
 
@@ -495,7 +501,12 @@ export default function OnboardingWizard() {
               else if (step === 4) handleNext()
               else if (step === 5 && date) saveEventToDB() // Save before step 6/7
               else if (step === 6) handleNext()
-              else if (step === 7) router.push(`/pricing?eventId=${savedEventId}`) // Redirect to checkout/pricing
+              else if (step === 7) {
+                const query = new URLSearchParams()
+                if (savedEventId) query.append('eventId', savedEventId)
+                if (promoCode) query.append('voucher', promoCode)
+                router.push(`/pricing?${query.toString()}`)
+              }
             }}
             disabled={savingEvent || (step === 2 && !eventType) || (step === 3 && !name) || (step === 5 && !date)}
             className="flex-1 bg-ink text-white py-4 rounded-full text-sm font-semibold hover:opacity-90 active:scale-95 transition-all shadow-lg flex justify-center items-center gap-2 disabled:opacity-50"
