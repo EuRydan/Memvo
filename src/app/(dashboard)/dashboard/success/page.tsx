@@ -25,7 +25,7 @@ function SuccessContent() {
   const [status, setStatus] = useState<'loading' | 'success'>('loading')
 
   useEffect(() => {
-    if (!sessionId) return
+    if (!intentId && !paymentId) return
 
     const supabase = createClient()
 
@@ -84,6 +84,7 @@ function SuccessContent() {
         }
       )
       .subscribe()
+    }
 
     return () => {
       clearInterval(verifyInterval)
