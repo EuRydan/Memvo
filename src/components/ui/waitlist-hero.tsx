@@ -76,11 +76,11 @@ export const WaitlistHero = () => {
                   "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=400&h=400&fit=crop&q=80",
                 ];
                 return (
-                  <div key={i} className="absolute rounded-3xl overflow-hidden shadow-2xl opacity-20"
+                  <div key={i} className="absolute rounded-xl overflow-hidden shadow-md opacity-30"
                     style={{
-                      width: '180px', height: '180px',
-                      left: `calc(50% + ${x}px - 90px)`,
-                      top: `calc(50% + ${y}px - 90px)`,
+                      width: '50px', height: '50px',
+                      left: `calc(50% + ${x}px - 25px)`,
+                      top: `calc(50% + ${y}px - 25px)`,
                       transform: `rotate(${i * 30}deg)`,
                     }}>
                     <img src={images[i % images.length]} className="w-full h-full object-cover" alt="" />
@@ -114,11 +114,11 @@ export const WaitlistHero = () => {
                   "https://images.unsplash.com/photo-1723373457175-31b09fa7d405?w=400&h=400&fit=crop&q=80",
                 ];
                 return (
-                  <div key={i} className="absolute rounded-3xl overflow-hidden shadow-2xl opacity-40"
+                  <div key={i} className="absolute rounded-2xl overflow-hidden shadow-lg opacity-50"
                     style={{
-                      width: '220px', height: '220px',
-                      left: `calc(50% + ${x}px - 110px)`,
-                      top: `calc(50% + ${y}px - 110px)`,
+                      width: '70px', height: '70px',
+                      left: `calc(50% + ${x}px - 35px)`,
+                      top: `calc(50% + ${y}px - 35px)`,
                       transform: `rotate(${i * 45 - 20}deg)`,
                     }}>
                     <img src={images[i % images.length]} className="w-full h-full object-cover" alt="" />
@@ -150,11 +150,11 @@ export const WaitlistHero = () => {
                   "https://images.unsplash.com/photo-1628551019393-46e6a870b94b?w=400&h=400&fit=crop&q=80",
                 ];
                 return (
-                  <div key={i} className="absolute rounded-[2rem] overflow-hidden shadow-xl opacity-80"
+                  <div key={i} className="absolute rounded-3xl overflow-hidden shadow-xl opacity-90"
                     style={{
-                      width: '280px', height: '280px',
-                      left: `calc(50% + ${x}px - 140px)`,
-                      top: `calc(50% + ${y}px - 140px)`,
+                      width: '100px', height: '100px',
+                      left: `calc(50% + ${x}px - 50px)`,
+                      top: `calc(50% + ${y}px - 50px)`,
                       transform: `rotate(${i * 72 + 15}deg)`,
                     }}>
                     <img src={images[i % images.length]} className="w-full h-full object-cover" alt="" />
