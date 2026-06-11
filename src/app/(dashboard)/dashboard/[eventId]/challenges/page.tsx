@@ -181,7 +181,7 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
           <div className="text-4xl mb-4">🔒</div>
           <h2 className="text-xl font-bold text-ink mb-2">Desafios Bloqueados</h2>
           <p className="text-sm text-slate mb-6">Você precisa ativar este evento efetuando o pagamento do plano para configurar os desafios.</p>
-          <button onClick={() => router.push('/pricing')} className="bg-ink text-white font-semibold py-3 px-6 rounded-full w-full hover:opacity-90 transition-opacity">
+          <button onClick={() => router.push(`/pricing?eventId=${eventId}`)} className="bg-ink text-white font-semibold py-3 px-6 rounded-full w-full hover:opacity-90 transition-opacity">
             Desbloquear Agora
           </button>
         </div>

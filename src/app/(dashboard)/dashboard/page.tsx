@@ -272,7 +272,7 @@ export default function DashboardPage() {
                   <div className="w-full grid grid-cols-4 gap-1 pt-3 border-t border-gray-100/80">
                     {isEventLocked(event.id, events, planId) ? (
                       <button
-                        onClick={() => router.push('/pricing')}
+                        onClick={() => router.push(`/pricing?eventId=${event.id}`)}
                         className="col-span-4 flex items-center justify-center gap-2 p-2.5 rounded-[14px] bg-red-50 text-red-600 hover:bg-red-100 transition-colors font-semibold text-sm"
                       >
                         🔒 Desbloquear Evento
@@ -348,11 +348,14 @@ export default function DashboardPage() {
             </div>
 
             <button
-              onClick={() => router.push('/pricing')}
+              onClick={() => {
+                setShowUpgradeModal(false);
+                router.push('/dashboard');
+              }}
               className="w-full bg-ink text-white font-semibold py-3.5 rounded-full hover:opacity-85 active:scale-95 transition-all duration-200"
               style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.16)' }}
             >
-              Ver planos e preços
+              Ir para o Painel
             </button>
             <p className="text-xs text-stone text-center mt-4">
               Cancele a qualquer momento.

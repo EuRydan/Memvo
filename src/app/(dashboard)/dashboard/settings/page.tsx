@@ -96,10 +96,10 @@ export default function SettingsPage() {
               </div>
             </div>
             <button
-              onClick={() => router.push('/pricing')}
+              onClick={() => router.push('/dashboard')}
               className="bg-ink text-white font-semibold py-2.5 px-5 rounded-xl hover:opacity-90 active:scale-95 transition-all text-sm whitespace-nowrap"
             >
-              Fazer Upgrade / Comprar Plano
+              Gerenciar no Painel
             </button>
           </div>
 
