@@ -43,82 +43,29 @@ export async function POST(request: Request) {
         const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
         const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey)
 
-        if (planIdRaw.startsWith('b2b_')) {
-          // Geração de Vouchers para parceiros
-          const pack = planIdRaw.replace('b2b_', '')
-          const PACKAGES: Record<string, { count: number, plan: string }> = {
-            pack_5: { count: 5, plan: 'classic' },
-            pack_10: { count: 10, plan: 'classic' },
-            pack_20: { count: 20, plan: 'classic' }
-          }
-          const packData = PACKAGES[pack]
+        const planId = planIdRaw
 
-          if (packData) {
-            // Verifica se já gerou vouchers para este pagamento
-            const { data: existingVouchers } = await supabaseAdmin
-              .from('vouchers')
-              .select('id')
-              .eq('payment_id', paymentId.toString())
-              .limit(1)
+        // Verificar se já ativou
+        const { data: existingPlan } = await supabaseAdmin
+          .from('user_plans')
+          .select('*')
+          .eq('payment_id', paymentId)
+          .maybeSingle()
 
-            if (!existingVouchers || existingVouchers.length === 0) {
-              const { generateVoucherCode } = await import('@/lib/voucher-generator')
-              const newVouchers = []
-              
-              for (let i = 0; i < packData.count; i++) {
-                let isUnique = false
-                let newCode = ''
-                let attempts = 0
-                
-                while (!isUnique && attempts < 10) {
-                  newCode = generateVoucherCode()
-                  const { data } = await supabaseAdmin.from('vouchers').select('id').eq('code', newCode).maybeSingle()
-                  if (!data) isUnique = true
-                  attempts++
-                }
-
-                newVouchers.push({
-                  code: newCode,
-                  purchaser_id: userId,
-                  plan_type: packData.plan,
-                  status: 'available',
-                  payment_id: paymentId.toString() // para evitar duplicidade futuramente
-                })
-              }
-
-              const { error: insertError } = await supabaseAdmin.from('vouchers').insert(newVouchers)
-              if (insertError) {
-                console.error('Erro ao inserir vouchers no webhook:', insertError)
-              } else {
-                console.log(`Gerado ${packData.count} vouchers para o parceiro ${userId}`)
-              }
-            }
-          }
-        } else {
-          const planId = planIdRaw
-
-          // Verificar se já ativou
-          const { data: existingPlan } = await supabaseAdmin
+        if (!existingPlan) {
+          const { error: insertError } = await supabaseAdmin
             .from('user_plans')
-            .select('*')
-            .eq('payment_id', paymentId)
-            .maybeSingle()
+            .insert({
+              user_id: userId,
+              plan_id: planId,
+              payment_id: paymentId.toString()
+            })
 
-          if (!existingPlan) {
-            const { error: insertError } = await supabaseAdmin
-              .from('user_plans')
-              .insert({
-                user_id: userId,
-                plan_id: planId,
-                payment_id: paymentId.toString()
-              })
-
-            if (insertError) {
-              console.error('Erro ao ativar plano no Supabase:', insertError)
-              return NextResponse.json({ error: 'Database error' }, { status: 500 })
-            }
-            console.log(`Plano ${planId} ativado com sucesso via Webhook MercadoPago para o usuário ${userId}`)
+          if (insertError) {
+            console.error('Erro ao ativar plano no Supabase:', insertError)
+            return NextResponse.json({ error: 'Database error' }, { status: 500 })
           }
+          console.log(`Plano ${planId} ativado com sucesso via Webhook MercadoPago para o usuário ${userId}`)
         }
 
         return NextResponse.json({ success: true, message: 'Processed successfully' })

@@ -64,7 +64,7 @@ function ClientFeedback() {
               <div className="flex justify-between pt-5 items-end">
                 <div>
                   <h2 className="font-semibold text-base">Rika Shinoda</h2>
-                  <p className="text-xs text-slate/80">Cerimonialista</p>
+                  <p className="text-xs text-slate/80">Casamento • Outubro 2024</p>
                 </div>
                 <Image
                   src="https://images.unsplash.com/photo-1512485694743-9c9538b4e6e0?q=80&w=687&auto=format&fit=crop"

@@ -48,8 +48,8 @@ export async function POST(request: Request) {
         notification_url: notificationUrl,
         statement_descriptor: 'MEMVO',
         back_urls: {
-          success: `${baseUrl}/dashboard/success?plan=${plan.replace('b2b_', '')}`,
-          pending: `${baseUrl}/dashboard/success?plan=${plan.replace('b2b_', '')}`,
+          success: `${baseUrl}/dashboard/success?plan=${plan}`,
+          pending: `${baseUrl}/dashboard/success?plan=${plan}`,
           failure: `${baseUrl}/pricing`,
         },
         auto_return: 'approved',

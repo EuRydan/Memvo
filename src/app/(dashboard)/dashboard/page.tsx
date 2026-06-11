@@ -16,7 +16,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
   const [planId, setPlanId] = useState<string>('none')
   const [showUpgradeModal, setShowUpgradeModal] = useState(false)
-  const [userRole, setUserRole] = useState<'host' | 'partner'>('host')
+
   const [mediaStats, setMediaStats] = useState<Record<string, { photos: number, guests: number }>>({})
   const [shareModalEvent, setShareModalEvent] = useState<Event | null>(null)
   const orb1Ref = useRef<HTMLDivElement>(null)
@@ -84,7 +84,7 @@ export default function DashboardPage() {
         }
       }
       
-      setUserRole(user.user_metadata?.role || 'host')
+
       setLoading(false)
     }
     load()
@@ -159,14 +159,7 @@ export default function DashboardPage() {
             )}
           </div>
           <div className="flex items-center gap-3">
-            {userRole === 'partner' && (
-              <button
-                onClick={() => router.push('/parceiros')}
-                className="hidden md:flex items-center gap-2 bg-stone-100 text-[#0a0a0a] text-sm font-semibold px-5 py-2.5 rounded-full hover:bg-stone-200 transition-all duration-200 cursor-pointer flex-shrink-0"
-              >
-                💼 Parceiros B2B
-              </button>
-            )}
+
             <button
               onClick={() => router.push('/onboarding')}
               className="bg-ink text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:opacity-85 active:scale-95 transition-all duration-200 cursor-pointer flex-shrink-0 relative overflow-hidden group"
