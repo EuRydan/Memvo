@@ -4,7 +4,7 @@ import { useState } from 'react'
 
 export function PartnerDashboardContent({ affiliateCode }: { affiliateCode: string }) {
   const [copied, setCopied] = useState(false)
-  const link = `https://memvo.com.br/r/${affiliateCode}`
+  const link = `https://memvo.com.br/pricing?cupom=${affiliateCode}`
 
   const handleCopy = () => {
     navigator.clipboard.writeText(link)
@@ -13,7 +13,7 @@ export function PartnerDashboardContent({ affiliateCode }: { affiliateCode: stri
   }
 
   const handleWhatsApp = () => {
-    const text = encodeURIComponent(`Crie o álbum de fotos colaborativo do seu evento! Use meu link para conhecer o Memvor: ${link}`)
+    const text = encodeURIComponent(`Ganhe 10% de desconto no álbum de fotos do seu evento! Use meu link para assinar o Memvor com desconto: ${link}`)
     window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank')
   }
 

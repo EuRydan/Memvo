@@ -65,9 +65,9 @@ export default async function PartnerDashboardPage() {
         <div className="flex flex-col md:flex-row gap-6 mb-10">
           <div className="flex-1 bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex items-center justify-between">
             <div>
-              <p className="text-[11px] font-bold tracking-wider text-slate uppercase mb-1">Seu Link de Indicação</p>
-              <p className="text-ink font-mono text-lg font-semibold bg-stone-50 px-3 py-1 rounded-md inline-block">
-                memvo.com.br/r/{affiliate.affiliate_code}
+              <p className="text-[11px] font-bold tracking-wider text-slate uppercase mb-1">Seu Link de Desconto</p>
+              <p className="text-ink font-mono text-sm sm:text-base font-semibold bg-stone-50 px-3 py-1.5 rounded-md inline-block max-w-full overflow-hidden text-ellipsis whitespace-nowrap" title={`memvo.com.br/pricing?cupom=${affiliate.affiliate_code}`}>
+                memvo.com.br/pricing?cupom={affiliate.affiliate_code}
               </p>
             </div>
             <PartnerDashboardContent affiliateCode={affiliate.affiliate_code} />
