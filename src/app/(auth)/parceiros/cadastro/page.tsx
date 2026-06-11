@@ -29,6 +29,7 @@ function PartnerRegisterContent() {
   const [password, setPassword] = useState('')
   const [whatsapp, setWhatsapp] = useState('')
   const [profession, setProfession] = useState('Cerimonialista')
+  const [source, setSource] = useState('Google')
   const [pixKey, setPixKey] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
@@ -80,6 +81,7 @@ function PartnerRegisterContent() {
         profession: profession,
         pix_key: pixKey,
         affiliate_code: code,
+        source: source,
         status: 'pending'
       })
 
@@ -210,6 +212,23 @@ function PartnerRegisterContent() {
                   <option value="Outro">Outro</option>
                 </select>
               </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-ink mb-1.5 ml-1">COMO NOS CONHECEU?</label>
+              <select
+                required
+                value={source}
+                onChange={(e) => setSource(e.target.value)}
+                className="w-full bg-white border border-gray-200 text-ink text-sm rounded-2xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#d5c5ff] focus:border-transparent transition-all appearance-none"
+              >
+                <option value="Google">Google</option>
+                <option value="Instagram">Instagram</option>
+                <option value="Indicação">Indicação</option>
+                <option value="LinkedIn">LinkedIn</option>
+                <option value="TikTok">TikTok</option>
+                <option value="Outro">Outro</option>
+              </select>
             </div>
 
             <div>
