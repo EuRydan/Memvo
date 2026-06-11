@@ -116,8 +116,8 @@ export async function middleware(request: NextRequest) {
     if (targetUrl && request.nextUrl.pathname !== targetUrl) {
       return NextResponse.redirect(new URL(targetUrl, request.url))
     }
-  } else if (user && role === 'affiliate' && isAuthRoute) {
-    // Affiliate logged in, trying to access auth routes
+  } else if (user && role === 'affiliate' && (isAuthRoute || isDashboardRoute || isPricingRoute || isOnboardingRoute)) {
+    // Affiliate logged in, trying to access host or auth routes
     return NextResponse.redirect(new URL('/parceiros/dashboard', request.url))
   }
 
