@@ -77,17 +77,39 @@ export async function POST(request: Request) {
             .update({ status: 'approved', processed_at: new Date().toISOString(), mp_payment_id: paymentId.toString() })
             .eq('id', intentId)
 
-          // 2. Inserir Plano
-          const { error: insertError } = await supabaseAdmin
+          // 2. Atualizar ou Inserir Plano
+          const { data: existingUserPlan } = await supabaseAdmin
             .from('user_plans')
-            .insert({
-              user_id: userId,
-              plan_id: planId,
-              payment_id: paymentId.toString()
-            })
+            .select('id')
+            .eq('user_id', userId)
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .maybeSingle()
 
-          if (insertError) {
-            console.error('Erro ao ativar plano no Supabase:', insertError)
+          let planError = null
+          if (existingUserPlan) {
+            const { error } = await supabaseAdmin
+              .from('user_plans')
+              .update({
+                plan_id: planId,
+                payment_id: paymentId.toString()
+                // upgraded_at could be set here if the column exists, but simple update is safer
+              })
+              .eq('id', existingUserPlan.id)
+            planError = error
+          } else {
+            const { error } = await supabaseAdmin
+              .from('user_plans')
+              .insert({
+                user_id: userId,
+                plan_id: planId,
+                payment_id: paymentId.toString()
+              })
+            planError = error
+          }
+
+          if (planError) {
+            console.error('Erro ao ativar/atualizar plano no Supabase:', planError)
             return NextResponse.json({ error: 'Database error' }, { status: 500 })
           }
 

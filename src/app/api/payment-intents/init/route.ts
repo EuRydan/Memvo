@@ -35,6 +35,26 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid plan' }, { status: 400 })
     }
 
+    // Busca o plano atual
+    const { data: currentPlan } = await supabase
+      .from('user_plans')
+      .select('plan_id')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+
+    if (currentPlan && currentPlan.plan_id) {
+      const currentPrice = PLAN_PRICES[currentPlan.plan_id as keyof typeof PLAN_PRICES] || 0
+      
+      if (price <= currentPrice) {
+        return NextResponse.json({ error: 'Você já possui este plano ou um superior' }, { status: 400 })
+      }
+      
+      // Cobra apenas a diferença
+      price = price - currentPrice
+    }
+
     // Voucher validation (Affiliate logic)
     let appliedAffiliateCode = null
 

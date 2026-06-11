@@ -109,6 +109,7 @@ function PricingContent() {
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [selectedPlan, setSelectedPlan] = useState<typeof PLANS[0] | null>(null)
   const [user, setUser] = useState<any>(null)
+  const [currentPlanId, setCurrentPlanId] = useState<string | null>(null)
   const router = useRouter()
   const searchParams = useSearchParams()
   const eventId = searchParams.get('eventId')
@@ -122,6 +123,18 @@ function PricingContent() {
       const supabase = createClient()
       const { data: { user } } = await supabase.auth.getUser()
       setUser(user)
+      if (user) {
+        const { data: currentPlan } = await supabase
+          .from('user_plans')
+          .select('plan_id')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .maybeSingle()
+        if (currentPlan) {
+          setCurrentPlanId(currentPlan.plan_id)
+        }
+      }
     }
     checkUser()
   }, [])
@@ -146,6 +159,23 @@ function PricingContent() {
     }
     validateCoupon()
   }, [voucherUrlParam])
+
+  const getDisplayPrice = (plan: typeof PLANS[0]) => {
+    if (!currentPlanId) return plan.price
+    const planPrices = { freemium: 0, essential: 79, classic: 149, premium: 249 } as Record<string, number>
+    const currentPrice = planPrices[currentPlanId] || 0
+    const targetPrice = planPrices[plan.id] || 0
+    if (targetPrice <= currentPrice) return plan.price
+    return `R$${targetPrice - currentPrice}`
+  }
+
+  const isPlanDisabled = (planId: string) => {
+    if (!currentPlanId) return false
+    const planPrices = { freemium: 0, essential: 79, classic: 149, premium: 249 } as Record<string, number>
+    const currentPrice = planPrices[currentPlanId] || 0
+    const targetPrice = planPrices[planId] || 0
+    return targetPrice <= currentPrice
+  }
 
   const handleSelectPlan = async (plan: typeof PLANS[0]) => {
     if (!user) {
@@ -238,10 +268,17 @@ function PricingContent() {
         {/* ── Pricing Cards / Gateway ── */}
         {!selectedPlan ? (
           <div className="flex flex-nowrap overflow-x-auto items-stretch justify-start xl:justify-center gap-6 lg:gap-8 mb-14 pt-16 pb-16 snap-x snap-mandatory px-6 sm:px-12" style={{ scrollbarWidth: 'none' }}>
-            {PLANS.filter(plan => !( (activeCoupon || isValidatingCoupon) && plan.id === 'freemium')).map(plan => (
+            {PLANS.filter(plan => !( (activeCoupon || isValidatingCoupon) && plan.id === 'freemium')).map(plan => {
+              const disabled = isPlanDisabled(plan.id)
+              const displayPrice = getDisplayPrice(plan)
+              const isUpgrade = currentPlanId && !disabled && plan.id !== 'freemium'
+
+              return (
               <div key={plan.id}
-                className={`shrink-0 snap-center w-full max-w-[320px] md:w-80 relative text-center border p-8 pb-14 rounded-2xl transition-all duration-300 hover:-translate-y-1 flex flex-col ${
-                  plan.popular 
+                className={`shrink-0 snap-center w-full max-w-[320px] md:w-80 relative text-center border p-8 pb-14 rounded-2xl transition-all duration-300 ${
+                  disabled ? 'opacity-60 grayscale-[0.5] pointer-events-none' : 'hover:-translate-y-1'
+                } flex flex-col ${
+                  plan.popular && !disabled
                     ? 'bg-[#0a0a0a] text-white border-white/10 shadow-2xl md:scale-105 z-10' 
                     : 'bg-white text-gray-800/80 border-gray-200 shadow-sm'
                 }`}
@@ -257,19 +294,19 @@ function PricingContent() {
                 )}
 
                 <p className={`font-semibold ${plan.popular ? 'pt-2' : ''}`}>{plan.name}</p>
-                <h1 className={`text-4xl font-bold mt-2 ${plan.popular ? 'text-white' : plan.price === 'R$0' ? 'text-gray-400' : 'text-[#0a0a0a]'}`}>
-                  {activeCoupon && plan.price !== 'R$0' ? (
+                <h1 className={`text-4xl font-bold mt-2 ${plan.popular && !disabled ? 'text-white' : displayPrice === 'R$0' ? 'text-gray-400' : 'text-[#0a0a0a]'}`}>
+                  {activeCoupon && displayPrice !== 'R$0' ? (
                     <div className="flex flex-col items-center justify-center gap-1">
-                      <span className="text-xl line-through opacity-50">{plan.price}</span>
+                      <span className="text-xl line-through opacity-50">{displayPrice}</span>
                       <span className="text-green-500">
-                        R${(Number(plan.price.replace('R$', '')) * 0.9).toFixed(2).replace('.', ',')}
+                        R${(Number(displayPrice.replace('R$', '')) * 0.9).toFixed(2).replace('.', ',')}
                       </span>
                     </div>
                   ) : (
-                    plan.price
+                    displayPrice
                   )}
-                  <span className={`text-sm font-normal block mt-1 ${plan.popular ? 'text-white/60' : 'text-gray-500'}`}>
-                    pagamento único
+                  <span className={`text-sm font-normal block mt-1 ${plan.popular && !disabled ? 'text-white/60' : 'text-gray-500'}`}>
+                    {isUpgrade ? 'upgrade' : 'pagamento único'}
                   </span>
                 </h1>
 
@@ -293,16 +330,20 @@ function PricingContent() {
                 <button 
                   onClick={() => handleSelectPlan(plan)}
                   type="button" 
+                  disabled={disabled}
                   className={`text-sm w-full py-3.5 rounded-xl font-semibold mt-auto transition-all active:scale-[0.98] ${
-                    plan.popular
-                      ? 'bg-white text-[#0a0a0a] hover:bg-gray-100'
-                      : 'bg-[#0a0a0a] text-white hover:bg-gray-900'
+                    disabled
+                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                      : plan.popular
+                        ? 'bg-white text-[#0a0a0a] hover:bg-gray-100'
+                        : 'bg-[#0a0a0a] text-white hover:bg-gray-900'
                   }`}
                 >
-                  Começar agora
+                  {disabled ? (currentPlanId === plan.id ? 'Seu Plano Atual' : 'Indisponível') : isUpgrade ? 'Fazer Upgrade' : 'Começar agora'}
                 </button>
               </div>
-            ))}
+            );
+            })}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-14 items-start animate-fade-in">
