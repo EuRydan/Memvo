@@ -3,8 +3,8 @@ import { Event } from '@/types'
 export type PlanTier = 'essential' | 'classic' | 'premium'
 
 export const PLAN_LIMITS: Record<PlanTier, number> = {
-  essential: 1,
-  classic: 3,
+  essential: Infinity,
+  classic: Infinity,
   premium: Infinity,
 }
 
@@ -35,12 +35,7 @@ export function countActiveEvents(events: Pick<Event, 'date' | 'active'>[]): num
  * Checks if a user with a specific plan can create a new event.
  */
 export function canCreateEvent(planId: string, events: Pick<Event, 'date' | 'active'>[]): boolean {
-  const plan = (planId as PlanTier) || 'essential'
-  const limit = PLAN_LIMITS[plan] || 1
-  
-  if (limit === Infinity) return true
-  
-  return countActiveEvents(events) < limit
+  return true
 }
 
 /**
@@ -63,21 +58,5 @@ export function isEventLocked(
   allEvents: Pick<Event, 'id' | 'date' | 'active' | 'created_at'>[],
   planId: string
 ): boolean {
-  const plan = (planId || 'none') as PlanTier | 'none'
-  const limit = plan === 'none' ? 0 : (PLAN_LIMITS[plan as PlanTier] || 0)
-
-  if (limit === Infinity) return false
-
-  // Filter only active events and sort by created_at ascending (oldest first)
-  const activeEvents = allEvents
-    .filter(isEventActive)
-    .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
-
-  const index = activeEvents.findIndex((e) => e.id === eventId)
-
-  // If not found in active events, it's either archived or doesn't exist.
-  // We do not lock archived events (they are read-only anyway).
-  if (index === -1) return false
-
-  return index >= limit
+  return false
 }

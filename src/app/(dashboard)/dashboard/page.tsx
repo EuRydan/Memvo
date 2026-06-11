@@ -177,8 +177,6 @@ export default function DashboardPage() {
             {planId !== 'none' && (
               <p className="text-xs font-medium text-slate mt-1.5 flex items-center gap-1.5">
                 Plano {displayPlanName}
-                <span className="w-1 h-1 rounded-full bg-stone-300"></span>
-                {maxEvents === Infinity ? 'Eventos Ilimitados' : `${activeCount} de ${maxEvents} eventos usados`}
               </p>
             )}
           </div>

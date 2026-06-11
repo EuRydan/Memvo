@@ -104,21 +104,6 @@ export default function SettingsPage() {
           </div>
 
           <div>
-            <p className="text-sm font-semibold text-gray-900 mb-2">Uso de Eventos</p>
-            <div className="flex items-center justify-between text-sm text-gray-500 mb-2">
-              <span>{activeCount} eventos utilizados</span>
-              <span>{maxEvents === Infinity ? 'Ilimitado' : `${maxEvents} disponíveis`}</span>
-            </div>
-            
-            <div className="w-full bg-gray-100 h-2.5 rounded-full overflow-hidden">
-              <div 
-                className={`h-full rounded-full ${maxEvents !== Infinity && activeCount >= maxEvents ? 'bg-red-400' : 'bg-emerald-400'}`} 
-                style={{ width: maxEvents === Infinity ? '100%' : `${Math.min(100, (activeCount / maxEvents) * 100)}%` }} 
-              />
-            </div>
-            <p className="text-xs text-gray-400 mt-2">
-              Eventos inativos (rascunhos) ou passados (mais de 30 dias) não contabilizam no seu limite atual.
-            </p>
           </div>
         </div>
 
