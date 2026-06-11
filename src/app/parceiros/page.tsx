@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { Logo } from '@/components/Logo'
 import { WordmarkFooter } from '@/components/WordmarkFooter'
-import { GooeyText } from '@/components/ui/gooey-text'
+import { WaitlistHero } from '@/components/ui/waitlist-hero'
 
 export default function ParceirosLandingPage() {
   return (
@@ -51,27 +51,7 @@ export default function ParceirosLandingPage() {
       </div>
 
       {/* ── HERO ── */}
-      <section className="relative w-full min-h-[80vh] flex flex-col items-center justify-center pt-32 pb-20 px-6 z-10">
-        <div className="text-center max-w-3xl mx-auto flex flex-col items-center justify-center h-64">
-          <p className="text-[1.2rem] md:text-[1.5rem] font-medium tracking-wide text-[#676f7b] mb-4">
-            Suas melhores memórias
-          </p>
-          
-          <div className="h-32 flex items-center justify-center w-full">
-            <GooeyText 
-              texts={["Casamentos", "Festas", "Eventos", "Inesquecíveis"]} 
-              textClassName="font-bold text-[#0a0a0a]"
-            />
-          </div>
-
-          <a href="#how-it-works" className="mt-12 text-sm font-semibold text-[#939393] uppercase tracking-widest hover:text-[#0a0a0a] transition-colors cursor-pointer flex flex-col items-center gap-2">
-            Clique para continuar
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="animate-bounce">
-              <path d="M12 5v14M19 12l-7 7-7-7"/>
-            </svg>
-          </a>
-        </div>
-      </section>
+      <WaitlistHero />
 
       {/* ── HOW IT WORKS ── */}
       <section id="how-it-works" className="relative w-full py-20 bg-white z-10">
