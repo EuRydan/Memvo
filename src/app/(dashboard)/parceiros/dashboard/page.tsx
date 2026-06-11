@@ -2,9 +2,9 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Logo } from '@/components/Logo'
-import { AffiliateDashboardContent } from './AffiliateDashboardContent'
+import { PartnerDashboardContent } from './PartnerDashboardContent'
 
-export default async function AffiliateDashboardPage() {
+export default async function PartnerDashboardPage() {
   const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
@@ -25,7 +25,7 @@ export default async function AffiliateDashboardPage() {
   }
 
   if (affiliate.status === 'pending') {
-    redirect('/afiliados/aguardando')
+    redirect('/parceiros/aguardando')
   }
 
   // Get commissions
@@ -70,7 +70,7 @@ export default async function AffiliateDashboardPage() {
                 memvo.com.br/r/{affiliate.affiliate_code}
               </p>
             </div>
-            <AffiliateDashboardContent affiliateCode={affiliate.affiliate_code} />
+            <PartnerDashboardContent affiliateCode={affiliate.affiliate_code} />
           </div>
           
           <div className="w-full md:w-64 bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">

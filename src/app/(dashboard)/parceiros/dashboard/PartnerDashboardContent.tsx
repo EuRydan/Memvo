@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-export function AffiliateDashboardContent({ affiliateCode }: { affiliateCode: string }) {
+export function PartnerDashboardContent({ affiliateCode }: { affiliateCode: string }) {
   const [copied, setCopied] = useState(false)
   const link = `https://memvo.com.br/r/${affiliateCode}`
 

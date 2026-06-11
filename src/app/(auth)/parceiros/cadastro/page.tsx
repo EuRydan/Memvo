@@ -21,7 +21,7 @@ function getStrength(pwd: string): { level: number; label: string; color: string
   return { level: 4, label: 'Forte', color: '#22c55e' }
 }
 
-function AffiliateRegisterContent() {
+function PartnerRegisterContent() {
   const router = useRouter()
   const supabase = createClient()
   const [name, setName] = useState('')
@@ -85,13 +85,13 @@ function AffiliateRegisterContent() {
 
       if (affiliateError) {
         console.error('Failed to create affiliate record:', affiliateError)
-        setError('Sua conta foi criada, mas houve um erro ao registrar como afiliado. Entre em contato com o suporte.')
+        setError('Sua conta foi criada, mas houve um erro ao registrar como parceiro. Entre em contato com o suporte.')
         setLoading(false)
         return
       }
     }
 
-    router.push('/afiliados/aguardando')
+    router.push('/parceiros/aguardando')
   }
 
   return (
@@ -135,7 +135,7 @@ function AffiliateRegisterContent() {
           <div className="flex justify-center mb-2">
             <Logo className="h-10 w-auto text-ink" />
           </div>
-          <p className="text-sm text-slate mt-2">Torne-se um afiliado e aumente sua renda.</p>
+          <p className="text-sm text-slate mt-2">Torne-se um parceiro e aumente sua renda.</p>
         </div>
 
         {/* Glass Card */}
@@ -152,7 +152,7 @@ function AffiliateRegisterContent() {
               style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
               className="text-[1.7rem] font-bold tracking-[-0.02em] text-ink leading-tight"
             >
-              Cadastro de Afiliado
+              Cadastro de Parceiro
             </h2>
           </div>
 
@@ -288,7 +288,7 @@ function AffiliateRegisterContent() {
               {loading ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               ) : (
-                'Criar conta de afiliado'
+                'Criar conta de parceiro'
               )}
             </button>
 
@@ -312,10 +312,10 @@ function AffiliateRegisterContent() {
   )
 }
 
-export default function AffiliateRegister() {
+export default function PartnerRegister() {
   return (
     <Suspense fallback={<div className="min-h-screen bg-[#fafafa]" />}>
-      <AffiliateRegisterContent />
+      <PartnerRegisterContent />
     </Suspense>
   )
 }

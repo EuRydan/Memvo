@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Logo } from '@/components/Logo'
 import { WordmarkFooter } from '@/components/WordmarkFooter'
 
-export default function AfiliadosLandingPage() {
+export default function ParceirosLandingPage() {
   return (
     <div className="min-h-screen bg-[#fafafa] overflow-clip">
       
@@ -26,10 +26,10 @@ export default function AfiliadosLandingPage() {
               className="text-sm font-semibold text-[#0a0a0a]/70 hover:text-[#0a0a0a] transition-colors">
               Entrar
             </Link>
-            <Link href="/afiliados/cadastro"
+            <Link href="/parceiros/cadastro"
               className="bg-[#0a0a0a] text-white text-xs font-bold px-4 py-2 rounded-full hover:bg-black/80 transition-all active:scale-95"
               style={{ boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>
-              Quero ser afiliado
+              Quero ser parceiro
             </Link>
           </div>
         </nav>
@@ -46,9 +46,9 @@ export default function AfiliadosLandingPage() {
           <p className="text-[16px] text-[#676f7b] leading-relaxed mb-10 max-w-lg mx-auto">
             Cerimonialistas, fotógrafos e assessores: ofereça uma experiência inovadora para seus clientes e receba <strong>30% de comissão</strong> por cada plano vendido através do seu link exclusivo.
           </p>
-          <Link href="/afiliados/cadastro"
+          <Link href="/parceiros/cadastro"
             className="inline-block bg-[#0a0a0a] text-white text-sm font-bold px-8 py-4 rounded-full hover:opacity-90 transition-all active:scale-95 shadow-xl">
-            Quero ser afiliado
+            Quero ser parceiro
           </Link>
         </div>
       </section>
@@ -92,7 +92,7 @@ export default function AfiliadosLandingPage() {
           <p className="text-sm text-white/90 mb-8 leading-relaxed">
             Seja um dos primeiros parceiros do Memvor e agregue valor aos seus pacotes de serviços.
           </p>
-          <Link href="/afiliados/cadastro"
+          <Link href="/parceiros/cadastro"
             className="inline-block bg-white text-[#0a0a0a] text-sm font-bold px-8 py-4 rounded-full hover:bg-[#fafafa] transition-all active:scale-95 shadow-xl">
             Fazer cadastro agora
           </Link>

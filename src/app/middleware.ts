@@ -45,11 +45,11 @@ export async function middleware(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
 
   // Route matchers
-  const isAuthRoute = request.nextUrl.pathname.startsWith('/login') || request.nextUrl.pathname.startsWith('/register') || request.nextUrl.pathname.startsWith('/afiliados/cadastro')
+  const isAuthRoute = request.nextUrl.pathname.startsWith('/login') || request.nextUrl.pathname.startsWith('/register') || request.nextUrl.pathname.startsWith('/parceiros/cadastro')
   const isDashboardRoute = request.nextUrl.pathname.startsWith('/dashboard')
   const isPricingRoute = request.nextUrl.pathname.startsWith('/pricing')
   const isOnboardingRoute = request.nextUrl.pathname.startsWith('/onboarding')
-  const isAffiliateDashboard = request.nextUrl.pathname.startsWith('/afiliados/dashboard')
+  const isAffiliateDashboard = request.nextUrl.pathname.startsWith('/parceiros/dashboard')
 
   // Se não tem user logado e tentou acessar rota protegida
   if (!user && (isDashboardRoute || isPricingRoute || isOnboardingRoute || isAffiliateDashboard)) {
@@ -118,7 +118,7 @@ export async function middleware(request: NextRequest) {
     }
   } else if (user && role === 'affiliate' && isAuthRoute) {
     // Affiliate logged in, trying to access auth routes
-    return NextResponse.redirect(new URL('/afiliados/dashboard', request.url))
+    return NextResponse.redirect(new URL('/parceiros/dashboard', request.url))
   }
 
   return supabaseResponse
