@@ -4,10 +4,10 @@ import { MercadoPagoConfig, Payment } from 'mercadopago'
 
 export async function POST(request: Request) {
   try {
-    const { intentId } = await request.json()
+    const { intentId, paymentId } = await request.json()
 
-    if (!intentId) {
-      return NextResponse.json({ error: 'Missing intentId' }, { status: 400 })
+    if (!intentId && !paymentId) {
+      return NextResponse.json({ error: 'Missing intentId and paymentId' }, { status: 400 })
     }
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
@@ -15,17 +15,19 @@ export async function POST(request: Request) {
     const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey)
 
     // Buscar a intent
-    const { data: intent, error: intentError } = await supabaseAdmin
-      .from('payment_intents')
-      .select('*')
-      .eq('id', intentId)
-      .maybeSingle()
-
-    if (intentError || !intent) {
-      return NextResponse.json({ error: 'Intent not found' }, { status: 404 })
+    let intent: any = null
+    
+    if (intentId) {
+      const { data, error: intentError } = await supabaseAdmin
+        .from('payment_intents')
+        .select('*')
+        .eq('id', intentId)
+        .maybeSingle()
+      
+      if (data) intent = data
     }
 
-    if (intent.status === 'approved') {
+    if (intent?.status === 'approved') {
       return NextResponse.json({ success: true, status: 'approved' })
     }
 
@@ -34,20 +36,47 @@ export async function POST(request: Request) {
     const client = new MercadoPagoConfig({ accessToken })
     const paymentClient = new Payment(client)
 
-    // Procurar pagamentos com este external_reference
-    const searchResult = await paymentClient.search({
-      options: {
-        external_reference: intentId
-      }
-    })
+    let approvedPayment: any = null
+    let currentIntentId = intentId
 
-    const approvedPayment = searchResult.results?.find((p: any) => p.status === 'approved')
+    if (paymentId) {
+      try {
+        const payment = await paymentClient.get({ id: paymentId })
+        if (payment.status === 'approved') {
+          approvedPayment = payment
+          if (!currentIntentId) currentIntentId = payment.external_reference
+        }
+      } catch (err) {
+        console.error('Error fetching payment by id', err)
+      }
+    }
+
+    if (!approvedPayment && currentIntentId) {
+      const searchResult = await paymentClient.search({
+        options: {
+          external_reference: currentIntentId
+        }
+      })
+      approvedPayment = searchResult.results?.find((p: any) => p.status === 'approved')
+    }
 
     if (!approvedPayment) {
       return NextResponse.json({ success: true, status: 'pending' })
     }
 
-    const paymentId = approvedPayment.id
+    // Se intentId não veio originalmente, precisamos buscar a intent agora
+    if (!intent) {
+      const { data: newIntent, error: newIntentError } = await supabaseAdmin
+        .from('payment_intents')
+        .select('*')
+        .eq('id', currentIntentId)
+        .maybeSingle()
+        
+      if (newIntent) intent = newIntent
+      else return NextResponse.json({ error: 'Intent not found from MP reference' }, { status: 404 })
+    }
+
+    const mpPaymentId = approvedPayment.id
     const paidAmount = approvedPayment.transaction_amount
 
     // Validar valor
@@ -63,15 +92,15 @@ export async function POST(request: Request) {
     const { data: existingPlan } = await supabaseAdmin
       .from('user_plans')
       .select('*')
-      .eq('payment_id', paymentId?.toString() || '')
+      .eq('payment_id', mpPaymentId?.toString() || '')
       .maybeSingle()
 
     if (!existingPlan) {
       // 1. Atualizar Intent
       await supabaseAdmin
         .from('payment_intents')
-        .update({ status: 'approved', processed_at: new Date().toISOString(), mp_payment_id: paymentId?.toString() })
-        .eq('id', intentId)
+        .update({ status: 'approved', processed_at: new Date().toISOString(), mp_payment_id: mpPaymentId?.toString() })
+        .eq('id', currentIntentId)
 
       // 2. Inserir Plano
       await supabaseAdmin
@@ -79,7 +108,7 @@ export async function POST(request: Request) {
         .insert({
           user_id: userId,
           plan_id: planId,
-          payment_id: paymentId?.toString() || 'manual_verification'
+          payment_id: mpPaymentId?.toString() || 'manual_verification'
         })
 
       // 3. Ativar Evento

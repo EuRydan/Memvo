@@ -9,7 +9,18 @@ import { createClient } from '@/lib/supabase/client'
 
 function SuccessContent() {
   const searchParams = useSearchParams()
-  const sessionId = searchParams.get('session_id')
+  const sid = searchParams.get('session_id')
+  const extRef = searchParams.get('external_reference')
+  const pid = searchParams.get('payment_id')
+  
+  let intentId = extRef
+  let paymentId = pid
+  
+  if (sid) {
+    if (sid.length === 36) intentId = intentId || sid
+    else paymentId = paymentId || sid
+  }
+
   const router = useRouter()
   const [status, setStatus] = useState<'loading' | 'success'>('loading')
 
@@ -20,10 +31,11 @@ function SuccessContent() {
 
     // 1. Check if it's already approved
     const checkStatus = async () => {
+      if (!intentId) return
       const { data } = await supabase
         .from('payment_intents')
         .select('status')
-        .eq('id', sessionId)
+        .eq('id', intentId)
         .maybeSingle()
         
       if (data?.status === 'approved') {
@@ -39,7 +51,7 @@ function SuccessContent() {
         const res = await fetch('/api/payment-intents/verify', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ intentId: sessionId })
+          body: JSON.stringify({ intentId, paymentId })
         })
         const result = await res.json()
         if (result.success && result.status === 'approved') {
@@ -55,11 +67,13 @@ function SuccessContent() {
     }, 3000)
 
     // 3. Keep realtime updates on payment_intents table as primary mechanism
-    const channel = supabase.channel(`intent-${sessionId}`)
-      .on(
-        'postgres_changes',
-        { event: 'UPDATE', schema: 'public', table: 'payment_intents', filter: `id=eq.${sessionId}` },
-        (payload) => {
+    let channel: any = null
+    if (intentId) {
+      channel = supabase.channel(`intent-${intentId}`)
+        .on(
+          'postgres_changes',
+          { event: 'UPDATE', schema: 'public', table: 'payment_intents', filter: `id=eq.${intentId}` },
+          (payload) => {
           if (payload.new.status === 'approved') {
             setStatus('success')
             clearInterval(verifyInterval)
@@ -73,11 +87,11 @@ function SuccessContent() {
 
     return () => {
       clearInterval(verifyInterval)
-      supabase.removeChannel(channel)
+      if (channel) supabase.removeChannel(channel)
     }
-  }, [sessionId, router])
+  }, [intentId, paymentId, router])
 
-  if (!sessionId) {
+  if (!intentId && !paymentId) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-[#fafafa]">
         <Logo className="h-10 w-auto text-ink mb-6" />
