@@ -1,20 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { MercadoPagoConfig, Preference } from 'mercadopago'
-
-const PLAN_PRICES = {
-  freemium: 0,
-  essential: 79.00,
-  classic: 149.00,
-  premium: 249.00
-}
-
-const PLAN_NAMES = {
-  freemium: 'Plano Free',
-  essential: 'Plano Essencial',
-  classic: 'Plano Clássico',
-  premium: 'Plano Premium'
-}
+import { MercadoPagoConfig, Payment } from 'mercadopago'
 
 export async function POST(request: Request) {
   try {
@@ -25,103 +11,54 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { plan, eventId, voucher } = await request.json()
+    const body = await request.json()
+    const { formData, intentId } = body
 
-    if (!plan || !eventId) {
-      return NextResponse.json({ error: 'Missing plan or eventId' }, { status: 400 })
+    if (!formData || !intentId) {
+      return NextResponse.json({ error: 'Missing formData or intentId' }, { status: 400 })
     }
 
-    let price = PLAN_PRICES[plan as keyof typeof PLAN_PRICES]
-    if (price === undefined) {
-      return NextResponse.json({ error: 'Invalid plan' }, { status: 400 })
-    }
-
-    // Voucher validation (Affiliate logic)
-    let appliedAffiliateCode = null
-
-    if (voucher) {
-      const { data: affiliate } = await supabase
-        .from('affiliates')
-        .select('affiliate_code, status')
-        .eq('affiliate_code', voucher)
-        .maybeSingle()
-
-      if (affiliate && affiliate.status === 'approved') {
-        // Apply 10% discount
-        price = price * 0.90
-        appliedAffiliateCode = affiliate.affiliate_code
-      }
-    }
-
-    // Cria o intent no banco de dados
+    // Verifica a propriedade do intent
     const { data: intent, error: intentError } = await supabase
       .from('payment_intents')
-      .insert({
-        user_id: user.id,
-        event_id: eventId,
-        plan_id: plan,
-        amount: price,
-        status: 'pending',
-        affiliate_code: appliedAffiliateCode
-      })
-      .select('id')
+      .select('*')
+      .eq('id', intentId)
+      .eq('user_id', user.id)
       .single()
 
-    if (intentError) throw intentError
-
-    // Se o preço for 0, não precisa de Mercado Pago (ex: Freemium)
-    if (price === 0) {
-       // Atualiza a intent e simula sucesso se necessário
-       return NextResponse.json({
-         success: true,
-         intentId: intent.id,
-         preferenceId: null // No preference needed for free
-       })
+    if (intentError || !intent) {
+      return NextResponse.json({ error: 'Intent not found or unauthorized' }, { status: 404 })
     }
 
-    // Inicializa o Mercado Pago SDK
+    // Inicializa o SDK
     const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN
     if (!accessToken) {
       return NextResponse.json({ error: 'Server configuration error' }, { status: 503 })
     }
-    
     const client = new MercadoPagoConfig({ accessToken })
-    const preference = new Preference(client)
+    const payment = new Payment(client)
 
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://memvo.com.br'
     const notificationUrl = process.env.MERCADOPAGO_WEBHOOK_URL || `${baseUrl}/api/webhooks/mercadopago`
 
-    const response = await preference.create({
+    const paymentResponse = await payment.create({
       body: {
-        items: [
-          {
-            id: plan,
-            title: PLAN_NAMES[plan as keyof typeof PLAN_NAMES] || 'Plano Memvo',
-            quantity: 1,
-            unit_price: Number(price.toFixed(2)),
-            currency_id: 'BRL',
-          }
-        ],
-        external_reference: intent.id, // O external_reference agora é o intentId, não "userId|planId"
+        ...formData,
+        external_reference: intent.id,
         notification_url: notificationUrl,
         statement_descriptor: 'MEMVO',
-        back_urls: {
-          success: `${baseUrl}/dashboard/success?session_id=${intent.id}`,
-          pending: `${baseUrl}/dashboard/success?session_id=${intent.id}`,
-          failure: `${baseUrl}/pricing?eventId=${eventId}`,
-        },
-        auto_return: 'approved',
       }
     })
 
     return NextResponse.json({
       success: true,
-      intentId: intent.id,
-      preferenceId: response.id
+      paymentId: paymentResponse.id,
+      status: paymentResponse.status,
+      status_detail: paymentResponse.status_detail,
     })
 
   } catch (error: any) {
-    console.error('Create payment intent error:', error)
+    console.error('Process payment intent error:', error)
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
 }

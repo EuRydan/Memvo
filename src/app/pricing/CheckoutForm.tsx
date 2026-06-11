@@ -7,23 +7,22 @@ if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_
   initMercadoPago(process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY, { locale: 'pt-BR' })
 }
 
-export default function CheckoutForm({ intentId, preferenceId, userId, returnUrl }: { intentId: string, preferenceId: string, userId: string, returnUrl: string }) {
+export default function CheckoutForm({ intentId, userId, returnUrl }: { intentId: string, userId: string, returnUrl: string }) {
   const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
   const [brickStatus, setBrickStatus] = useState<string>('carregando')
   const [amount, setAmount] = useState<number>(0)
-  const [activePreferenceId, setActivePreferenceId] = useState<string>(preferenceId)
+
   const [couponInput, setCouponInput] = useState('')
   const [applyingCoupon, setApplyingCoupon] = useState(false)
   const [couponMessage, setCouponMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
   
   const initialization = React.useMemo(() => {
-    if (!activePreferenceId || !amount) return undefined;
+    if (!amount) return undefined;
     return {
       amount: amount,
-      preferenceId: activePreferenceId,
     }
-  }, [amount, activePreferenceId]);
+  }, [amount]);
 
   const customization = React.useMemo(() => ({
     paymentMethods: {
@@ -92,7 +91,6 @@ export default function CheckoutForm({ intentId, preferenceId, userId, returnUrl
                          const data = await res.json()
                          if (data.success) {
                            setAmount(data.newAmount)
-                           setActivePreferenceId(data.newPreferenceId)
                            setCouponMessage({ type: 'success', text: `Desconto da parceira ${data.partnerName} aplicado!` })
                            setCouponInput('')
                            // Reset brick to force re-render correctly (sometimes MP SDK needs help)
@@ -130,14 +128,14 @@ export default function CheckoutForm({ intentId, preferenceId, userId, returnUrl
                    Erro ao conectar com o Mercado Pago. Verifique sua conexão ou tente recarregar a página.
                  </div>
                )}
-               {preferenceId && (
+               {amount > 0 && (
                  <div style={{ display: brickStatus === 'erro' ? 'none' : 'block' }}>
                    <Payment
                       initialization={initialization!}
                       customization={customization}
                       onSubmit={async ({ selectedPaymentMethod, formData }: any) => {
                         return new Promise<void>((resolve, reject) => {
-                          fetch('/api/process-payment', {
+                          fetch('/api/payment-intents/create', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ formData, intentId })

@@ -30,6 +30,9 @@ export default function RootLayout({
       lang="pt-BR"
       className={`${inter.variable} ${playfair.variable} h-full antialiased`}
     >
+      <head>
+        <script src="https://www.mercadopago.com/v2/security.js" {...{ view: 'checkout' }} async></script>
+      </head>
       <body className="min-h-full flex flex-col bg-canvas text-ink" suppressHydrationWarning>
         {children}
         <RealtimeToast />

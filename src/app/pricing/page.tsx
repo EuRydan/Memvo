@@ -159,7 +159,7 @@ function PricingContent() {
     
     // Create payment intent
     const finalVoucher = activeCoupon?.code || null
-    const response = await fetch('/api/payment-intents/create', {
+    const response = await fetch('/api/payment-intents/init', {
       method: 'POST',
       body: JSON.stringify({ plan: plan.id, eventId, voucher: finalVoucher }),
     })
@@ -169,7 +169,6 @@ function PricingContent() {
       return
     }
     setIntentId(data.intentId)
-    setPreferenceId(data.preferenceId)
     setSelectedPlan(plan)
   }
 
@@ -369,14 +368,13 @@ function PricingContent() {
               </div>
               <p className="text-[11px] font-semibold text-[#939393] uppercase tracking-widest mb-6">Ambiente protegido</p>
 
-              {preferenceId && intentId && (
+              {intentId && (
                 <div className="mt-8 bg-white rounded-3xl p-6 md:p-8" style={{ boxShadow: '0 8px 40px rgba(0,0,0,0.08)' }}>
                   <h2 className="text-xl font-bold text-ink mb-6 text-center" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
                     Finalizar Pagamento
                   </h2>
                   <CheckoutForm 
                     intentId={intentId}
-                    preferenceId={preferenceId}
                     userId={user?.id} 
                     returnUrl={`${process.env.NEXT_PUBLIC_SITE_URL || ''}/dashboard/success`}
                   />

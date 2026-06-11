@@ -54,46 +54,7 @@ export async function POST(request: Request) {
     // 3. Calcular novo valor (10% desconto)
     const newAmount = Number(intent.amount) * 0.90
 
-    // 4. Gerar nova Preference no Mercado Pago
-    const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN
-    if (!accessToken) {
-      return NextResponse.json({ error: 'Server configuration error' }, { status: 503 })
-    }
-    
-    const client = new MercadoPagoConfig({ accessToken })
-    const preference = new Preference(client)
-
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://memvo.com.br'
-    const notificationUrl = process.env.MERCADOPAGO_WEBHOOK_URL || `${baseUrl}/api/webhooks/mercadopago`
-
-    const response = await preference.create({
-      body: {
-        items: [
-          {
-            id: intent.plan_id,
-            title: PLAN_NAMES[intent.plan_id as keyof typeof PLAN_NAMES] || 'Plano Memvo (Com Desconto)',
-            quantity: 1,
-            unit_price: Number(newAmount.toFixed(2)),
-            currency_id: 'BRL',
-          }
-        ],
-        external_reference: intent.id,
-        notification_url: notificationUrl,
-        statement_descriptor: 'MEMVO',
-        back_urls: {
-          success: `${baseUrl}/dashboard/success?session_id=${intent.id}`,
-          pending: `${baseUrl}/dashboard/success?session_id=${intent.id}`,
-          failure: `${baseUrl}/pricing?eventId=${intent.event_id}`,
-        },
-        auto_return: 'approved',
-      }
-    })
-
-    if (!response.id) {
-      throw new Error('Failed to create Mercado Pago preference')
-    }
-
-    // 5. Atualizar Intent no DB
+    // 4. Atualizar Intent no DB
     await supabase
       .from('payment_intents')
       .update({
@@ -105,7 +66,6 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       newAmount,
-      newPreferenceId: response.id,
       partnerName: affiliate.name
     })
 
