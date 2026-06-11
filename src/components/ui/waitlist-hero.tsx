@@ -1,6 +1,5 @@
 "use client"
 
-import { useState, useRef } from "react"
 import Link from "next/link"
 
 export const WaitlistHero = () => {
@@ -113,7 +112,7 @@ export const WaitlistHero = () => {
         <div
           className="absolute inset-0 z-10 pointer-events-none"
           style={{
-            background: \`linear-gradient(to top, \${colors.baseBg} 20%, rgba(250, 250, 250, 0.6) 50%, transparent 100%)\`,
+            background: `linear-gradient(to top, ${colors.baseBg} 20%, rgba(250, 250, 250, 0.6) 50%, transparent 100%)`,
           }}
         />
 
