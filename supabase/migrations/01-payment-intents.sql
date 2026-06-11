@@ -69,3 +69,6 @@ create policy "insert own payment_intents" on payment_intents
 drop policy if exists "update own payment_intents" on payment_intents;
 create policy "update own payment_intents" on payment_intents
   for update using (auth.uid() = user_id);
+
+-- Ativar Realtime para a tabela payment_intents para que o webhook possa notificar o frontend
+alter publication supabase_realtime add table payment_intents;
