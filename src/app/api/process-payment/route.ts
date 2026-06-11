@@ -11,9 +11,9 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json()
-    const { formData, userId, planId } = body
+    const { formData, intentId } = body
 
-    if (!formData || !userId || !planId) {
+    if (!formData || !intentId) {
       return NextResponse.json({ error: 'Faltam dados do formulário.' }, { status: 400 })
     }
 
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     const paymentResponse = await payment.create({
       body: {
         ...formData,
-        external_reference: `${userId}|${planId}`,
+        external_reference: intentId,
         notification_url: notificationUrl,
       }
     })

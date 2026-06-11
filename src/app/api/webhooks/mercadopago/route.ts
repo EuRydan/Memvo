@@ -32,27 +32,52 @@ export async function POST(request: Request) {
           return NextResponse.json({ success: true, message: 'Ignored: No external reference' })
         }
 
-        const [userId, planIdRaw] = externalReference.split('|')
+        const intentId = externalReference
         
-        if (!userId || !planIdRaw) {
-          console.error(`externalReference mal formatado: ${externalReference}`)
-          return NextResponse.json({ error: 'Invalid external reference' }, { status: 400 })
-        }
-
         const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
         const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
         const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey)
 
-        const planId = planIdRaw
+        // Buscar a intent
+        const { data: intent, error: intentError } = await supabaseAdmin
+          .from('payment_intents')
+          .select('*')
+          .eq('id', intentId)
+          .maybeSingle()
+
+        if (intentError || !intent) {
+          console.error(`Intent não encontrada: ${intentId}`)
+          return NextResponse.json({ error: 'Intent not found' }, { status: 404 })
+        }
+
+        // Validar valor da transação
+        const paidAmount = paymentInfo.transaction_amount
+        if (paidAmount !== Number(intent.amount)) {
+          console.error(`Valor pago (${paidAmount}) diverge do intent (${intent.amount}) para intent ${intentId}`)
+          // Em um cenário real poderíamos marcar como "partial_payment", mas para este B2C vamos rejeitar a ativação automática
+          return NextResponse.json({ error: 'Amount mismatch' }, { status: 400 })
+        }
+
+        const planId = intent.plan_id
+        const userId = intent.user_id
+        const eventId = intent.event_id
 
         // Verificar se já ativou
         const { data: existingPlan } = await supabaseAdmin
           .from('user_plans')
           .select('*')
-          .eq('payment_id', paymentId)
+          .eq('payment_id', paymentId.toString())
           .maybeSingle()
 
         if (!existingPlan) {
+          // Iniciar transação/atualizações
+          // 1. Atualizar Intent
+          await supabaseAdmin
+            .from('payment_intents')
+            .update({ status: 'approved', processed_at: new Date().toISOString(), mp_payment_id: paymentId.toString() })
+            .eq('id', intentId)
+
+          // 2. Inserir Plano
           const { error: insertError } = await supabaseAdmin
             .from('user_plans')
             .insert({
@@ -65,7 +90,14 @@ export async function POST(request: Request) {
             console.error('Erro ao ativar plano no Supabase:', insertError)
             return NextResponse.json({ error: 'Database error' }, { status: 500 })
           }
-          console.log(`Plano ${planId} ativado com sucesso via Webhook MercadoPago para o usuário ${userId}`)
+
+          // 3. Ativar Evento
+          await supabaseAdmin
+            .from('events')
+            .update({ active: true, status: 'published' }) // ou 'active' se o status for outro
+            .eq('id', eventId)
+            
+          console.log(`Plano ${planId} e evento ${eventId} ativados com sucesso via Webhook MercadoPago para o usuário ${userId}`)
         }
 
         return NextResponse.json({ success: true, message: 'Processed successfully' })

@@ -104,6 +104,8 @@ const FAQS = [
 ]
 
 export default function PricingPage() {
+  const [preferenceId, setPreferenceId] = useState<string | null>(null)
+  const [intentId, setIntentId] = useState<string | null>(null)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [selectedPlan, setSelectedPlan] = useState<typeof PLANS[0] | null>(null)
   const [user, setUser] = useState<any>(null)
@@ -118,11 +120,20 @@ export default function PricingPage() {
     checkUser()
   }, [])
 
-  const handleSelectPlan = (plan: typeof PLANS[0]) => {
+  const handleSelectPlan = async (plan: typeof PLANS[0]) => {
     if (!user) {
       router.push('/register?redirect=/pricing')
       return
     }
+    
+    // Create payment intent
+    const response = await fetch('/api/payment-intents/create', {
+      method: 'POST',
+      body: JSON.stringify({ planId: plan.id }),
+    })
+    const data = await response.json()
+    setIntentId(data.intentId)
+    setPreferenceId(data.preferenceId)
     setSelectedPlan(plan)
   }
 
@@ -301,12 +312,19 @@ export default function PricingPage() {
               </div>
               <p className="text-[11px] font-semibold text-[#939393] uppercase tracking-widest mb-6">Ambiente protegido</p>
 
-              <CheckoutForm 
-                planId={selectedPlan.id} 
-                planPrice={selectedPlan.price} 
-                userId={user?.id}
-                returnUrl={`${typeof window !== 'undefined' ? window.location.origin : ''}/dashboard/success?plan=${selectedPlan.id}`} 
-              />
+              {preferenceId && intentId && (
+                <div className="mt-8 bg-white rounded-3xl p-6 md:p-8" style={{ boxShadow: '0 8px 40px rgba(0,0,0,0.08)' }}>
+                  <h2 className="text-xl font-bold text-ink mb-6 text-center" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
+                    Finalizar Pagamento
+                  </h2>
+                  <CheckoutForm 
+                    intentId={intentId}
+                    preferenceId={preferenceId}
+                    userId={user?.id} 
+                    returnUrl={`${process.env.NEXT_PUBLIC_SITE_URL || ''}/dashboard/success`}
+                  />
+                </div>
+              )}
             </div>
           </div>
         )}

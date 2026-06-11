@@ -96,7 +96,35 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
     if (!files || !event) return
     setUploadingId(challengeId)
 
+    const allowedImageMimes = ['image/jpeg', 'image/png', 'image/heic', 'image/webp']
+    const allowedVideoMimes = ['video/mp4', 'video/quicktime', 'video/webm']
+    const MAX_PHOTO_SIZE = 10 * 1024 * 1024 // 10MB
+    const MAX_VIDEO_SIZE = 50 * 1024 * 1024 // 50MB
+
     for (const file of Array.from(files)) {
+      const isVideo = file.type.startsWith('video/')
+      
+      // Validação de MIME type e Tamanho
+      if (isVideo) {
+        if (!allowedVideoMimes.includes(file.type)) {
+          alert(`Formato de vídeo não suportado: ${file.name}. Use MP4, MOV ou WebM.`)
+          continue
+        }
+        if (file.size > MAX_VIDEO_SIZE) {
+          alert(`O vídeo ${file.name} excede o limite de 50MB.`)
+          continue
+        }
+      } else {
+        if (!allowedImageMimes.includes(file.type)) {
+          alert(`Formato de imagem não suportado: ${file.name}. Use JPG, PNG, WEBP ou HEIC.`)
+          continue
+        }
+        if (file.size > MAX_PHOTO_SIZE) {
+          alert(`A imagem ${file.name} excede o limite de 10MB.`)
+          continue
+        }
+      }
+
       const ext = file.name.split('.').pop()
       const fileName = `uploads/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
       const { error: storageError } = await supabase.storage
@@ -216,6 +244,25 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
           Evento não ativado
         </h1>
         <p className="text-sm text-slate">O anfitrião precisa concluir a configuração no painel para receber fotos.</p>
+      </div>
+    </div>
+  )
+
+  // ── Draft ──
+  if (event && !event.active) return (
+    <div className="min-h-screen flex items-center justify-center bg-[#fafafa] px-5">
+      <div
+        className="text-center rounded-[20px] p-10 max-w-sm w-full"
+        style={{ background: '#fff', boxShadow: '0 8px 40px rgba(0,0,0,0.08)' }}
+      >
+        <p className="text-5xl mb-4">💳</p>
+        <h1
+          style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+          className="text-xl font-bold text-ink mb-2"
+        >
+          Aguardando Pagamento
+        </h1>
+        <p className="text-sm text-slate">O anfitrião está finalizando a ativação deste evento.</p>
       </div>
     </div>
   )

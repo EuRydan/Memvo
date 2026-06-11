@@ -4,15 +4,56 @@ import { Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Logo } from '@/components/Logo'
-import { initMercadoPago, StatusScreen } from '@mercadopago/sdk-react'
-
-if (process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY) {
-  initMercadoPago(process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY, { locale: 'pt-BR' })
-}
+import { useEffect, useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
 
 function SuccessContent() {
   const searchParams = useSearchParams()
   const sessionId = searchParams.get('session_id')
+  const router = useRouter()
+  const [status, setStatus] = useState<'loading' | 'success'>('loading')
+
+  useEffect(() => {
+    if (!sessionId) return
+
+    const supabase = createClient()
+
+    // 1. Check if it's already approved
+    const checkStatus = async () => {
+      const { data } = await supabase
+        .from('payment_intents')
+        .select('status')
+        .eq('id', sessionId)
+        .maybeSingle()
+        
+      if (data?.status === 'approved') {
+        setStatus('success')
+      }
+    }
+    
+    checkStatus()
+
+    // 2. Subscribe to realtime updates on payment_intents table
+    const channel = supabase.channel(`intent-${sessionId}`)
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'payment_intents', filter: `id=eq.${sessionId}` },
+        (payload) => {
+          if (payload.new.status === 'approved') {
+            setStatus('success')
+            // Optionally redirect after a few seconds
+            setTimeout(() => {
+              router.push('/dashboard')
+            }, 3000)
+          }
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [sessionId, router])
 
   if (!sessionId) {
     return (
@@ -40,12 +81,32 @@ function SuccessContent() {
         <Logo className="h-10 w-auto text-ink mx-auto" />
       </div>
 
-      <div className="w-full max-w-[600px] relative z-10">
-        <StatusScreen
-          initialization={{ paymentId: sessionId }}
-          onReady={() => console.log('Status Screen is ready')}
-          onError={(error) => console.error('Erro no Status Screen:', error)}
-        />
+      <div className="w-full max-w-[600px] relative z-10 flex flex-col items-center text-center">
+        {status === 'loading' ? (
+          <>
+            <div className="w-16 h-16 border-4 border-[#0a0a0a]/20 border-t-[#0a0a0a] rounded-full animate-spin mb-6"></div>
+            <h2 style={{ fontFamily: 'Georgia, "Times New Roman", serif' }} className="text-2xl font-bold text-ink mb-3">
+              Confirmando pagamento...
+            </h2>
+            <p className="text-sm text-slate mb-8 leading-relaxed max-w-sm">
+              Aguarde um instante enquanto verificamos seu pagamento com o Mercado Pago. Esta página atualizará automaticamente.
+            </p>
+          </>
+        ) : (
+          <>
+            <div className="w-16 h-16 bg-[#4ac550] text-white rounded-full flex items-center justify-center mb-6">
+              <svg width="32" height="32" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+            <h2 style={{ fontFamily: 'Georgia, "Times New Roman", serif' }} className="text-2xl font-bold text-ink mb-3">
+              Pagamento Confirmado!
+            </h2>
+            <p className="text-sm text-slate mb-8 leading-relaxed max-w-sm">
+              Seu plano foi ativado com sucesso. Você será redirecionado em instantes...
+            </p>
+          </>
+        )}
 
         <div className="mt-8 text-center">
           <Link
@@ -55,9 +116,6 @@ function SuccessContent() {
           >
             Ir para o painel
           </Link>
-          <p className="mt-4 text-xs text-stone-500 max-w-sm mx-auto">
-            Assim que seu pagamento for confirmado, os recursos do seu plano serão desbloqueados automaticamente.
-          </p>
         </div>
       </div>
     </div>

@@ -101,6 +101,9 @@ export default function DashboardPage() {
   const displayPlanName = planNames[planId] || 'Nenhum'
   const maxEvents = planId !== 'none' && PLAN_LIMITS[planId as PlanTier] ? PLAN_LIMITS[planId as PlanTier] : (planId === 'freemium' ? 1 : 0)
   const activeCount = countActiveEvents(events)
+  
+  const draftEventId = events.find(e => e.status === 'draft' && !e.active)?.id
+  const showBanner = draftEventId && planId === 'none'
 
   if (loading) {
     return (
@@ -139,6 +142,27 @@ export default function DashboardPage() {
 
       {/* ── Main Content ── */}
       <main className="relative z-10 pt-10 pb-16 px-6 max-w-3xl mx-auto">
+      
+        {/* Payment Banner */}
+        {showBanner && (
+          <div className="mb-8 rounded-2xl bg-orange-50 border border-orange-200 p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm animate-in fade-in slide-in-from-top-4">
+            <div className="flex items-start sm:items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center shrink-0">
+                <span className="text-orange-600 text-lg">⚠️</span>
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-orange-900">Complete sua compra</h3>
+                <p className="text-xs text-orange-700 mt-0.5">Você tem um evento aguardando ativação. Escolha um plano para liberá-lo.</p>
+              </div>
+            </div>
+            <button
+              onClick={() => router.push(`/pricing?eventId=${draftEventId}`)}
+              className="bg-orange-600 text-white text-xs font-bold px-5 py-2.5 rounded-full hover:bg-orange-700 active:scale-95 transition-all shrink-0 whitespace-nowrap"
+            >
+              Ver Planos
+            </button>
+          </div>
+        )}
 
         {/* Section header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">

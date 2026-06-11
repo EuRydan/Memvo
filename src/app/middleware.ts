@@ -42,7 +42,74 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  await supabase.auth.getUser()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  const isAuthRoute = request.nextUrl.pathname.startsWith('/login') || request.nextUrl.pathname.startsWith('/register')
+  const isDashboardRoute = request.nextUrl.pathname.startsWith('/dashboard')
+  const isPricingRoute = request.nextUrl.pathname.startsWith('/pricing')
+  const isOnboardingRoute = request.nextUrl.pathname.startsWith('/onboarding')
+
+  // Se não tem user logado e tentou acessar rota protegida
+  if (!user && (isDashboardRoute || isPricingRoute || isOnboardingRoute)) {
+    return NextResponse.redirect(new URL('/login', request.url))
+  }
+
+  // Se tem user logado e tentou acessar login/register, manda pro lugar certo
+  // Se está acessando uma rota protegida (dashboard, pricing, onboarding), aplica o fluxo lógico
+  if (user && (isAuthRoute || isDashboardRoute || isPricingRoute || isOnboardingRoute)) {
+    
+    // Obter plano do usuário
+    const { data: planData } = await supabase
+      .from('user_plans')
+      .select('id')
+      .eq('user_id', user.id)
+      .limit(1)
+      .maybeSingle()
+      
+    const hasPlan = !!planData
+
+    // Verificar se já fez onboarding antes (tem pelo menos 1 evento)
+    const { data: eventsData } = await supabase
+      .from('events')
+      .select('id, active, status')
+      .eq('owner_id', user.id)
+      .limit(1)
+
+    const hasAnyEvent = eventsData && eventsData.length > 0
+    const hasDraftWithoutPlan = eventsData?.some(e => e.status === 'draft' && !e.active) && !hasPlan
+
+    let targetUrl: string | null = null
+
+    if (hasPlan) {
+      // Se tem plano ativo, deve ir para o dashboard (se estiver tentando login/register/onboarding/pricing)
+      if (isAuthRoute || isOnboardingRoute || isPricingRoute) {
+        targetUrl = '/dashboard'
+      }
+    } else if (hasDraftWithoutPlan) {
+      // Tem draft e não tem plano -> pricing
+      // Obter o ID do evento draft para passar na URL
+      const draftEvent = eventsData?.find(e => e.status === 'draft' && !e.active)
+      if (!isPricingRoute && draftEvent) {
+        targetUrl = `/pricing?eventId=${draftEvent.id}`
+      }
+    } else if (!hasAnyEvent) {
+      // Nunca fez onboarding (sem eventos) -> onboarding
+      if (!isOnboardingRoute) {
+        targetUrl = '/onboarding'
+      }
+    } else {
+       // Tem evento (que não é draft, ex: evento arquivado) e não tem plano, ou outro caso limite
+       // Vamos permitir ir para dashboard ou pricing. Se tentar login/register, manda pro dashboard.
+       if (isAuthRoute) {
+         targetUrl = '/dashboard'
+       }
+    }
+
+    if (targetUrl && request.nextUrl.pathname !== targetUrl && !request.nextUrl.pathname.startsWith(targetUrl.split('?')[0])) {
+        return NextResponse.redirect(new URL(targetUrl, request.url))
+    }
+  }
+
   return supabaseResponse
 }
 

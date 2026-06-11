@@ -7,21 +7,19 @@ if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_
   initMercadoPago(process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY, { locale: 'pt-BR' })
 }
 
-export default function CheckoutForm({ planId, planPrice, userId, returnUrl }: { planId: string, planPrice: string, userId: string, returnUrl: string }) {
+export default function CheckoutForm({ intentId, preferenceId, userId, returnUrl }: { intentId: string, preferenceId: string, userId: string, returnUrl: string }) {
   const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
   const [brickStatus, setBrickStatus] = useState<string>('carregando')
-  const [preferenceId, setPreferenceId] = useState<string | null>(null)
+  const [amount, setAmount] = useState<number>(0)
   
-  const numericPrice = parseFloat(planPrice.replace('R$', '').replace(',', '.')) || 0
-
   const initialization = React.useMemo(() => {
-    if (!preferenceId) return undefined;
+    if (!preferenceId || !amount) return undefined;
     return {
-      amount: numericPrice,
+      amount: amount,
       preferenceId: preferenceId,
     }
-  }, [numericPrice, preferenceId]);
+  }, [amount, preferenceId]);
 
   const customization = React.useMemo(() => ({
     paymentMethods: {
@@ -33,16 +31,12 @@ export default function CheckoutForm({ planId, planPrice, userId, returnUrl }: {
   } as any), []);
 
   React.useEffect(() => {
-    async function createPreference() {
+    async function fetchIntent() {
       try {
-        const response = await fetch('/api/create-payment-preference', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ plan: planId, userId, price: numericPrice })
-        })
+        const response = await fetch(`/api/payment-intents/${intentId}`)
         const data = await response.json()
-        if (response.ok && data.preferenceId) {
-          setPreferenceId(data.preferenceId)
+        if (response.ok && data.intent) {
+          setAmount(Number(data.intent.amount))
         } else {
           console.error(data.error)
           setBrickStatus('erro')
@@ -53,10 +47,10 @@ export default function CheckoutForm({ planId, planPrice, userId, returnUrl }: {
       }
     }
     
-    if (userId) {
-      createPreference()
+    if (intentId) {
+      fetchIntent()
     }
-  }, [planId, userId, numericPrice])
+  }, [intentId])
 
 
 
@@ -90,7 +84,7 @@ export default function CheckoutForm({ planId, planPrice, userId, returnUrl }: {
                           fetch('/api/process-payment', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ formData, userId, planId })
+                            body: JSON.stringify({ formData, intentId })
                           })
                           .then(res => res.json())
                           .then(data => {
