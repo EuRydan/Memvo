@@ -17,6 +17,7 @@ const PLANS = [
     price: 'R$0',
     popular: false,
     features: [
+      { text: '1 evento ativo', included: true },
       { text: 'Até 10 convidados', included: true },
       { text: '1 foto por convidado no desafio', included: true },
       { text: 'Até 1 desafio fotográfico', included: true },
@@ -35,6 +36,7 @@ const PLANS = [
     price: 'R$79',
     popular: false,
     features: [
+      { text: '1 evento ativo', included: true },
       { text: 'Até 50 convidados', included: true },
       { text: '3 fotos por convidado no desafio', included: true },
       { text: 'Até 5 desafios fotográficos', included: true },
@@ -53,6 +55,7 @@ const PLANS = [
     price: 'R$149',
     popular: true,
     features: [
+      { text: 'Até 3 eventos ativos', included: true },
       { text: 'Até 200 convidados', included: true },
       { text: 'Fotos ilimitadas', included: true },
       { text: 'Desafios ilimitados', included: true },
@@ -71,6 +74,7 @@ const PLANS = [
     price: 'R$249',
     popular: false,
     features: [
+      { text: 'Eventos ilimitados', included: true },
       { text: 'Convidados ilimitados', included: true },
       { text: 'Fotos ilimitadas', included: true },
       { text: 'Desafios ilimitados', included: true },
