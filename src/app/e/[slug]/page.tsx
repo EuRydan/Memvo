@@ -130,7 +130,6 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
       const { error: storageError } = await supabase.storage
         .from('media').upload(fileName, file, { cacheControl: '3600', upsert: false })
       if (storageError) { console.error(storageError); continue }
-      const isVideo = file.type.startsWith('video/')
       
       const res = await fetch('/api/media/create', {
         method: 'POST',
