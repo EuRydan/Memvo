@@ -355,6 +355,13 @@ function PricingContent() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-14 items-start animate-fade-in">
+            {(() => {
+              const disabled = isPlanDisabled(selectedPlan.id)
+              const displayPrice = getDisplayPrice(selectedPlan)
+              const isUpgrade = currentPlanId && !disabled && selectedPlan.id !== 'freemium'
+
+              return (
+                <>
             {/* Left: Selected Plan */}
             <div className={`w-full max-w-[320px] mx-auto md:max-w-sm relative text-center border p-8 pb-14 rounded-2xl ${
                 selectedPlan.popular 
@@ -373,10 +380,19 @@ function PricingContent() {
               )}
 
               <p className={`font-semibold ${selectedPlan.popular ? 'pt-2' : ''}`}>{selectedPlan.name}</p>
-              <h1 className={`text-4xl font-bold mt-2 ${selectedPlan.popular ? 'text-white' : selectedPlan.price === 'R$0' ? 'text-gray-400' : 'text-[#0a0a0a]'}`}>
-                {selectedPlan.price}
+              <h1 className={`text-4xl font-bold mt-2 ${selectedPlan.popular ? 'text-white' : displayPrice === 'R$0' ? 'text-gray-400' : 'text-[#0a0a0a]'}`}>
+                {activeCoupon && displayPrice !== 'R$0' ? (
+                  <div className="flex flex-col items-center justify-center gap-1">
+                    <span className="text-xl line-through opacity-50">{displayPrice}</span>
+                    <span className="text-green-500">
+                      R${(Number(displayPrice.replace('R$', '')) * 0.9).toFixed(2).replace('.', ',')}
+                    </span>
+                  </div>
+                ) : (
+                  displayPrice
+                )}
                 <span className={`text-sm font-normal block mt-1 ${selectedPlan.popular ? 'text-white/60' : 'text-gray-500'}`}>
-                  pagamento único
+                  {isUpgrade ? 'upgrade' : 'pagamento único'}
                 </span>
               </h1>
 
@@ -413,7 +429,13 @@ function PricingContent() {
               </div>
               <div className="flex justify-between items-center mb-6 pt-6 border-t border-gray-100">
                 <span className="text-gray-500 font-medium">Total a pagar</span>
-                <span className={`text-xl font-bold tracking-tight ${selectedPlan.price === 'R$0' ? 'text-gray-400' : 'text-[#0a0a0a]'}`}>{selectedPlan.price}</span>
+                <span className={`text-xl font-bold tracking-tight ${displayPrice === 'R$0' ? 'text-gray-400' : 'text-[#0a0a0a]'}`}>
+                  {activeCoupon && displayPrice !== 'R$0' ? (
+                    `R$${(Number(displayPrice.replace('R$', '')) * 0.9).toFixed(2).replace('.', ',')}`
+                  ) : (
+                    displayPrice
+                  )}
+                </span>
               </div>
               <p className="text-[11px] font-semibold text-[#939393] uppercase tracking-widest mb-6">Ambiente protegido</p>
 
@@ -430,6 +452,9 @@ function PricingContent() {
                 </div>
               )}
             </div>
+                </>
+              )
+            })()}
           </div>
         )}
 
