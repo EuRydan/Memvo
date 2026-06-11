@@ -513,14 +513,21 @@ export default function OnboardingWizard() {
               else if (step === 5 && date) saveEventToDB() // Save before step 6/7
               else if (step === 6) handleNext()
               else if (step === 7) {
-                if (hasPlan) {
-                  router.push(`/dashboard/${savedEventId || ''}`)
-                } else {
-                  const query = new URLSearchParams()
-                  if (savedEventId) query.append('eventId', savedEventId)
-                  if (promoCode) query.append('voucher', promoCode)
-                  router.push(`/pricing?${query.toString()}`)
-                }
+                setSavingEvent(true)
+                fetch('/api/onboarding/draft', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ state: {} })
+                }).finally(() => {
+                  if (hasPlan) {
+                    router.push(`/dashboard/${savedEventId || ''}`)
+                  } else {
+                    const query = new URLSearchParams()
+                    if (savedEventId) query.append('eventId', savedEventId)
+                    if (promoCode) query.append('voucher', promoCode)
+                    router.push(`/pricing?${query.toString()}`)
+                  }
+                })
               }
             }}
             disabled={savingEvent || (step === 2 && !eventType) || (step === 3 && !name) || (step === 5 && !date)}
