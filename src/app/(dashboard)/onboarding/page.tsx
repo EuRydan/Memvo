@@ -61,9 +61,21 @@ export default function OnboardingWizard() {
         
       setHasPlan(!!planData)
 
+      // Check if forcing a new event
+      const params = new URLSearchParams(window.location.search)
+      if (params.get('new') === 'true') {
+        fetch('/api/onboarding/draft', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ state: {} })
+        }).catch(() => {})
+        setLoading(false)
+        return
+      }
+
       // Load draft from backend
       try {
-        const res = await fetch('/api/onboarding/draft')
+        const res = await fetch('/api/onboarding/draft', { cache: 'no-store' })
         const data = await res.json()
         const parsed = data.draft
         if (parsed && parsed.userId === user.id) {

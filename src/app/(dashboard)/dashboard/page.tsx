@@ -183,7 +183,7 @@ export default function DashboardPage() {
           <div className="flex items-center gap-3">
 
             <button
-              onClick={() => router.push('/onboarding')}
+              onClick={() => router.push('/onboarding?new=true')}
               className="bg-ink text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:opacity-85 active:scale-95 transition-all duration-200 cursor-pointer flex-shrink-0 relative overflow-hidden group"
               style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.16)' }}
             >
@@ -208,7 +208,7 @@ export default function DashboardPage() {
                 <p className="text-sm font-semibold text-ink mb-1">Nenhum evento ainda</p>
                 <p className="text-xs text-slate mb-5">Crie seu primeiro evento e compartilhe memórias.</p>
                 <button
-                  onClick={() => router.push('/onboarding')}
+                  onClick={() => router.push('/onboarding?new=true')}
                   className="bg-ink text-white text-sm font-semibold px-6 py-2.5 rounded-full hover:opacity-85 transition-opacity"
                 >
                   Criar meu primeiro evento
