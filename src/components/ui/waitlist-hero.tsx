@@ -55,17 +55,38 @@ export const WaitlistHero = () => {
             <div
               className="absolute top-1/2 left-1/2"
               style={{
-                width: "2000px",
-                height: "2000px",
-                transform: "translate(-50%, -50%) rotate(279.05deg)",
+                width: "1600px",
+                height: "1600px",
+                transform: "translate(-50%, -50%)",
                 zIndex: 0,
               }}
             >
-              <img
-                src="https://images.unsplash.com/photo-1731596153022-4cedafe3330a?w=2400&q=100&auto=format&fit=crop"
-                alt=""
-                className="w-full h-full object-cover opacity-20 rounded-[100px]"
-              />
+              {Array.from({ length: 12 }).map((_, i) => {
+                const angle = (i / 12) * Math.PI * 2;
+                const r = 700;
+                const x = Math.cos(angle) * r;
+                const y = Math.sin(angle) * r;
+                const images = [
+                  "https://images.unsplash.com/photo-1731596153022-4cedafe3330a?w=400&q=80",
+                  "https://images.pexels.com/photos/17931371/pexels-photo-17931371.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop",
+                  "https://images.unsplash.com/photo-1723373457175-31b09fa7d405?w=400&h=400&fit=crop&q=80",
+                  "https://images.unsplash.com/photo-1595877786462-ea6dc03f1695?w=400&h=400&fit=crop&q=80",
+                  "https://images.unsplash.com/photo-1628551019393-46e6a870b94b?w=400&h=400&fit=crop&q=80",
+                  "https://images.unsplash.com/photo-1633657322446-ed5784d121e4?w=400&h=400&fit=crop&q=80",
+                  "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=400&h=400&fit=crop&q=80",
+                ];
+                return (
+                  <div key={i} className="absolute rounded-3xl overflow-hidden shadow-2xl opacity-20"
+                    style={{
+                      width: '180px', height: '180px',
+                      left: `calc(50% + ${x}px - 90px)`,
+                      top: `calc(50% + ${y}px - 90px)`,
+                      transform: `rotate(${i * 30}deg)`,
+                    }}>
+                    <img src={images[i % images.length]} className="w-full h-full object-cover" alt="" />
+                  </div>
+                )
+              })}
             </div>
           </div>
 
@@ -74,17 +95,36 @@ export const WaitlistHero = () => {
             <div
               className="absolute top-1/2 left-1/2"
               style={{
-                width: "1000px",
-                height: "1000px",
-                transform: "translate(-50%, -50%) rotate(304.42deg)",
+                width: "1200px",
+                height: "1200px",
+                transform: "translate(-50%, -50%)",
                 zIndex: 1,
               }}
             >
-              <img
-                src="https://images.pexels.com/photos/17931371/pexels-photo-17931371.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop"
-                alt=""
-                className="w-full h-full object-cover opacity-30 rounded-[80px]"
-              />
+              {Array.from({ length: 8 }).map((_, i) => {
+                const angle = (i / 8) * Math.PI * 2 + 0.5;
+                const r = 450;
+                const x = Math.cos(angle) * r;
+                const y = Math.sin(angle) * r;
+                const images = [
+                  "https://images.unsplash.com/photo-1633657322446-ed5784d121e4?w=400&h=400&fit=crop&q=80",
+                  "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=400&h=400&fit=crop&q=80",
+                  "https://images.unsplash.com/photo-1731596153022-4cedafe3330a?w=400&q=80",
+                  "https://images.pexels.com/photos/17931371/pexels-photo-17931371.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop",
+                  "https://images.unsplash.com/photo-1723373457175-31b09fa7d405?w=400&h=400&fit=crop&q=80",
+                ];
+                return (
+                  <div key={i} className="absolute rounded-3xl overflow-hidden shadow-2xl opacity-40"
+                    style={{
+                      width: '220px', height: '220px',
+                      left: `calc(50% + ${x}px - 110px)`,
+                      top: `calc(50% + ${y}px - 110px)`,
+                      transform: `rotate(${i * 45 - 20}deg)`,
+                    }}>
+                    <img src={images[i % images.length]} className="w-full h-full object-cover" alt="" />
+                  </div>
+                )
+              })}
             </div>
           </div>
 
@@ -95,15 +135,32 @@ export const WaitlistHero = () => {
               style={{
                 width: "800px",
                 height: "800px",
-                transform: "translate(-50%, -50%) rotate(48.33deg)",
+                transform: "translate(-50%, -50%)",
                 zIndex: 2,
               }}
             >
-              <img
-                src="https://images.unsplash.com/photo-1723373457175-31b09fa7d405?w=800&h=600&fit=crop&q=80"
-                alt="Memórias"
-                className="w-full h-full object-cover opacity-40 rounded-[60px]"
-              />
+              {Array.from({ length: 5 }).map((_, i) => {
+                const angle = (i / 5) * Math.PI * 2;
+                const r = 250;
+                const x = Math.cos(angle) * r;
+                const y = Math.sin(angle) * r;
+                const images = [
+                  "https://images.unsplash.com/photo-1723373457175-31b09fa7d405?w=400&h=400&fit=crop&q=80",
+                  "https://images.unsplash.com/photo-1595877786462-ea6dc03f1695?w=400&h=400&fit=crop&q=80",
+                  "https://images.unsplash.com/photo-1628551019393-46e6a870b94b?w=400&h=400&fit=crop&q=80",
+                ];
+                return (
+                  <div key={i} className="absolute rounded-[2rem] overflow-hidden shadow-xl opacity-80"
+                    style={{
+                      width: '280px', height: '280px',
+                      left: `calc(50% + ${x}px - 140px)`,
+                      top: `calc(50% + ${y}px - 140px)`,
+                      transform: `rotate(${i * 72 + 15}deg)`,
+                    }}>
+                    <img src={images[i % images.length]} className="w-full h-full object-cover" alt="" />
+                  </div>
+                )
+              })}
             </div>
           </div>
         </div>
