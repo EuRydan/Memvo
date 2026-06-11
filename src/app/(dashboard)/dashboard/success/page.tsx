@@ -33,7 +33,28 @@ function SuccessContent() {
     
     checkStatus()
 
-    // 2. Subscribe to realtime updates on payment_intents table
+    // 2. Poll the verify endpoint every 3 seconds as a robust fallback to webhooks
+    const verifyInterval = setInterval(async () => {
+      try {
+        const res = await fetch('/api/payment-intents/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ intentId: sessionId })
+        })
+        const result = await res.json()
+        if (result.success && result.status === 'approved') {
+          setStatus('success')
+          clearInterval(verifyInterval)
+          setTimeout(() => {
+            router.push('/dashboard')
+          }, 2000)
+        }
+      } catch (err) {
+        console.error('Error verifying payment:', err)
+      }
+    }, 3000)
+
+    // 3. Keep realtime updates on payment_intents table as primary mechanism
     const channel = supabase.channel(`intent-${sessionId}`)
       .on(
         'postgres_changes',
@@ -41,16 +62,17 @@ function SuccessContent() {
         (payload) => {
           if (payload.new.status === 'approved') {
             setStatus('success')
-            // Optionally redirect after a few seconds
+            clearInterval(verifyInterval)
             setTimeout(() => {
               router.push('/dashboard')
-            }, 3000)
+            }, 2000)
           }
         }
       )
       .subscribe()
 
     return () => {
+      clearInterval(verifyInterval)
       supabase.removeChannel(channel)
     }
   }, [sessionId, router])
