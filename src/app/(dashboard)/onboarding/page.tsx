@@ -58,6 +58,7 @@ export default function OnboardingWizard() {
         const parsed = data.draft
         if (parsed && parsed.userId === user.id) {
           if (parsed.step) setStep(parsed.step)
+          if (parsed.savedEventId) setSavedEventId(parsed.savedEventId)
           if (parsed.eventType) setEventType(parsed.eventType)
           if (parsed.name) setName(parsed.name)
           if (parsed.date) setDate(parsed.date)
@@ -80,14 +81,14 @@ export default function OnboardingWizard() {
     if (loading || !currentUserId) return
     const draft = {
       userId: currentUserId,
-      step, eventType, name, date, endDate, time, location, additionalInfo, selectedChallenges
+      step, eventType, name, date, endDate, time, location, additionalInfo, selectedChallenges, savedEventId
     }
     fetch('/api/onboarding/draft', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ state: draft })
     }).catch(err => console.error('Error saving draft', err))
-  }, [step, eventType, name, date, endDate, time, location, additionalInfo, selectedChallenges, loading, currentUserId])
+  }, [step, eventType, name, date, endDate, time, location, additionalInfo, selectedChallenges, savedEventId, loading, currentUserId])
 
   // 3. Fetch Challenges when eventType changes
   useEffect(() => {
