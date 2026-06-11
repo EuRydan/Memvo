@@ -36,9 +36,21 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid plan' }, { status: 400 })
     }
 
-    // Lógica simplificada de voucher: se o voucher for "MEMVO10", dá 10% de desconto
-    if (voucher === 'MEMVO10') {
-      price = price * 0.9
+    // Voucher validation (Affiliate logic)
+    let appliedAffiliateCode = null
+
+    if (voucher) {
+      const { data: affiliate } = await supabase
+        .from('affiliates')
+        .select('affiliate_code, status')
+        .eq('affiliate_code', voucher)
+        .maybeSingle()
+
+      if (affiliate && affiliate.status === 'approved') {
+        // Apply 10% discount
+        price = price * 0.90
+        appliedAffiliateCode = affiliate.affiliate_code
+      }
     }
 
     // Cria o intent no banco de dados
@@ -49,7 +61,8 @@ export async function POST(request: Request) {
         event_id: eventId,
         plan_id: plan,
         amount: price,
-        status: 'pending'
+        status: 'pending',
+        affiliate_code: appliedAffiliateCode
       })
       .select('id')
       .single()

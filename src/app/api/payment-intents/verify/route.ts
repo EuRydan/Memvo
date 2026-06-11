@@ -120,8 +120,13 @@ export async function POST(request: Request) {
       console.log(`Verificação manual: Plano ${planId} e evento ${eventId} ativados com sucesso para ${userId}`)
 
       // 4. Process Affiliate Commission
-      const { data: user } = await supabaseAdmin.auth.admin.getUserById(userId)
-      const affiliateCode = user?.user?.user_metadata?.affiliate_code
+      const { data: intentData } = await supabaseAdmin
+        .from('payment_intents')
+        .select('affiliate_code')
+        .eq('id', currentIntentId)
+        .single()
+        
+      const affiliateCode = intentData?.affiliate_code
 
       if (affiliateCode) {
         // Find affiliate by code

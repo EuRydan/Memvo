@@ -12,14 +12,18 @@ export default function CheckoutForm({ intentId, preferenceId, userId, returnUrl
   const [message, setMessage] = useState<string | null>(null)
   const [brickStatus, setBrickStatus] = useState<string>('carregando')
   const [amount, setAmount] = useState<number>(0)
+  const [activePreferenceId, setActivePreferenceId] = useState<string>(preferenceId)
+  const [couponInput, setCouponInput] = useState('')
+  const [applyingCoupon, setApplyingCoupon] = useState(false)
+  const [couponMessage, setCouponMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
   
   const initialization = React.useMemo(() => {
-    if (!preferenceId || !amount) return undefined;
+    if (!activePreferenceId || !amount) return undefined;
     return {
       amount: amount,
-      preferenceId: preferenceId,
+      preferenceId: activePreferenceId,
     }
-  }, [amount, preferenceId]);
+  }, [amount, activePreferenceId]);
 
   const customization = React.useMemo(() => ({
     paymentMethods: {
@@ -63,6 +67,58 @@ export default function CheckoutForm({ intentId, preferenceId, userId, returnUrl
              </div>
            ) : (
              <>
+               {/* Coupon Section */}
+               <div className="mb-6 p-4 bg-white border border-gray-100 rounded-2xl shadow-sm">
+                 <h3 className="text-sm font-semibold text-ink mb-3">Possui um cupom de desconto?</h3>
+                 <div className="flex gap-2">
+                   <input
+                     type="text"
+                     value={couponInput}
+                     onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+                     placeholder="Ex: PARCEIRO10"
+                     className="flex-1 bg-gray-50 border border-gray-200 text-ink text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#d5c5ff]"
+                   />
+                   <button
+                     onClick={async () => {
+                       if (!couponInput) return
+                       setApplyingCoupon(true)
+                       setCouponMessage(null)
+                       try {
+                         const res = await fetch('/api/payment-intents/apply-coupon', {
+                           method: 'POST',
+                           headers: { 'Content-Type': 'application/json' },
+                           body: JSON.stringify({ intentId, couponCode: couponInput })
+                         })
+                         const data = await res.json()
+                         if (data.success) {
+                           setAmount(data.newAmount)
+                           setActivePreferenceId(data.newPreferenceId)
+                           setCouponMessage({ type: 'success', text: `Desconto da parceira ${data.partnerName} aplicado!` })
+                           setCouponInput('')
+                           // Reset brick to force re-render correctly (sometimes MP SDK needs help)
+                           setBrickStatus('carregando')
+                           setTimeout(() => setBrickStatus('pronto'), 500)
+                         } else {
+                           setCouponMessage({ type: 'error', text: data.error || 'Cupom inválido.' })
+                         }
+                       } catch (e) {
+                         setCouponMessage({ type: 'error', text: 'Erro ao aplicar cupom.' })
+                       }
+                       setApplyingCoupon(false)
+                     }}
+                     disabled={applyingCoupon || !couponInput}
+                     className="bg-ink text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
+                   >
+                     {applyingCoupon ? '...' : 'Aplicar'}
+                   </button>
+                 </div>
+                 {couponMessage && (
+                   <p className={`mt-2 text-xs font-medium ${couponMessage.type === 'success' ? 'text-green-600' : 'text-red-500'}`}>
+                     {couponMessage.text}
+                   </p>
+                 )}
+               </div>
+
                {brickStatus === 'carregando' && (
                  <div className="flex flex-col items-center justify-center h-48 space-y-4">
                    <div className="w-8 h-8 border-4 border-[#0a0a0a]/20 border-t-[#0a0a0a] rounded-full animate-spin"></div>

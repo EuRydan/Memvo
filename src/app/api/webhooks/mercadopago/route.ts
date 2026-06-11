@@ -100,8 +100,13 @@ export async function POST(request: Request) {
           console.log(`Plano ${planId} e evento ${eventId} ativados com sucesso via Webhook MercadoPago para o usuário ${userId}`)
 
           // 4. Process Affiliate Commission
-          const { data: user } = await supabaseAdmin.auth.admin.getUserById(userId)
-          const affiliateCode = user?.user?.user_metadata?.affiliate_code
+          const { data: intentData } = await supabaseAdmin
+            .from('payment_intents')
+            .select('affiliate_code')
+            .eq('id', intentId)
+            .single()
+            
+          const affiliateCode = intentData?.affiliate_code
 
           if (affiliateCode) {
             // Find affiliate by code

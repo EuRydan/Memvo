@@ -112,7 +112,9 @@ function PricingContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const eventId = searchParams.get('eventId')
-  const voucher = searchParams.get('voucher')
+  const voucherUrlParam = searchParams.get('cupom')
+  const [activeCoupon, setActiveCoupon] = useState<{ code: string, partnerName: string } | null>(null)
+  const [couponError, setCouponError] = useState<string | null>(null)
 
   useEffect(() => {
     const checkUser = async () => {
@@ -122,6 +124,25 @@ function PricingContent() {
     }
     checkUser()
   }, [])
+
+  useEffect(() => {
+    async function validateCoupon() {
+      if (!voucherUrlParam) return
+      try {
+        const res = await fetch(`/api/coupons?code=${voucherUrlParam}`)
+        const data = await res.json()
+        if (res.ok && data.valid) {
+          setActiveCoupon({ code: data.code, partnerName: data.partnerName })
+          setCouponError(null)
+        } else {
+          setCouponError('Cupom inválido ou expirado.')
+        }
+      } catch (e) {
+        setCouponError('Erro ao validar cupom.')
+      }
+    }
+    validateCoupon()
+  }, [voucherUrlParam])
 
   const handleSelectPlan = async (plan: typeof PLANS[0]) => {
     if (!user) {
@@ -134,9 +155,10 @@ function PricingContent() {
     }
     
     // Create payment intent
+    const finalVoucher = activeCoupon?.code || null
     const response = await fetch('/api/payment-intents/create', {
       method: 'POST',
-      body: JSON.stringify({ plan: plan.id, eventId, voucher }),
+      body: JSON.stringify({ plan: plan.id, eventId, voucher: finalVoucher }),
     })
     const data = await response.json()
     if (!data.success) {
@@ -189,7 +211,6 @@ function PricingContent() {
 
       <main className={`relative z-10 pt-24 pb-20 px-5 mx-auto transition-all duration-500 ${selectedPlan ? 'max-w-5xl' : 'max-w-[1400px]'}`}>
 
-        {/* Hero */}
         <div className="text-center mb-10">
           <p className="text-[11px] font-semibold tracking-[0.2em] text-[#939393] uppercase mb-3">Planos</p>
           <h1 style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
@@ -197,6 +218,17 @@ function PricingContent() {
             Escolha seu plano
           </h1>
           <p className="text-sm text-[#676f7b]">Pagamento único. Sem assinatura.</p>
+          
+          {activeCoupon && (
+            <div className="mt-6 inline-block bg-green-50 border border-green-200 text-green-700 px-6 py-3 rounded-full text-sm font-medium animate-in fade-in slide-in-from-bottom-4">
+              ✨ Desconto especial de 10% da parceira <strong>{activeCoupon.partnerName}</strong> aplicado!
+            </div>
+          )}
+          {couponError && (
+            <div className="mt-6 inline-block bg-red-50 border border-red-200 text-red-600 px-6 py-3 rounded-full text-sm font-medium animate-in fade-in slide-in-from-bottom-4">
+              {couponError}
+            </div>
+          )}
         </div>
 
         {/* ── Pricing Cards / Gateway ── */}
@@ -222,7 +254,16 @@ function PricingContent() {
 
                 <p className={`font-semibold ${plan.popular ? 'pt-2' : ''}`}>{plan.name}</p>
                 <h1 className={`text-4xl font-bold mt-2 ${plan.popular ? 'text-white' : plan.price === 'R$0' ? 'text-gray-400' : 'text-[#0a0a0a]'}`}>
-                  {plan.price}
+                  {activeCoupon && plan.price !== 'R$0' ? (
+                    <div className="flex flex-col items-center justify-center gap-1">
+                      <span className="text-xl line-through opacity-50">{plan.price}</span>
+                      <span className="text-green-500">
+                        R${(Number(plan.price.replace('R$', '')) * 0.9).toFixed(2).replace('.', ',')}
+                      </span>
+                    </div>
+                  ) : (
+                    plan.price
+                  )}
                   <span className={`text-sm font-normal block mt-1 ${plan.popular ? 'text-white/60' : 'text-gray-500'}`}>
                     pagamento único
                   </span>
