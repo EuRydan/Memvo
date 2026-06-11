@@ -138,6 +138,7 @@ export function WordmarkFooter({
         <div className="flex gap-6 text-sm">
           <a href="/" className="text-black/60 hover:text-black transition-colors">Início</a>
           <a href="/pricing" className="text-black/60 hover:text-black transition-colors">Planos e Preços</a>
+          <a href="/parceiros/cadastro" className="text-black/80 hover:text-black font-semibold transition-colors">Quero ser parceira</a>
           <a href="/privacy" className="text-black/60 hover:text-black transition-colors">Política de Privacidade</a>
           <a href="/terms" className="text-black/60 hover:text-black transition-colors">Termos de Uso</a>
         </div>
