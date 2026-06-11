@@ -60,3 +60,12 @@ create trigger update_onboarding_drafts_modtime
 before update on onboarding_drafts
 for each row execute function update_modified_column();
 alter table events add column if not exists status text default 'published';
+
+-- RLS: Permissão para inserir payment_intents
+drop policy if exists "insert own payment_intents" on payment_intents;
+create policy "insert own payment_intents" on payment_intents
+  for insert with check (auth.uid() = user_id);
+
+drop policy if exists "update own payment_intents" on payment_intents;
+create policy "update own payment_intents" on payment_intents
+  for update using (auth.uid() = user_id);
