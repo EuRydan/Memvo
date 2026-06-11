@@ -142,9 +142,16 @@ export default function CheckoutForm({ planId, planPrice, userId, returnUrl }: {
                           .then(res => res.json())
                           .then(data => {
                             if (data.success && data.paymentId) {
-                              const separator = returnUrl.includes('?') ? '&' : '?';
-                              window.location.href = `${returnUrl}${separator}session_id=${data.paymentId}`;
-                              resolve();
+                              if (data.status === 'rejected') {
+                                console.error('Pagamento recusado:', data.status_detail);
+                                setBrickStatus('erro');
+                                setMessage('Pagamento recusado. Por favor, tente outro cartão.');
+                                reject();
+                              } else {
+                                const separator = returnUrl.includes('?') ? '&' : '?';
+                                window.location.href = `${returnUrl}${separator}session_id=${data.paymentId}`;
+                                resolve();
+                              }
                             } else {
                               console.error(data.error);
                               setBrickStatus('erro');
