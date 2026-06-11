@@ -12,6 +12,7 @@ export type Event = {
   time?: string
   location?: string
   additional_info?: string
+  status?: string
 }
 
 export type Media = {
