@@ -18,6 +18,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
   const [planId, setPlanId] = useState<string>('none')
   const [showUpgradeModal, setShowUpgradeModal] = useState(false)
+  const [uploadingCoverFor, setUploadingCoverFor] = useState<string | null>(null)
 
   const [mediaStats, setMediaStats] = useState<Record<string, { photos: number, guests: number }>>({})
   const [shareModalEvent, setShareModalEvent] = useState<Event | null>(null)
@@ -91,6 +92,35 @@ export default function DashboardPage() {
     }
     load()
   }, [])
+
+  async function handleUploadCover(eventId: string, file?: File | null) {
+    if (!file) return
+    setUploadingCoverFor(eventId)
+    try {
+      const ext = file.name.split('.').pop()
+      const fileName = `covers/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+      const { error: storageError, data: storageData } = await supabase.storage
+        .from('media').upload(fileName, file, { cacheControl: '3600', upsert: false })
+        
+      if (storageError) throw storageError
+      
+      const coverUrl = supabase.storage.from('media').getPublicUrl(storageData.path).data.publicUrl
+      
+      const { error: updateError } = await supabase
+        .from('events')
+        .update({ cover_url: coverUrl })
+        .eq('id', eventId)
+        
+      if (updateError) throw updateError
+      
+      setEvents(prev => prev.map(e => e.id === eventId ? { ...e, cover_url: coverUrl } : e))
+    } catch (err) {
+      console.error('Error uploading cover:', err)
+      alert(t('mainDashboard.uploadCoverError') || 'Erro ao enviar capa.')
+    } finally {
+      setUploadingCoverFor(null)
+    }
+  }
 
   // Helper to format plan name
   const planNames: Record<string, string> = {
@@ -227,12 +257,28 @@ export default function DashboardPage() {
                       {event.cover_url ? (
                          <img src={event.cover_url} alt={event.name} className="w-full h-full object-cover transition-transform hover:scale-105 duration-500" />
                       ) : (
-                         <div className="text-center p-4 flex flex-col items-center justify-center h-full">
-                            <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" className="text-slate mb-2 opacity-60">
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            <p className="text-xs text-slate font-medium opacity-80">{t('mainDashboard.uploadCover')}</p>
-                         </div>
+                         <label className={`text-center p-4 flex flex-col items-center justify-center h-full w-full ${uploadingCoverFor === event.id ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-ink/5 transition-colors rounded-[16px]'}`}>
+                            <input 
+                              type="file" 
+                              className="hidden" 
+                              accept="image/*"
+                              disabled={uploadingCoverFor === event.id}
+                              onChange={(e) => handleUploadCover(event.id, e.target.files?.[0])}
+                            />
+                            {uploadingCoverFor === event.id ? (
+                               <svg className="animate-spin text-slate mb-2" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                               </svg>
+                            ) : (
+                               <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" className="text-slate mb-2 opacity-60">
+                                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                               </svg>
+                            )}
+                            <p className="text-xs text-slate font-medium opacity-80">
+                               {uploadingCoverFor === event.id ? (t('mainDashboard.uploadingCover') || 'Enviando...') : t('mainDashboard.uploadCover')}
+                            </p>
+                         </label>
                       )}
                       
                       {/* Badges */}
