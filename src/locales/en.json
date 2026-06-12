@@ -1,0 +1,24 @@
+{
+  "userMenu": {
+    "getPlan": "Get a plan",
+    "createEvent": "Create an event",
+    "billing": "Plan & Billing",
+    "settings": "Settings",
+    "folders": "My folders",
+    "language": "Language",
+    "theme": "Theme",
+    "help": "Help",
+    "logout": "Log out",
+    "defaultUser": "User"
+  },
+  "themes": {
+    "system": "System",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "languages": {
+    "pt": "Portuguese",
+    "en": "English",
+    "es": "Spanish"
+  }
+}

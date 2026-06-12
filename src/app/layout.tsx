@@ -19,6 +19,8 @@ export const metadata: Metadata = {
 };
 
 import { RealtimeToast } from "@/components/RealtimeToast";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { I18nProvider } from "@/contexts/I18nContext";
 
 export default function RootLayout({
   children,
@@ -29,15 +31,19 @@ export default function RootLayout({
     <html
       lang="pt-BR"
       className={`${inter.variable} ${playfair.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <head>
         <script src="https://www.mercadopago.com/v2/security.js" {...{ view: 'checkout' }} async></script>
       </head>
-      <body className="min-h-full flex flex-col bg-canvas text-ink" suppressHydrationWarning>
-        {children}
-        <RealtimeToast />
+      <body className="min-h-full flex flex-col bg-canvas text-ink transition-colors duration-200" suppressHydrationWarning>
+        <I18nProvider>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            {children}
+            <RealtimeToast />
+          </ThemeProvider>
+        </I18nProvider>
       </body>
     </html>
   );
 }
-

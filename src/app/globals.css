@@ -40,6 +40,26 @@ body {
   font-family: var(--font-sans);
 }
 
+.dark {
+  --color-primary: #ffffff;
+  --color-on-primary: #000000;
+  --color-ink: #fdfdfd;
+  --color-ink-soft: #e5e5e5;
+  --color-graphite: #a3a3a3;
+  --color-slate: #9ca3af;
+  --color-slate-soft: #6b7280;
+  --color-mute: #4b5563;
+  --color-stone: #6b7280;
+  --color-ash: #404040;
+  --color-hairline: #2a2a2a;
+  --color-hairline-soft: #333333;
+  --color-surface-cool: #1f1f1f;
+  --color-canvas: #0a0a0a;
+  --color-canvas-warm: #111111;
+  --color-scrim: #000000;
+  --color-footer: #0a0a0a;
+}
+
 @keyframes drift {
   0%   { transform: translate(0, 0) scale(1); }
   50%  { transform: translate(-20px, 30px) scale(1.08); }

@@ -1,0 +1,24 @@
+{
+  "userMenu": {
+    "getPlan": "Obter um plano",
+    "createEvent": "Criar um evento",
+    "billing": "Plano e faturamento",
+    "settings": "Ajustes",
+    "folders": "Minhas pastas",
+    "language": "Idioma",
+    "theme": "Tema",
+    "help": "Ajuda",
+    "logout": "Sair",
+    "defaultUser": "Usuário"
+  },
+  "themes": {
+    "system": "Sistema",
+    "light": "Claro",
+    "dark": "Escuro"
+  },
+  "languages": {
+    "pt": "Português",
+    "en": "Inglês",
+    "es": "Espanhol"
+  }
+}
