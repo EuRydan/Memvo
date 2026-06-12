@@ -228,7 +228,7 @@ function PricingContent() {
           WebkitBackdropFilter: 'blur(20px)',
           borderBottom: '1px solid rgba(0,0,0,0.06)',
         }}>
-        <Link href="/" className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#f0f0f0] transition-colors text-[#676f7b] hover:text-[#0a0a0a]">
+        <Link href={user ? "/dashboard" : "/"} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#f0f0f0] transition-colors text-[#676f7b] hover:text-[#0a0a0a]">
           <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
             <polyline points="15 18 9 12 15 6"/>
           </svg>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Logo } from '@/components/Logo'
@@ -14,6 +14,22 @@ export function LoginContent() {
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) {
+        const role = user.user_metadata?.role
+        const redirectTo = searchParams.get('redirect')
+        if (redirectTo) {
+          router.push(redirectTo)
+        } else if (role === 'affiliate') {
+          router.push('/parceiros/dashboard')
+        } else {
+          router.push('/dashboard')
+        }
+      }
+    })
+  }, [router, searchParams, supabase.auth])
 
   async function handleLogin(e?: React.FormEvent) {
     e?.preventDefault()
