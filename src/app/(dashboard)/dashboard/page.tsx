@@ -327,7 +327,7 @@ export default function DashboardPage() {
                   </div>
 
                   {/* Right: Actions */}
-                  <div className="flex flex-row flex-wrap xl:flex-nowrap w-full">
+                  <div className="flex flex-row flex-wrap xl:flex-nowrap w-full xl:flex-1">
                     {isEventLocked(event.id, events, planId) ? (
                       <div className="flex flex-col items-center justify-center w-full p-6 bg-red-50 dark:bg-red-500/10 transition-colors">
                          <button
