@@ -2,6 +2,10 @@ import Link from 'next/link'
 import { Logo } from '@/components/Logo'
 import { WordmarkFooter } from '@/components/WordmarkFooter'
 import { WaitlistHero } from '@/components/ui/waitlist-hero'
+import { BenefitsSection } from '@/components/parceiros/BenefitsSection'
+import { TargetAudience } from '@/components/parceiros/TargetAudience'
+import { EarningsCalculator } from '@/components/parceiros/EarningsCalculator'
+import { ParceirosFAQ } from '@/components/parceiros/ParceirosFAQ'
 
 export default function ParceirosLandingPage() {
   return (
@@ -78,6 +82,18 @@ export default function ParceirosLandingPage() {
           ))}
         </div>
       </section>
+
+      {/* ── BENEFITS ── */}
+      <BenefitsSection />
+
+      {/* ── TARGET AUDIENCE ── */}
+      <TargetAudience />
+
+      {/* ── EARNINGS CALCULATOR ── */}
+      <EarningsCalculator />
+
+      {/* ── FAQ ── */}
+      <ParceirosFAQ />
 
       {/* ── FINAL CTA ── */}
       <section className="relative px-6 py-20 overflow-hidden mx-5 mb-10 rounded-[28px] mt-10"
