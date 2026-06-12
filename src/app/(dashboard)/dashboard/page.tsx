@@ -327,9 +327,9 @@ export default function DashboardPage() {
                   </div>
 
                   {/* Right: Actions */}
-                  <div className="flex flex-row flex-wrap xl:flex-nowrap w-full xl:flex-1">
+                  <div className="grid grid-cols-2 xl:grid-cols-4 w-full xl:flex-1">
                     {isEventLocked(event.id, events, planId) ? (
-                      <div className="flex flex-col items-center justify-center w-full p-6 bg-red-50 dark:bg-red-500/10 transition-colors">
+                      <div className="flex flex-col items-center justify-center w-full p-6 bg-red-50 dark:bg-red-500/10 transition-colors col-span-2 xl:col-span-4">
                          <button
                            onClick={() => router.push(`/pricing?eventId=${event.id}`)}
                            className="text-red-600 dark:text-red-400 font-bold text-sm flex items-center gap-2"
@@ -342,7 +342,7 @@ export default function DashboardPage() {
                         {/* Action 1 */}
                         <div 
                           onClick={() => setShareModalEvent(event)}
-                          className="flex flex-col items-center justify-center flex-1 min-w-[50%] xl:min-w-0 py-6 border-r border-b xl:border-b-0 border-hairline hover:bg-ink/5 cursor-pointer transition-colors group overflow-hidden"
+                          className="flex flex-col items-center justify-center py-6 border-r border-b xl:border-b-0 border-hairline hover:bg-ink/5 cursor-pointer transition-colors group overflow-hidden"
                         >
                            <span className="text-sm font-semibold text-ink mb-1 group-hover:scale-105 transition-transform truncate w-full text-center px-2">QR</span>
                            <span className="text-[11px] sm:text-xs text-stone truncate w-full text-center px-2">{t('mainDashboard.share')}</span>
@@ -350,7 +350,7 @@ export default function DashboardPage() {
                         {/* Action 2 */}
                         <div 
                           onClick={() => router.push(`/dashboard/${event.id}`)}
-                          className="flex flex-col items-center justify-center flex-1 min-w-[50%] xl:min-w-0 py-6 border-b xl:border-b-0 xl:border-r border-hairline hover:bg-ink/5 cursor-pointer transition-colors group overflow-hidden"
+                          className="flex flex-col items-center justify-center py-6 border-b xl:border-b-0 xl:border-r border-hairline hover:bg-ink/5 cursor-pointer transition-colors group overflow-hidden"
                         >
                            <span className="text-sm font-semibold text-ink mb-1 uppercase group-hover:scale-105 transition-transform truncate w-full text-center px-2">{t('mainDashboard.album')}</span>
                            <span className="text-[11px] sm:text-xs text-stone truncate w-full text-center px-2">{t('mainDashboard.view')}</span>
@@ -358,7 +358,7 @@ export default function DashboardPage() {
                         {/* Action 3 */}
                         <div 
                           onClick={() => router.push(`/dashboard/${event.id}/challenges`)}
-                          className="flex flex-col items-center justify-center flex-1 min-w-[50%] xl:min-w-0 py-6 border-r xl:border-r border-hairline hover:bg-ink/5 cursor-pointer transition-colors group overflow-hidden"
+                          className="flex flex-col items-center justify-center py-6 border-r xl:border-r border-hairline hover:bg-ink/5 cursor-pointer transition-colors group overflow-hidden"
                         >
                            <span className="text-sm font-semibold text-ink mb-1 uppercase group-hover:scale-105 transition-transform truncate w-full text-center px-2">{t('mainDashboard.missions')}</span>
                            <span className="text-[11px] sm:text-xs text-stone truncate w-full text-center px-2">{t('mainDashboard.challenges')}</span>
@@ -366,7 +366,7 @@ export default function DashboardPage() {
                         {/* Action 4 */}
                         <div 
                           onClick={() => router.push(`/dashboard/${event.id}/stats`)}
-                          className="flex flex-col items-center justify-center flex-1 min-w-[50%] xl:min-w-0 py-6 hover:bg-ink/5 cursor-pointer transition-colors group overflow-hidden"
+                          className="flex flex-col items-center justify-center py-6 hover:bg-ink/5 cursor-pointer transition-colors group overflow-hidden"
                         >
                            <span className="text-sm font-semibold text-ink mb-1 uppercase group-hover:scale-105 transition-transform truncate w-full text-center px-2">{t('mainDashboard.stats')}</span>
                            <span className="text-[11px] sm:text-xs text-stone truncate w-full text-center px-2">{t('mainDashboard.stats')}</span>
