@@ -219,100 +219,112 @@ export default function DashboardPage() {
               {events.map(event => (
                 <div
                   key={event.id}
-                  className="flex flex-col items-center w-full max-w-[280px] sm:w-[280px] bg-canvas-warm rounded-[32px] overflow-hidden border border-hairline shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] hover:-translate-y-1 p-5 duration-200"
+                  className="flex flex-col md:flex-row items-stretch w-full max-w-5xl bg-canvas-warm rounded-[24px] overflow-hidden border border-hairline shadow-sm hover:shadow-md transition-shadow duration-300"
                 >
-                  {/* Image / QR Code Container (Gradient Border) */}
-                  <div className="w-full aspect-square rounded-[24px] relative overflow-hidden mb-5 p-1.5 bg-gradient-to-br from-[#f4c5a8] to-[#d4bde8] shadow-sm">
-                     <div className="w-full h-full rounded-[18px] overflow-hidden transition-transform hover:scale-105 duration-300">
-                       {event.cover_url ? (
-                         <img src={event.cover_url} alt={event.name} className="w-full h-full object-cover" />
-                       ) : (
-                         <QRCodeGenerator slug={event.slug} eventName={event.name} eventDate={event.date} size={400} variant="cover" />
-                       )}
-                     </div>
-                     {/* Badges */}
-                     <div className="absolute top-4 left-4 flex flex-col gap-1">
-                       {isEventLocked(event.id, events, planId) ? (
-                         <div className="bg-red-500/95 backdrop-blur text-[9px] font-bold uppercase tracking-wider px-2.5 py-1.5 rounded-full text-white shadow-sm border border-red-600/20">
-                           {t('mainDashboard.pendingPayment')}
+                  {/* Left: Image Box */}
+                  <div className="relative w-full md:w-[300px] h-[220px] md:h-auto shrink-0 p-3">
+                    <div className="w-full h-full rounded-[16px] overflow-hidden bg-ink/5 flex flex-col items-center justify-center relative">
+                      {event.cover_url ? (
+                         <img src={event.cover_url} alt={event.name} className="w-full h-full object-cover transition-transform hover:scale-105 duration-500" />
+                      ) : (
+                         <div className="text-center p-4 flex flex-col items-center justify-center h-full">
+                            <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" className="text-slate mb-2 opacity-60">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <p className="text-xs text-slate font-medium opacity-80">{t('mainDashboard.uploadCover')}</p>
                          </div>
-                       ) : new Date(event.date + 'T12:00:00') > new Date() ? (
-                         <div className="bg-yellow-400/95 backdrop-blur text-[9px] font-bold uppercase tracking-wider px-2.5 py-1.5 rounded-full text-yellow-900 shadow-sm border border-yellow-500/20">
-                           {t('mainDashboard.comingSoon')}
-                         </div>
-                       ) : isEventActive(event) ? (
-                         <div className="bg-emerald-500/95 backdrop-blur text-[9px] font-bold uppercase tracking-wider px-2.5 py-1.5 rounded-full text-white shadow-sm border border-emerald-600/20">
-                           {t('mainDashboard.active')}
-                         </div>
-                       ) : (
-                         <div className="bg-canvas-warm/95 backdrop-blur text-[9px] font-bold uppercase tracking-wider px-2.5 py-1.5 rounded-full text-stone shadow-sm border border-hairline">
-                           {t('mainDashboard.archived')}
-                         </div>
-                       )}
-                     </div>
+                      )}
+                      
+                      {/* Badges */}
+                      <div className="absolute top-4 left-4 flex flex-col gap-1">
+                        {isEventLocked(event.id, events, planId) ? (
+                          <div className="bg-canvas text-ink text-[10px] font-bold px-3 py-1.5 rounded-full shadow-sm">
+                            {t('mainDashboard.pendingPayment')}
+                          </div>
+                        ) : new Date(event.date + 'T12:00:00') > new Date() ? (
+                          <div className="bg-canvas text-ink text-[10px] font-bold px-3 py-1.5 rounded-full shadow-sm">
+                            {t('mainDashboard.comingSoon')}
+                          </div>
+                        ) : isEventActive(event) ? (
+                          <div className="bg-canvas text-ink text-[10px] font-bold px-3 py-1.5 rounded-full shadow-sm">
+                            {t('mainDashboard.active')}
+                          </div>
+                        ) : (
+                          <div className="bg-canvas text-ink text-[10px] font-bold px-3 py-1.5 rounded-full shadow-sm">
+                            {t('mainDashboard.archived')}
+                          </div>
+                        )}
+                      </div>
+                      
+                      {/* Right Action (Download/Share etc maybe just visual based on design) */}
+                      <div className="absolute top-4 right-4">
+                        <button className="bg-black/30 hover:bg-black/50 text-white p-2 rounded-full backdrop-blur-sm transition-colors">
+                           <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                        </button>
+                      </div>
+                    </div>
                   </div>
 
-                  {/* Text Info */}
-                  <div className="flex flex-col items-center text-center px-2 w-full mb-4">
-                     <h3 className="text-[17px] font-bold text-ink leading-snug line-clamp-1 w-full truncate transition-colors duration-200">
+                  {/* Middle: Info */}
+                  <div className="flex flex-col justify-center px-6 py-5 md:py-8 w-full md:w-[280px] shrink-0 border-b md:border-b-0 md:border-r border-hairline">
+                     <h3 className="text-2xl font-bold text-ink leading-tight mb-4 transition-colors duration-200">
                        {event.name}
                      </h3>
-                     <p className="text-[13px] text-slate mt-1 font-medium transition-colors duration-200">
+                     <p className="text-[13px] text-slate font-medium transition-colors duration-200">
                        {new Date(event.date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
                      </p>
                      {mediaStats[event.id] && (
-                       <p className="text-[11px] text-stone font-semibold mt-1.5 flex items-center gap-1.5 transition-colors duration-200">
-                         {mediaStats[event.id].photos} {t('mainDashboard.photos')} <span className="w-0.5 h-0.5 rounded-full bg-slate"></span> {mediaStats[event.id].guests} {t('mainDashboard.guests')}
+                       <p className="text-[11px] text-stone font-semibold mt-1 transition-colors duration-200">
+                         {mediaStats[event.id].photos} {t('mainDashboard.photos')} <span className="mx-1">•</span> {mediaStats[event.id].guests} {t('mainDashboard.guests')}
                        </p>
                      )}
                   </div>
 
-                  <div className="w-full grid grid-cols-4 gap-1 pt-3 border-t border-hairline transition-colors duration-200">
+                  {/* Right: Actions */}
+                  <div className="flex flex-row flex-wrap md:flex-nowrap w-full">
                     {isEventLocked(event.id, events, planId) ? (
-                      <button
-                        onClick={() => router.push(`/pricing?eventId=${event.id}`)}
-                        className="col-span-4 flex items-center justify-center gap-2 p-2.5 rounded-[14px] bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-500/20 transition-colors font-semibold text-sm"
-                      >
-                        🔒 {t('mainDashboard.unlockEvent')}
-                      </button>
+                      <div className="flex flex-col items-center justify-center w-full p-6 bg-red-50 dark:bg-red-500/10 transition-colors">
+                         <button
+                           onClick={() => router.push(`/pricing?eventId=${event.id}`)}
+                           className="text-red-600 dark:text-red-400 font-bold text-sm flex items-center gap-2"
+                         >
+                           🔒 {t('mainDashboard.unlockEvent')}
+                         </button>
+                      </div>
                     ) : (
                       <>
-                        <button
+                        {/* Action 1 */}
+                        <div 
                           onClick={() => setShareModalEvent(event)}
-                          className="flex flex-col items-center justify-center p-2.5 rounded-[14px] hover:bg-ink/5 transition-colors group cursor-pointer"
+                          className="flex flex-col items-center justify-center flex-1 min-w-[50%] md:min-w-0 py-6 border-r border-b md:border-b-0 border-hairline hover:bg-ink/5 cursor-pointer transition-colors group"
                         >
-                          <span className="text-[16px] font-bold text-ink transition-colors">
-                            QR
-                          </span>
-                          <span className="text-[11px] text-slate font-medium tracking-wide transition-colors">{t('mainDashboard.share')}</span>
-                        </button>
-                        <button
+                           <span className="text-sm font-semibold text-ink mb-1 group-hover:scale-105 transition-transform">QR</span>
+                           <span className="text-xs text-stone">{t('mainDashboard.share')}</span>
+                        </div>
+                        {/* Action 2 */}
+                        <div 
                           onClick={() => router.push(`/dashboard/${event.id}`)}
-                          className="flex flex-col items-center justify-center p-2.5 rounded-[14px] hover:bg-ink/5 transition-colors group cursor-pointer"
+                          className="flex flex-col items-center justify-center flex-1 min-w-[50%] md:min-w-0 py-6 border-b md:border-b-0 md:border-r border-hairline hover:bg-ink/5 cursor-pointer transition-colors group"
                         >
-                          <span className="text-[16px] font-bold text-ink transition-colors">
-                            {t('mainDashboard.album')}
-                          </span>
-                          <span className="text-[11px] text-slate font-medium tracking-wide transition-colors">{t('mainDashboard.view')}</span>
-                        </button>
-                        <button
+                           <span className="text-sm font-semibold text-ink mb-1 uppercase group-hover:scale-105 transition-transform">{t('mainDashboard.album')}</span>
+                           <span className="text-xs text-stone">{t('mainDashboard.view')}</span>
+                        </div>
+                        {/* Action 3 */}
+                        <div 
                           onClick={() => router.push(`/dashboard/${event.id}/challenges`)}
-                          className="flex flex-col items-center justify-center p-2.5 rounded-[14px] hover:bg-ink/5 transition-colors group cursor-pointer"
+                          className="flex flex-col items-center justify-center flex-1 min-w-[50%] md:min-w-0 py-6 border-r md:border-r border-hairline hover:bg-ink/5 cursor-pointer transition-colors group"
                         >
-                          <span className="text-[16px] font-bold text-ink transition-colors">
-                            {t('mainDashboard.missions')}
-                          </span>
-                          <span className="text-[11px] text-slate font-medium tracking-wide transition-colors">{t('mainDashboard.challenges')}</span>
-                        </button>
-                        <button
+                           <span className="text-sm font-semibold text-ink mb-1 uppercase group-hover:scale-105 transition-transform">{t('mainDashboard.missions')}</span>
+                           <span className="text-xs text-stone">{t('mainDashboard.challenges')}</span>
+                        </div>
+                        {/* Action 4 */}
+                        <div 
                           onClick={() => router.push(`/dashboard/${event.id}/stats`)}
-                          className="flex flex-col items-center justify-center p-2.5 rounded-[14px] hover:bg-ink/5 transition-colors group cursor-pointer"
+                          className="flex flex-col items-center justify-center flex-1 min-w-[50%] md:min-w-0 py-6 hover:bg-ink/5 cursor-pointer transition-colors group"
                         >
-                          <span className="text-[16px] font-bold text-ink transition-colors">
-                            📊
-                          </span>
-                          <span className="text-[11px] text-slate font-medium tracking-wide transition-colors">{t('mainDashboard.stats')}</span>
-                        </button>
+                           <span className="text-sm font-semibold text-ink mb-1 uppercase group-hover:scale-105 transition-transform">{t('mainDashboard.stats')}</span>
+                           <span className="text-xs text-stone">{t('mainDashboard.stats')}</span>
+                        </div>
                       </>
                     )}
                   </div>

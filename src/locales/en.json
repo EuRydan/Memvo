@@ -78,6 +78,7 @@
     "shareEvent": "Share Event",
     "copyEventLink": "Copy event link",
     "shareDesc": "Guests scan the QR Code to access the album without needing an app.",
-    "linkCopied": "Link copied to clipboard!"
+    "linkCopied": "Link copied to clipboard!",
+    "uploadCover": "Upload a cover image"
   }
 }
