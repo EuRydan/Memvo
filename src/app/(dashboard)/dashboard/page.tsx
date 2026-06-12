@@ -219,10 +219,10 @@ export default function DashboardPage() {
               {events.map(event => (
                 <div
                   key={event.id}
-                  className="flex flex-col md:flex-row items-stretch w-full max-w-5xl bg-canvas-warm rounded-[24px] overflow-hidden border border-hairline shadow-sm hover:shadow-md transition-shadow duration-300"
+                  className="flex flex-col xl:flex-row items-stretch w-full max-w-5xl bg-canvas-warm rounded-[24px] overflow-hidden border border-hairline shadow-sm hover:shadow-md transition-shadow duration-300"
                 >
                   {/* Left: Image Box */}
-                  <div className="relative w-full md:w-[300px] h-[220px] md:h-auto shrink-0 p-3">
+                  <div className="relative w-full xl:w-[300px] h-[220px] xl:h-auto shrink-0 p-3">
                     <div className="w-full h-full rounded-[16px] overflow-hidden bg-ink/5 flex flex-col items-center justify-center relative">
                       {event.cover_url ? (
                          <img src={event.cover_url} alt={event.name} className="w-full h-full object-cover transition-transform hover:scale-105 duration-500" />
@@ -256,7 +256,7 @@ export default function DashboardPage() {
                         )}
                       </div>
                       
-                      {/* Right Action (Download/Share etc maybe just visual based on design) */}
+                      {/* Right Action */}
                       <div className="absolute top-4 right-4">
                         <button className="bg-black/30 hover:bg-black/50 text-white p-2 rounded-full backdrop-blur-sm transition-colors">
                            <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
@@ -266,7 +266,7 @@ export default function DashboardPage() {
                   </div>
 
                   {/* Middle: Info */}
-                  <div className="flex flex-col justify-center px-6 py-5 md:py-8 w-full md:w-[280px] shrink-0 border-b md:border-b-0 md:border-r border-hairline">
+                  <div className="flex flex-col justify-center px-6 py-5 xl:py-8 w-full xl:w-[280px] shrink-0 border-b xl:border-b-0 xl:border-r border-hairline">
                      <h3 className="text-2xl font-bold text-ink leading-tight mb-4 transition-colors duration-200">
                        {event.name}
                      </h3>
@@ -281,7 +281,7 @@ export default function DashboardPage() {
                   </div>
 
                   {/* Right: Actions */}
-                  <div className="flex flex-row flex-wrap md:flex-nowrap w-full">
+                  <div className="flex flex-row flex-wrap xl:flex-nowrap w-full">
                     {isEventLocked(event.id, events, planId) ? (
                       <div className="flex flex-col items-center justify-center w-full p-6 bg-red-50 dark:bg-red-500/10 transition-colors">
                          <button
@@ -296,34 +296,34 @@ export default function DashboardPage() {
                         {/* Action 1 */}
                         <div 
                           onClick={() => setShareModalEvent(event)}
-                          className="flex flex-col items-center justify-center flex-1 min-w-[50%] md:min-w-0 py-6 border-r border-b md:border-b-0 border-hairline hover:bg-ink/5 cursor-pointer transition-colors group"
+                          className="flex flex-col items-center justify-center flex-1 min-w-[50%] xl:min-w-0 py-6 border-r border-b xl:border-b-0 border-hairline hover:bg-ink/5 cursor-pointer transition-colors group overflow-hidden"
                         >
-                           <span className="text-sm font-semibold text-ink mb-1 group-hover:scale-105 transition-transform">QR</span>
-                           <span className="text-xs text-stone">{t('mainDashboard.share')}</span>
+                           <span className="text-sm font-semibold text-ink mb-1 group-hover:scale-105 transition-transform truncate w-full text-center px-2">QR</span>
+                           <span className="text-[11px] sm:text-xs text-stone truncate w-full text-center px-2">{t('mainDashboard.share')}</span>
                         </div>
                         {/* Action 2 */}
                         <div 
                           onClick={() => router.push(`/dashboard/${event.id}`)}
-                          className="flex flex-col items-center justify-center flex-1 min-w-[50%] md:min-w-0 py-6 border-b md:border-b-0 md:border-r border-hairline hover:bg-ink/5 cursor-pointer transition-colors group"
+                          className="flex flex-col items-center justify-center flex-1 min-w-[50%] xl:min-w-0 py-6 border-b xl:border-b-0 xl:border-r border-hairline hover:bg-ink/5 cursor-pointer transition-colors group overflow-hidden"
                         >
-                           <span className="text-sm font-semibold text-ink mb-1 uppercase group-hover:scale-105 transition-transform">{t('mainDashboard.album')}</span>
-                           <span className="text-xs text-stone">{t('mainDashboard.view')}</span>
+                           <span className="text-sm font-semibold text-ink mb-1 uppercase group-hover:scale-105 transition-transform truncate w-full text-center px-2">{t('mainDashboard.album')}</span>
+                           <span className="text-[11px] sm:text-xs text-stone truncate w-full text-center px-2">{t('mainDashboard.view')}</span>
                         </div>
                         {/* Action 3 */}
                         <div 
                           onClick={() => router.push(`/dashboard/${event.id}/challenges`)}
-                          className="flex flex-col items-center justify-center flex-1 min-w-[50%] md:min-w-0 py-6 border-r md:border-r border-hairline hover:bg-ink/5 cursor-pointer transition-colors group"
+                          className="flex flex-col items-center justify-center flex-1 min-w-[50%] xl:min-w-0 py-6 border-r xl:border-r border-hairline hover:bg-ink/5 cursor-pointer transition-colors group overflow-hidden"
                         >
-                           <span className="text-sm font-semibold text-ink mb-1 uppercase group-hover:scale-105 transition-transform">{t('mainDashboard.missions')}</span>
-                           <span className="text-xs text-stone">{t('mainDashboard.challenges')}</span>
+                           <span className="text-sm font-semibold text-ink mb-1 uppercase group-hover:scale-105 transition-transform truncate w-full text-center px-2">{t('mainDashboard.missions')}</span>
+                           <span className="text-[11px] sm:text-xs text-stone truncate w-full text-center px-2">{t('mainDashboard.challenges')}</span>
                         </div>
                         {/* Action 4 */}
                         <div 
                           onClick={() => router.push(`/dashboard/${event.id}/stats`)}
-                          className="flex flex-col items-center justify-center flex-1 min-w-[50%] md:min-w-0 py-6 hover:bg-ink/5 cursor-pointer transition-colors group"
+                          className="flex flex-col items-center justify-center flex-1 min-w-[50%] xl:min-w-0 py-6 hover:bg-ink/5 cursor-pointer transition-colors group overflow-hidden"
                         >
-                           <span className="text-sm font-semibold text-ink mb-1 uppercase group-hover:scale-105 transition-transform">{t('mainDashboard.stats')}</span>
-                           <span className="text-xs text-stone">{t('mainDashboard.stats')}</span>
+                           <span className="text-sm font-semibold text-ink mb-1 uppercase group-hover:scale-105 transition-transform truncate w-full text-center px-2">{t('mainDashboard.stats')}</span>
+                           <span className="text-[11px] sm:text-xs text-stone truncate w-full text-center px-2">{t('mainDashboard.stats')}</span>
                         </div>
                       </>
                     )}
