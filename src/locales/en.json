@@ -20,5 +20,29 @@
     "pt": "Portuguese",
     "en": "English",
     "es": "Spanish"
+  },
+  "dashboard": {
+    "title": "Partners",
+    "discountLink": "Your Discount Link",
+    "accountStatus": "Account Status",
+    "active": "Active",
+    "pix": "Pix",
+    "financialSummary": "Financial Summary",
+    "monthCommissions": "This Month's Commissions",
+    "totalEarned": "Total Earned",
+    "pendingPayment": "Pending Payment",
+    "salesHistory": "Sales History",
+    "table": {
+      "date": "Date",
+      "plan": "Plan Sold",
+      "commission": "Your Commission",
+      "status": "Status",
+      "empty": "No sales registered yet. Start sharing your link!",
+      "unknown": "Unknown",
+      "paid": "Paid",
+      "pending": "Pending"
+    },
+    "copyLink": "Copy Link",
+    "copied": "Copied!"
   }
 }

@@ -20,5 +20,29 @@
     "pt": "Portugués",
     "en": "Inglés",
     "es": "Español"
+  },
+  "dashboard": {
+    "title": "Socios",
+    "discountLink": "Tu enlace de descuento",
+    "accountStatus": "Estado de la cuenta",
+    "active": "Activo",
+    "pix": "Pix",
+    "financialSummary": "Resumen Financiero",
+    "monthCommissions": "Comisiones del mes",
+    "totalEarned": "Total Ganado",
+    "pendingPayment": "Pago Pendiente",
+    "salesHistory": "Historial de Ventas",
+    "table": {
+      "date": "Fecha",
+      "plan": "Plan Vendido",
+      "commission": "Tu Comisión",
+      "status": "Estado",
+      "empty": "Aún no hay ventas registradas. ¡Empieza a compartir tu enlace!",
+      "unknown": "Desconocido",
+      "paid": "Pagado",
+      "pending": "Pendiente"
+    },
+    "copyLink": "Copiar Enlace",
+    "copied": "¡Copiado!"
   }
 }
