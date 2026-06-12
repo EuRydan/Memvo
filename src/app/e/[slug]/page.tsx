@@ -47,7 +47,7 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
 
       const { data: allEvents } = await supabase
         .from('events')
-        .select('id, date, active, created_at')
+        .select('id, date, active, created_at, status')
         .eq('owner_id', data.owner_id)
         
       if (allEvents && isEventLocked(data.id, allEvents, plan)) {

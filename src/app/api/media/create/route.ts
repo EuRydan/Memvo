@@ -56,7 +56,7 @@ export async function POST(request: Request) {
     // 3. Checar se o evento está bloqueado por falta de pagamento
     const { data: allEvents } = await supabase
       .from('events')
-      .select('id, date, active, created_at')
+      .select('id, date, active, created_at, status')
       .eq('owner_id', eventData.owner_id)
       
     if (allEvents && isEventLocked(event_id, allEvents, planId)) {

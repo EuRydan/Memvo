@@ -55,8 +55,11 @@ export function getPhotoLimit(planId: string): number {
  */
 export function isEventLocked(
   eventId: string,
-  allEvents: Pick<Event, 'id' | 'date' | 'active' | 'created_at'>[],
+  allEvents: any[],
   planId: string
 ): boolean {
+  const event = allEvents.find(e => e.id === eventId)
+  if (!event) return false
+  if (event.status === 'draft') return true
   return false
 }

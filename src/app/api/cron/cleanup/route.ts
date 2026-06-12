@@ -95,7 +95,7 @@ export async function GET(request: Request) {
         // Obter todos os eventos do dono para a checagem do isEventLocked
         const { data: allOwnerEvents } = await supabase
           .from('events')
-          .select('id, date, active, created_at')
+          .select('id, date, active, created_at, status')
           .eq('owner_id', ownerId)
           
         if (!allOwnerEvents) continue

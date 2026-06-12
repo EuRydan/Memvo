@@ -45,7 +45,7 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
         const planId = planData?.plan_id || 'none'
         const { data: allEvents } = await supabase
           .from('events')
-          .select('id, date, active, created_at')
+          .select('id, date, active, created_at, status')
           .eq('owner_id', user.id)
           
         if (allEvents && isEventLocked(eventId, allEvents, planId)) {
