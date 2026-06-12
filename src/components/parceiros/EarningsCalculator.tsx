@@ -5,7 +5,15 @@ import { Calculator } from "lucide-react"
 
 export function EarningsCalculator() {
   const [eventsPerMonth, setEventsPerMonth] = useState(5)
-  const baseTicket = 149.00 // Plano Clássico
+  const [selectedPlan, setSelectedPlan] = useState<'essential' | 'classic' | 'premium'>('classic')
+
+  const plans = {
+    essential: { name: 'Essencial', price: 79.00 },
+    classic: { name: 'Clássico', price: 149.00 },
+    premium: { name: 'Premium', price: 249.00 }
+  }
+
+  const baseTicket = plans[selectedPlan].price
   const commissionRate = 0.30 // 30%
   
   const earningsPerEvent = baseTicket * commissionRate
@@ -34,8 +42,27 @@ export function EarningsCalculator() {
               </h2>
               
               <p className="text-white/70 text-sm mb-10 leading-relaxed">
-                Descubra o potencial de ganhos mensais e anuais indicando o Memvor para seus clientes. (Baseado no Plano Clássico de R$ 149)
+                Descubra o potencial de ganhos mensais e anuais indicando o Memvor para seus clientes.
               </p>
+
+              <div className="mb-8">
+                <p className="text-sm font-semibold mb-3">Qual plano você costuma indicar?</p>
+                <div className="flex bg-white/10 p-1 rounded-xl">
+                  {Object.entries(plans).map(([key, plan]) => (
+                    <button
+                      key={key}
+                      onClick={() => setSelectedPlan(key as 'essential' | 'classic' | 'premium')}
+                      className={`flex-1 text-xs md:text-sm font-medium py-2 rounded-lg transition-all ${
+                        selectedPlan === key 
+                          ? 'bg-white text-[#0a0a0a] shadow-md' 
+                          : 'text-white/70 hover:text-white hover:bg-white/5'
+                      }`}
+                    >
+                      {plan.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
               <div className="mb-6">
                 <div className="flex justify-between text-sm font-semibold mb-4">
