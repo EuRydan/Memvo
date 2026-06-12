@@ -249,15 +249,15 @@ export default function DashboardPage() {
               {events.map(event => (
                 <div
                   key={event.id}
-                  className="flex flex-col xl:flex-row items-stretch w-full max-w-5xl bg-[#1c1c1c] rounded-[24px] overflow-hidden shadow-lg transition-shadow duration-300"
+                  className="flex flex-col xl:flex-row items-stretch w-full max-w-[1200px] mx-auto bg-canvas-warm rounded-[24px] overflow-hidden border border-hairline shadow-sm hover:shadow-md transition-shadow duration-300"
                 >
                   {/* Left: Image Box */}
-                  <div className="relative w-full xl:w-[320px] h-[220px] xl:h-auto shrink-0 p-4">
-                    <div className="w-full h-full rounded-[16px] overflow-hidden bg-[#0f2d1e] flex flex-col items-center justify-center relative">
+                  <div className="relative w-full xl:w-[300px] h-[220px] xl:h-auto shrink-0 p-3">
+                    <div className="w-full h-full rounded-[16px] overflow-hidden bg-ink/5 flex flex-col items-center justify-center relative">
                       {event.cover_url ? (
                          <img src={event.cover_url} alt={event.name} className="w-full h-full object-cover transition-transform hover:scale-105 duration-500" />
                       ) : (
-                         <label className={`text-center p-4 flex flex-col items-center justify-center h-full w-full ${uploadingCoverFor === event.id ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-black/20 transition-colors rounded-[16px]'}`}>
+                         <label className={`text-center p-4 flex flex-col items-center justify-center h-full w-full ${uploadingCoverFor === event.id ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-ink/10 transition-colors rounded-[16px]'}`}>
                             <input 
                               type="file" 
                               className="hidden" 
@@ -266,16 +266,16 @@ export default function DashboardPage() {
                               onChange={(e) => handleUploadCover(event.id, e.target.files?.[0])}
                             />
                             {uploadingCoverFor === event.id ? (
-                               <svg className="animate-spin text-white mb-2" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                               <svg className="animate-spin text-slate mb-2" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
                                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
                                </svg>
                             ) : (
-                               <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" className="text-white/60 mb-2 opacity-60">
+                               <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" className="text-slate mb-2 opacity-60">
                                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                </svg>
                             )}
-                            <p className="text-xs text-white/80 font-medium">
+                            <p className="text-xs text-slate font-medium">
                                {uploadingCoverFor === event.id ? (t('mainDashboard.uploadingCover') || 'Enviando...') : t('mainDashboard.uploadCover')}
                             </p>
                          </label>
@@ -284,19 +284,19 @@ export default function DashboardPage() {
                       {/* Badges */}
                       <div className="absolute top-4 left-4 flex flex-col gap-1">
                         {isEventLocked(event.id, events, planId) ? (
-                          <div className="bg-white text-black text-[10px] font-bold px-3 py-1 rounded-full shadow-sm">
+                          <div className="bg-canvas text-ink text-[10px] font-bold px-3 py-1.5 rounded-full shadow-sm">
                             {t('mainDashboard.pendingPayment')}
                           </div>
                         ) : new Date(event.date + 'T12:00:00') > new Date() ? (
-                          <div className="bg-white text-black text-[10px] font-bold px-3 py-1 rounded-full shadow-sm">
+                          <div className="bg-canvas text-ink text-[10px] font-bold px-3 py-1.5 rounded-full shadow-sm">
                             {t('mainDashboard.comingSoon')}
                           </div>
                         ) : isEventActive(event) ? (
-                          <div className="bg-white text-black text-[10px] font-bold px-3 py-1 rounded-full shadow-sm">
+                          <div className="bg-canvas text-ink text-[10px] font-bold px-3 py-1.5 rounded-full shadow-sm">
                             {t('mainDashboard.active')}
                           </div>
                         ) : (
-                          <div className="bg-white text-black text-[10px] font-bold px-3 py-1 rounded-full shadow-sm">
+                          <div className="bg-canvas text-ink text-[10px] font-bold px-3 py-1.5 rounded-full shadow-sm">
                             {t('mainDashboard.archived')}
                           </div>
                         )}
@@ -312,25 +312,25 @@ export default function DashboardPage() {
                   </div>
 
                   {/* Middle: Info */}
-                  <div className="flex flex-col justify-center pl-8 pr-6 py-5 xl:py-8 w-full xl:w-[280px] shrink-0">
-                     <h3 className="text-[28px] font-bold text-white leading-tight mb-4 tracking-tight">
+                  <div className="flex flex-col justify-center px-6 py-5 xl:py-8 w-full xl:flex-1 shrink-0">
+                     <h3 className="text-2xl font-bold text-ink leading-tight mb-4 tracking-tight">
                        {event.name}
                      </h3>
-                     <p className="text-[11px] text-[#888888] font-medium">
+                     <p className="text-[13px] text-slate font-medium">
                        {new Date(event.date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
                      </p>
-                     <p className="text-[11px] text-[#888888] font-medium mt-1">
+                     <p className="text-[11px] text-stone font-semibold mt-1">
                        {(mediaStats[event.id]?.photos || 0)} fotos <span className="mx-1">•</span> {(mediaStats[event.id]?.guests || 0)} convidados
                      </p>
                   </div>
 
                   {/* Right: Actions */}
-                  <div className="grid grid-cols-2 xl:grid-cols-4 w-full xl:flex-1 py-4">
+                  <div className="grid grid-cols-2 xl:grid-cols-4 w-full xl:w-[480px] shrink-0 border-t xl:border-t-0 xl:border-l border-hairline">
                     {isEventLocked(event.id, events, planId) ? (
-                      <div className="flex flex-col items-center justify-center w-full p-6 bg-red-500/10 transition-colors col-span-2 xl:col-span-4 rounded-r-[24px]">
+                      <div className="flex flex-col items-center justify-center w-full p-6 bg-red-50 dark:bg-red-500/10 transition-colors col-span-2 xl:col-span-4 rounded-r-[24px]">
                          <button
                            onClick={() => router.push(`/pricing?eventId=${event.id}`)}
-                           className="text-red-400 font-bold text-sm flex items-center gap-2"
+                           className="text-red-600 dark:text-red-400 font-bold text-sm flex items-center gap-2"
                          >
                            🔒 {t('mainDashboard.unlockEvent')}
                          </button>
@@ -340,34 +340,34 @@ export default function DashboardPage() {
                         {/* Action 1 */}
                         <div 
                           onClick={() => setShareModalEvent(event)}
-                          className="flex flex-col items-center justify-center py-6 border-r border-white/5 hover:bg-white/5 cursor-pointer transition-colors group"
+                          className="flex flex-col items-center justify-center py-6 border-r border-b xl:border-b-0 border-hairline hover:bg-ink/5 cursor-pointer transition-colors group min-w-0"
                         >
-                           <span className="text-sm font-medium text-white mb-2 uppercase tracking-wide group-hover:scale-105 transition-transform truncate px-2">QR</span>
-                           <span className="text-[11px] text-[#666666] truncate px-2">Compartilhar</span>
+                           <span className="text-sm font-semibold text-ink mb-1 uppercase tracking-wide group-hover:scale-105 transition-transform truncate px-2 w-full text-center">QR</span>
+                           <span className="text-[11px] text-stone truncate px-2 w-full text-center">Compartilhar</span>
                         </div>
                         {/* Action 2 */}
                         <div 
                           onClick={() => router.push(`/dashboard/${event.id}`)}
-                          className="flex flex-col items-center justify-center py-6 xl:border-r border-white/5 hover:bg-white/5 cursor-pointer transition-colors group"
+                          className="flex flex-col items-center justify-center py-6 border-b xl:border-b-0 xl:border-r border-hairline hover:bg-ink/5 cursor-pointer transition-colors group min-w-0"
                         >
-                           <span className="text-sm font-medium text-white mb-2 uppercase tracking-wide group-hover:scale-105 transition-transform truncate px-2">ÁLBUM</span>
-                           <span className="text-[11px] text-[#666666] truncate px-2">Visualizar</span>
+                           <span className="text-sm font-semibold text-ink mb-1 uppercase tracking-wide group-hover:scale-105 transition-transform truncate px-2 w-full text-center">ÁLBUM</span>
+                           <span className="text-[11px] text-stone truncate px-2 w-full text-center">Visualizar</span>
                         </div>
                         {/* Action 3 */}
                         <div 
                           onClick={() => router.push(`/dashboard/${event.id}/challenges`)}
-                          className="flex flex-col items-center justify-center py-6 border-r border-white/5 hover:bg-white/5 cursor-pointer transition-colors group"
+                          className="flex flex-col items-center justify-center py-6 border-r xl:border-r border-hairline hover:bg-ink/5 cursor-pointer transition-colors group min-w-0"
                         >
-                           <span className="text-sm font-medium text-white mb-2 uppercase tracking-wide group-hover:scale-105 transition-transform truncate px-2">MISSÕES</span>
-                           <span className="text-[11px] text-[#666666] truncate px-2">Desafios</span>
+                           <span className="text-sm font-semibold text-ink mb-1 uppercase tracking-wide group-hover:scale-105 transition-transform truncate px-2 w-full text-center">MISSÕES</span>
+                           <span className="text-[11px] text-stone truncate px-2 w-full text-center">Desafios</span>
                         </div>
                         {/* Action 4 */}
                         <div 
                           onClick={() => router.push(`/dashboard/${event.id}/stats`)}
-                          className="flex flex-col items-center justify-center py-6 hover:bg-white/5 cursor-pointer transition-colors group"
+                          className="flex flex-col items-center justify-center py-6 hover:bg-ink/5 cursor-pointer transition-colors group min-w-0"
                         >
-                           <span className="text-sm font-medium text-white mb-2 uppercase tracking-wide group-hover:scale-105 transition-transform truncate px-2">RESUMO</span>
-                           <span className="text-[11px] text-[#666666] truncate px-2">Resumo</span>
+                           <span className="text-sm font-semibold text-ink mb-1 uppercase tracking-wide group-hover:scale-105 transition-transform truncate px-2 w-full text-center">RESUMO</span>
+                           <span className="text-[11px] text-stone truncate px-2 w-full text-center">Resumo</span>
                         </div>
                       </>
                     )}
