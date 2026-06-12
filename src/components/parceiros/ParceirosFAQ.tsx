@@ -8,12 +8,12 @@ export function ParceirosFAQ() {
 
   const faqs = [
     {
-      question: "Tenho algum custo para me tornar parceiro?",
-      answer: "Não! O programa de parcerias do Memvor é 100% gratuito. Você não paga nenhuma taxa de adesão ou manutenção."
+      question: "Como recebo minha comissão?",
+      answer: "Assim que a venda é confirmada pelo seu link, a comissão fica disponível no seu painel. Os saques são realizados via PIX em até 7 dias após a confirmação do pagamento do cliente."
     },
     {
-      question: "Como recebo minha comissão?",
-      answer: "Assim que a venda é confirmada pelo seu link, a comissão fica disponível no seu painel. Os saques são realizados via PIX diretamente para a conta cadastrada no seu perfil."
+      question: "O que acontece se o cliente cancelar ou pedir reembolso?",
+      answer: "A transparência é fundamental para nós. Caso o cliente solicite reembolso dentro do prazo de garantia de 7 dias, a comissão correspondente será estornada do seu painel. Após esse período, sua comissão está 100% garantida."
     },
     {
       question: "Como os noivos sabem que a indicação é minha?",

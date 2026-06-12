@@ -4,14 +4,15 @@ import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { motion, AnimatePresence } from 'framer-motion'
-import { User, Settings, LayoutDashboard, LogOut } from 'lucide-react'
+import { CreditCard, Settings, FolderHeart, Globe, Moon, HelpCircle, Power, ChevronDown, LayoutDashboard } from 'lucide-react'
 
 interface UserDropdownProps {
   email: string
   name: string
+  plan?: string
 }
 
-export function UserDropdown({ email, name }: UserDropdownProps) {
+export function UserDropdown({ email, name, plan = 'Free' }: UserDropdownProps) {
   const [isOpen, setIsOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
@@ -41,11 +42,45 @@ export function UserDropdown({ email, name }: UserDropdownProps) {
   // Generate initial
   const initial = name ? name.charAt(0).toUpperCase() : (email ? email.charAt(0).toUpperCase() : '?')
 
+  const MenuItem = ({ icon, label, badge, onClick }: { icon: React.ReactNode, label: string, badge?: string, onClick: () => void }) => (
+    <button onClick={onClick} className="w-full flex items-center justify-between px-5 py-2.5 hover:bg-[#222] transition-colors group">
+      <div className="flex items-center gap-3 text-[#8a8a93] group-hover:text-white transition-colors">
+        {icon}
+        <span className="text-[14px] text-gray-200 font-medium">{label}</span>
+      </div>
+      {badge && (
+        <span className="px-2 py-0.5 rounded text-[11px] font-medium bg-[#2a2a35] text-indigo-300 border border-[#3f3f5a]">
+          {badge}
+        </span>
+      )}
+    </button>
+  )
+
+  const MenuSelect = ({ icon, label, value, options }: { icon: React.ReactNode, label: string, value: string, options: string[] }) => (
+    <div className="w-full flex items-center justify-between px-5 py-2 hover:bg-[#222] transition-colors group">
+      <div className="flex items-center gap-3 text-[#8a8a93] group-hover:text-white transition-colors">
+        {icon}
+        <span className="text-[14px] text-gray-200 font-medium">{label}</span>
+      </div>
+      <div className="relative">
+        <select 
+          defaultValue={value}
+          className="appearance-none bg-transparent border border-[#333] text-gray-200 text-[13px] font-medium rounded-md pl-3 pr-8 py-1 focus:outline-none focus:border-[#5264F9] hover:border-[#555] cursor-pointer transition-colors"
+        >
+          {options.map((opt) => (
+            <option key={opt} value={opt} className="bg-[#161616] text-white py-1">{opt}</option>
+          ))}
+        </select>
+        <ChevronDown size={14} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+      </div>
+    </div>
+  )
+
   return (
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-9 h-9 rounded-full bg-gradient-to-tr from-gray-200 to-gray-100 border border-gray-200 shadow-sm flex items-center justify-center text-ink font-semibold hover:ring-2 hover:ring-gray-200 hover:ring-offset-1 transition-all"
+        className="w-9 h-9 rounded-full bg-[#0ea5e9] border border-[#0ea5e9]/20 shadow-sm flex items-center justify-center text-white font-bold hover:opacity-90 transition-opacity"
       >
         {initial}
       </button>
@@ -57,46 +92,85 @@ export function UserDropdown({ email, name }: UserDropdownProps) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="absolute right-0 mt-2 w-56 bg-white border border-gray-100 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] overflow-hidden z-50 origin-top-right"
+            className="absolute right-0 mt-3 w-[320px] bg-[#161616] border border-[#2a2a2a] rounded-2xl shadow-2xl overflow-hidden z-50 origin-top-right text-gray-200 font-sans"
           >
             {/* Header info */}
-            <div className="px-4 py-3 border-b border-gray-100 bg-gray-50/50">
-              <p className="text-sm font-semibold text-gray-900 truncate">{name || 'Anfitrião'}</p>
-              <p className="text-xs text-gray-500 truncate mt-0.5">{email}</p>
+            <div className="px-5 pt-5 pb-4 flex items-center gap-3">
+              <div className="w-11 h-11 rounded-full bg-[#0ea5e9] flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+                {initial}
+              </div>
+              <div className="overflow-hidden">
+                <p className="text-[15px] font-bold text-white truncate">{name || 'Usuário'}</p>
+                <p className="text-[13px] text-[#8a8a93] truncate mt-0.5">{email}</p>
+              </div>
             </div>
+
+            {/* Actions */}
+            <div className="px-5 pb-4 flex flex-col gap-2.5">
+              <button 
+                onClick={() => navigateTo('/pricing')} 
+                className="w-full py-2.5 bg-[#5264F9] hover:bg-[#4353d8] text-white text-[14px] font-semibold rounded-lg transition-colors flex justify-center items-center"
+              >
+                Obter um plano
+              </button>
+              <button 
+                onClick={() => navigateTo('/dashboard/events/new')} 
+                className="w-full py-2.5 bg-transparent border border-[#333] hover:bg-[#222] text-white text-[14px] font-semibold rounded-lg transition-colors flex justify-center items-center"
+              >
+                Criar um evento
+              </button>
+            </div>
+
+            <div className="h-px w-full bg-[#2a2a2a]" />
 
             {/* Links */}
-            <div className="p-2 flex flex-col gap-1">
-              <button
-                onClick={() => navigateTo('/dashboard')}
-                className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 font-medium rounded-xl hover:bg-gray-100 hover:text-gray-900 transition-colors"
-              >
-                <LayoutDashboard size={16} className="text-gray-400" /> Painel de Eventos
-              </button>
+            <div className="py-2 flex flex-col">
+              <MenuItem 
+                icon={<CreditCard size={18} strokeWidth={2} />} 
+                label="Plano e faturamento" 
+                badge={plan} 
+                onClick={() => navigateTo('/dashboard/billing')} 
+              />
+              <MenuItem 
+                icon={<Settings size={18} strokeWidth={2} />} 
+                label="Ajustes" 
+                onClick={() => navigateTo('/dashboard/settings')} 
+              />
+              <MenuItem 
+                icon={<FolderHeart size={18} strokeWidth={2} />} 
+                label="Minhas pastas" 
+                onClick={() => navigateTo('/dashboard/folders')} 
+              />
               
-              <button
-                onClick={() => navigateTo('/dashboard/profile')}
-                className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 font-medium rounded-xl hover:bg-gray-100 hover:text-gray-900 transition-colors"
-              >
-                <User size={16} className="text-gray-400" /> Meu Perfil
-              </button>
-
-              <button
-                onClick={() => navigateTo('/dashboard/settings')}
-                className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 font-medium rounded-xl hover:bg-gray-100 hover:text-gray-900 transition-colors"
-              >
-                <Settings size={16} className="text-gray-400" /> Configurações e Plano
-              </button>
+              {/* Select items */}
+              <MenuSelect 
+                icon={<Globe size={18} strokeWidth={2} />} 
+                label="Idioma" 
+                value="Português" 
+                options={['Português', 'Inglês', 'Espanhol']} 
+              />
+              <MenuSelect 
+                icon={<Moon size={18} strokeWidth={2} />} 
+                label="Tema" 
+                value="Sistema" 
+                options={['Sistema', 'Claro', 'Escuro']} 
+              />
+              
+              <MenuItem 
+                icon={<HelpCircle size={18} strokeWidth={2} />} 
+                label="Ajuda" 
+                onClick={() => navigateTo('/help')} 
+              />
             </div>
 
-            {/* Footer */}
-            <div className="p-2 border-t border-gray-100">
-              <button
-                onClick={handleSignOut}
-                className="w-full flex items-center gap-3 px-3 py-2 text-sm text-red-600 font-medium rounded-xl hover:bg-red-50 transition-colors"
-              >
-                <LogOut size={16} className="text-red-400" /> Sair
-              </button>
+            <div className="h-px w-full bg-[#2a2a2a]" />
+
+            <div className="py-2">
+              <MenuItem 
+                icon={<Power size={18} strokeWidth={2} />} 
+                label="Sair" 
+                onClick={handleSignOut} 
+              />
             </div>
           </motion.div>
         )}

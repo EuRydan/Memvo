@@ -73,16 +73,19 @@ export function EarningsCalculator() {
                 <input 
                   type="range" 
                   min="1" 
-                  max="50" 
+                  max="20" 
                   value={eventsPerMonth} 
                   onChange={(e) => setEventsPerMonth(Number(e.target.value))}
                   className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer accent-[#f4c5a8]"
                 />
                 
-                <div className="flex justify-between text-xs text-white/50 mt-2">
+                <div className="flex justify-between text-xs text-white/50 mt-2 mb-2">
                   <span>1</span>
-                  <span>50+</span>
+                  <span>20+</span>
                 </div>
+                <p className="text-xs text-white/40 italic text-center">
+                  *Alguns parceiros com equipes maiores conseguem mais.
+                </p>
               </div>
             </div>
 

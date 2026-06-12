@@ -106,7 +106,7 @@ export default function ParceirosLandingPage() {
             Aumente sua renda indicando tecnologia de ponta
           </h2>
           <p className="text-sm text-white/90 mb-8 leading-relaxed">
-            Seja um dos primeiros parceiros do Memvor e agregue valor aos seus pacotes de serviços.
+            Programa em fase de lançamento — condições de fundador para os primeiros parceiros.
           </p>
           <Link href="/parceiros/cadastro"
             className="inline-block bg-white text-[#0a0a0a] text-sm font-bold px-8 py-4 rounded-full hover:bg-[#fafafa] transition-all active:scale-95 shadow-xl">
