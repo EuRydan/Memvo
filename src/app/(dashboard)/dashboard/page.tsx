@@ -170,7 +170,7 @@ export default function DashboardPage() {
       />
 
       {/* ── Main Content ── */}
-      <main className="relative z-10 pt-10 pb-16 px-6 max-w-3xl mx-auto">
+      <main className="relative z-10 pt-10 pb-16 px-6 max-w-6xl mx-auto">
       
         {/* Payment Banner */}
         {showBanner && (
@@ -249,10 +249,10 @@ export default function DashboardPage() {
               {events.map(event => (
                 <div
                   key={event.id}
-                  className="flex flex-col xl:flex-row items-stretch w-full max-w-[1200px] mx-auto bg-canvas-warm rounded-[24px] overflow-hidden border border-hairline shadow-sm hover:shadow-md transition-shadow duration-300"
+                  className="flex flex-col xl:flex-row items-stretch w-full bg-canvas-warm rounded-[24px] overflow-hidden border border-hairline shadow-sm hover:shadow-md transition-shadow duration-300"
                 >
                   {/* Left: Image Box */}
-                  <div className="relative w-full xl:w-[300px] h-[220px] xl:h-auto shrink-0 p-3">
+                  <div className="relative w-full xl:w-[260px] h-[220px] xl:h-auto shrink-0 p-3">
                     <div className="w-full h-full rounded-[16px] overflow-hidden bg-ink/5 flex flex-col items-center justify-center relative">
                       {event.cover_url ? (
                          <img src={event.cover_url} alt={event.name} className="w-full h-full object-cover transition-transform hover:scale-105 duration-500" />
@@ -312,7 +312,7 @@ export default function DashboardPage() {
                   </div>
 
                   {/* Middle: Info */}
-                  <div className="flex flex-col justify-center px-6 py-5 xl:py-8 w-full xl:flex-1 shrink-0">
+                  <div className="flex flex-col justify-center px-6 py-5 xl:py-8 w-full xl:w-[220px] shrink-0 border-b xl:border-b-0 xl:border-r border-hairline">
                      <h3 className="text-2xl font-bold text-ink leading-tight mb-4 tracking-tight">
                        {event.name}
                      </h3>
@@ -325,7 +325,7 @@ export default function DashboardPage() {
                   </div>
 
                   {/* Right: Actions */}
-                  <div className="grid grid-cols-2 xl:grid-cols-4 w-full xl:w-[480px] shrink-0 border-t xl:border-t-0 xl:border-l border-hairline">
+                  <div className="grid grid-cols-2 xl:grid-cols-4 flex-1 min-w-0">
                     {isEventLocked(event.id, events, planId) ? (
                       <div className="flex flex-col items-center justify-center w-full p-6 bg-red-50 dark:bg-red-500/10 transition-colors col-span-2 xl:col-span-4 rounded-r-[24px]">
                          <button
