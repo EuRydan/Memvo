@@ -40,8 +40,10 @@ export async function POST(request: Request) {
           
           if (hmac !== v1) {
             console.error(`[ALERTA WEBHOOK] Assinatura do Mercado Pago inválida!`)
-            console.error(`Recebido v1: ${v1.substring(0, 8)}... | Calculado: ${hmac.substring(0, 8)}...`)
-            console.error(`Manifesto usado: ${manifest}`)
+            console.error(`Recebido v1 completo: ${v1}`)
+            console.error(`Calculado hmac completo: ${hmac}`)
+            console.error(`Manifesto usado exato: '${manifest}'`)
+            console.error(`Debug info: paymentId='${paymentId}' (tipo: ${typeof paymentId}), requestId='${requestId}', ts='${ts}'`)
             
             if (enforceSignature) {
               return NextResponse.json({ error: 'Unauthorized', message: 'Invalid signature' }, { status: 401 })
