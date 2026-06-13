@@ -1,17 +1,62 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { MercadoPagoConfig, Payment } from 'mercadopago'
+import crypto from 'crypto'
 
 export async function POST(request: Request) {
   try {
-    const signature = request.headers.get('x-signature')
-    // TODO: Validar assinatura se MERCADOPAGO_WEBHOOK_SECRET estiver configurado
+    const signatureHeader = request.headers.get('x-signature')
+    const requestId = request.headers.get('x-request-id')
+    const secret = process.env.MERCADOPAGO_WEBHOOK_SECRET
+    const enforceSignature = process.env.WEBHOOK_ENFORCE_SIGNATURE === 'true'
     
+    // We clone the request to read json if needed without consuming it if we had raw body needs,
+    // but MP's signature only uses id, request-id and ts.
     const payload = await request.json()
     const { action, type, data } = payload
+    
+    // O ID pode vir no body ou na URL dependendo do tipo de notificação (IPN vs Webhook)
+    let paymentId = data?.id
+    if (!paymentId) {
+      const url = new URL(request.url)
+      paymentId = url.searchParams.get('data.id') || url.searchParams.get('id')
+    }
+
+    // -- SHADOW MODE / VALIDAÇÃO DE ASSINATURA --
+    if (signatureHeader && requestId && secret && paymentId) {
+      try {
+        const parts = signatureHeader.split(',')
+        let ts = ''
+        let v1 = ''
+        parts.forEach(part => {
+          if (part.startsWith('ts=')) ts = part.split('=')[1]
+          if (part.startsWith('v1=')) v1 = part.split('=')[1]
+        })
+
+        if (ts && v1) {
+          const manifest = `id:${paymentId};request-id:${requestId};ts:${ts};`
+          const hmac = crypto.createHmac('sha256', secret).update(manifest).digest('hex')
+          
+          if (hmac !== v1) {
+            console.error(`[ALERTA WEBHOOK] Assinatura do Mercado Pago inválida!`)
+            console.error(`Recebido v1: ${v1.substring(0, 8)}... | Calculado: ${hmac.substring(0, 8)}...`)
+            console.error(`Manifesto usado: ${manifest}`)
+            
+            if (enforceSignature) {
+              return NextResponse.json({ error: 'Unauthorized', message: 'Invalid signature' }, { status: 401 })
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Erro ao validar assinatura:', err)
+      }
+    } else if (enforceSignature && secret) {
+       console.error('[ALERTA WEBHOOK] Headers de assinatura ausentes mas modo ENFORCE está ativo.')
+       return NextResponse.json({ error: 'Unauthorized', message: 'Missing headers' }, { status: 401 })
+    }
+    // -- FIM DA VALIDAÇÃO --
 
     if (action === 'payment.created' || action === 'payment.updated' || type === 'payment') {
-      const paymentId = data?.id
 
       if (!paymentId) {
         return NextResponse.json({ success: true, message: 'Ignored: No payment id' })
@@ -26,6 +71,9 @@ export async function POST(request: Request) {
 
       if (paymentInfo.status === 'approved') {
         const externalReference = paymentInfo.external_reference
+        const paymentMethod = paymentInfo.payment_method_id || 'desconhecido'
+
+        console.log(`✅ [WEBHOOK SUCESSO] Pagamento aprovado via: ${paymentMethod.toUpperCase()} (ID: ${paymentId})`)
         
         if (!externalReference) {
           console.warn(`Pagamento recebido sem externalReference: ${paymentId}`)

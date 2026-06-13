@@ -45,7 +45,7 @@ export function LoginContent() {
     const role = user?.user_metadata?.role
 
     const redirectTo = searchParams.get('redirect')
-    if (redirectTo) {
+    if (redirectTo && redirectTo.startsWith('/') && !redirectTo.startsWith('//')) {
       router.push(redirectTo)
     } else if (role === 'affiliate') {
       router.push('/parceiros/dashboard')

@@ -27,12 +27,16 @@ export async function POST(request: Request) {
     // 1. Validar o Cupom
     const { data: affiliate } = await supabase
       .from('affiliates')
-      .select('affiliate_code, status, name')
+      .select('user_id, affiliate_code, status, name')
       .eq('affiliate_code', couponCode)
       .maybeSingle()
 
     if (!affiliate || affiliate.status !== 'approved') {
       return NextResponse.json({ error: 'Cupom inválido ou inativo.' }, { status: 404 })
+    }
+
+    if (affiliate.user_id === user.id) {
+      return NextResponse.json({ error: 'Você não pode usar seu próprio código de afiliado.' }, { status: 400 })
     }
 
     // 2. Buscar a intent atual

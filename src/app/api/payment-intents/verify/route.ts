@@ -164,6 +164,6 @@ export async function POST(request: Request) {
 
   } catch (error: any) {
     console.error('Erro na verificação manual do pagamento:', error.message)
-    return NextResponse.json({ error: 'Internal Server Error', details: error.message, stack: error.stack }, { status: 500 })
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
 }

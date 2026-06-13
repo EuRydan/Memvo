@@ -7,17 +7,9 @@ export async function middleware(request: NextRequest) {
   const ip = request.headers.get('x-forwarded-for') || 'unknown'
   const now = Date.now()
   
-  if (request.nextUrl.pathname.startsWith('/api/')) {
-    // Note: Edge middleware does not persist global variables reliably, 
-    // but this adds a basic layer of friction against rapid local bursts.
-    // In production, Upstash Redis or a WAF is recommended for distributed rate limiting.
-    const requestLimit = parseInt(request.headers.get('x-abuse-test') || '50') // Allow tests to mock limits
-    // Since we cannot use global maps reliably in edge, we simulate the structure
-    // but return 429 if the request is explicitly abusive (mocked for tests)
-    if (requestLimit <= 0) {
-      return new NextResponse(JSON.stringify({ error: 'Too Many Requests' }), { status: 429 })
-    }
-  }
+  // Em produção, deve-se usar um Rate Limiter real como Upstash Redis para
+  // proteger rotas como /api/media/create. Aqui removemos o limite falso
+  // que dependia apenas de um header manipulável.
 
   let supabaseResponse = NextResponse.next({ request })
 

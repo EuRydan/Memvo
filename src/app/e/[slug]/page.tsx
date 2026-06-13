@@ -126,7 +126,7 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
       }
 
       const ext = file.name.split('.').pop()
-      const fileName = `uploads/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+      const fileName = `${event.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
       const { error: storageError } = await supabase.storage
         .from('media').upload(fileName, file, { cacheControl: '3600', upsert: false })
       if (storageError) { console.error(storageError); continue }

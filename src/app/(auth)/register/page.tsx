@@ -93,22 +93,25 @@ function RegisterContent() {
     }
 
     if (authData.user && (sessionId || invite === 'memvor-vip-2026')) {
-      // 2. Insert into user_plans (use 'classic' for invite registrations)
-      const planToSave = invite === 'memvor-vip-2026' ? 'classic' : plan
-      const paymentRef = invite === 'memvor-vip-2026' ? `invite-${authData.user.id}` : sessionId
-      const { error: planError } = await supabase.from('user_plans').insert({
-        user_id: authData.user.id,
-        plan_id: planToSave,
-        payment_id: paymentRef,
-      })
-
-      if (planError) {
-        console.error('Failed to save plan:', planError)
+      // Call secure backend to assign plan
+      try {
+        const res = await fetch('/api/auth/register-plan', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ invite, plan, sessionId })
+        })
+        const data = await res.json()
+        if (!res.ok) {
+          console.error('Failed to save plan:', data.error)
+          setError(data.error || 'Erro ao aplicar o cupom/convite.')
+        }
+      } catch (err) {
+        console.error('Network error during plan assignment:', err)
       }
     }
 
     const redirectTo = searchParams.get('redirect')
-    if (redirectTo) {
+    if (redirectTo && redirectTo.startsWith('/') && !redirectTo.startsWith('//')) {
       router.push(redirectTo)
     } else {
       router.push('/dashboard')

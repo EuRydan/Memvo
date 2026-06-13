@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 const PLAN_PRICES = {
   freemium: 0,
   essential: 79.00,
-  classic: 149.00,
+  classic: 1.00, // TEMPORÁRIO PARA TESTE
   premium: 249.00
 }
 
@@ -61,11 +61,12 @@ export async function POST(request: Request) {
     if (voucher) {
       const { data: affiliate } = await supabase
         .from('affiliates')
-        .select('affiliate_code, status')
+        .select('user_id, affiliate_code, status')
         .eq('affiliate_code', voucher)
         .maybeSingle()
 
-      if (affiliate && affiliate.status === 'approved') {
+      // Ensure the affiliate is approved and is NOT the user themselves
+      if (affiliate && affiliate.status === 'approved' && affiliate.user_id !== user.id) {
         // Apply 10% discount
         price = price * 0.90
         appliedAffiliateCode = affiliate.affiliate_code
