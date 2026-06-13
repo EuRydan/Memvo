@@ -158,28 +158,18 @@ export default function OnboardingWizard() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) throw new Error('Not authenticated')
 
-      let coverUrl = null
-      if (coverFile) {
-        const ext = coverFile.name.split('.').pop()
-        const fileName = `covers/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
-        const { error: storageError, data: storageData } = await supabase.storage
-          .from('media').upload(fileName, coverFile, { cacheControl: '3600', upsert: false })
-        
-        if (!storageError && storageData) {
-          coverUrl = supabase.storage.from('media').getPublicUrl(storageData.path).data.publicUrl
-        }
-      }
-
-      // Create a unique slug using a random suffix to avoid global collisions
-      const baseSlug = generateSlug(name)
-      const uniqueSlug = `${baseSlug}-${Math.random().toString(36).slice(2, 6)}`
-
       const payload: any = {
         name,
         date,
         owner_id: user.id,
-        active: hasPlan ? true : false,
-        status: hasPlan ? 'published' : 'draft',
+        active: false,
+        status: 'draft',
+        settings: {
+          requireApproval: false,
+          allowDownloads: true,
+          showUploaderName: true,
+          theme: 'light'
+        },
         event_type: eventType,
         time,
         location,
@@ -187,7 +177,6 @@ export default function OnboardingWizard() {
       }
       
       if (endDate) payload.end_date = endDate
-      if (coverUrl) payload.cover_url = coverUrl
 
       let newEventId = savedEventId
 
@@ -204,6 +193,8 @@ export default function OnboardingWizard() {
         await supabase.from('challenges').delete().eq('event_id', savedEventId)
       } else {
         // Insert new event
+        const baseSlug = generateSlug(name)
+        const uniqueSlug = `${baseSlug}-${Math.random().toString(36).slice(2, 6)}`
         const { data: eventData, error: eventError } = await supabase
           .from('events')
           .insert([{ ...payload, slug: uniqueSlug }])
@@ -213,6 +204,34 @@ export default function OnboardingWizard() {
         if (eventError) throw eventError
         newEventId = eventData.id
         setSavedEventId(newEventId)
+      }
+
+      // Now handle cover upload securely via presign
+      if (coverFile && newEventId) {
+        const ext = coverFile.name.split('.').pop()
+        
+        const presignRes = await fetch('/api/media/presign', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            event_id: newEventId,
+            file_ext: ext,
+            file_size: coverFile.size,
+            is_cover: true
+          })
+        })
+        
+        const presignData = await presignRes.json()
+        if (presignRes.ok) {
+          const { token, path } = presignData
+          const { error: storageError, data: storageData } = await supabase.storage
+            .from('media').uploadToSignedUrl(path, token, coverFile, { cacheControl: '3600', upsert: false })
+          
+          if (!storageError && storageData) {
+            const uploadedCoverUrl = supabase.storage.from('media').getPublicUrl(storageData.path).data.publicUrl
+            await supabase.from('events').update({ cover_url: uploadedCoverUrl }).eq('id', newEventId)
+          }
+        }
       }
 
       // Insert challenges

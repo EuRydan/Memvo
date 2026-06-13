@@ -98,9 +98,25 @@ export default function DashboardPage() {
     setUploadingCoverFor(eventId)
     try {
       const ext = file.name.split('.').pop()
-      const fileName = `covers/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+      
+      const presignRes = await fetch('/api/media/presign', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event_id: eventId,
+          file_ext: ext,
+          file_size: file.size,
+          is_cover: true
+        })
+      })
+      
+      const presignData = await presignRes.json()
+      if (!presignRes.ok) throw new Error(presignData.error || 'Failed to presign')
+      
+      const { token, path } = presignData
       const { error: storageError, data: storageData } = await supabase.storage
-        .from('media').upload(fileName, file, { cacheControl: '3600', upsert: false })
+        .from('media')
+        .uploadToSignedUrl(path, token, file, { cacheControl: '3600', upsert: false })
         
       if (storageError) throw storageError
       

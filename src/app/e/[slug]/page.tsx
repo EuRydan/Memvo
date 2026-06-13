@@ -126,17 +126,44 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
       }
 
       const ext = file.name.split('.').pop()
-      const fileName = `${event.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
-      const { error: storageError } = await supabase.storage
-        .from('media').upload(fileName, file, { cacheControl: '3600', upsert: false })
-      if (storageError) { console.error(storageError); continue }
       
+      // 1. Obter URL pré-assinada
+      const presignRes = await fetch('/api/media/presign', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event_id: event.id,
+          file_ext: ext,
+          file_size: file.size,
+          challenge_id: challengeId || null
+        })
+      })
+      
+      const presignData = await presignRes.json()
+      
+      if (!presignRes.ok) {
+        alert(presignData.error || 'Erro de permissão para envio. Você pode ter atingido o limite.')
+        continue
+      }
+      
+      // 2. Upload direto usando a URL assinada
+      const { token, path } = presignData
+      const { error: storageError } = await supabase.storage
+        .from('media')
+        .uploadToSignedUrl(path, token, file, { cacheControl: '3600', upsert: false })
+        
+      if (storageError) {
+        console.error('Storage Upload Error:', storageError)
+        continue
+      }
+      
+      // 3. Confirmar a criação no banco de dados
       const res = await fetch('/api/media/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           event_id: event.id,
-          storage_path: fileName,
+          storage_path: path,
           uploader_name: uploaderName || null,
           type: isVideo ? 'video' : 'photo',
           challenge_id: challengeId || null,
@@ -163,7 +190,7 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
         fetch('/api/drive/upload', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ eventId: event.id, storagePath: fileName })
+          body: JSON.stringify({ eventId: event.id, storagePath: path })
         }).catch(err => console.error('Drive upload trigger failed', err))
       }
     }
