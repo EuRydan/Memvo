@@ -20,6 +20,24 @@ export default async function DashboardLayout({
   const userName = user.user_metadata?.full_name || user.user_metadata?.name || ''
   const userEmail = user.email || ''
 
+  // Buscar plano atual do usuário
+  const { data: planData } = await supabase
+    .from('user_plans')
+    .select('plan_id')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+
+  const PLAN_NAMES: Record<string, string> = {
+    freemium: 'Free',
+    essential: 'Essencial',
+    classic: 'Clássico',
+    premium: 'Premium'
+  }
+  
+  const currentPlan = planData?.plan_id ? (PLAN_NAMES[planData.plan_id] || 'Free') : 'Free'
+
   return (
     <div className="min-h-screen bg-canvas transition-colors duration-200 flex flex-col">
       {/* ── Top Navigation Bar ── */}
@@ -31,7 +49,7 @@ export default async function DashboardLayout({
         </div>
 
         <div className="flex items-center gap-4">
-          <UserDropdown email={userEmail} name={userName} />
+          <UserDropdown email={userEmail} name={userName} plan={currentPlan} />
         </div>
       </header>
 
