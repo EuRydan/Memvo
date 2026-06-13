@@ -119,6 +119,8 @@ function PricingContent() {
   const [couponError, setCouponError] = useState<string | null>(null)
   const [isValidatingCoupon, setIsValidatingCoupon] = useState(!!voucherUrlParam)
 
+  const [userEvents, setUserEvents] = useState<{id: string, name: string}[]>([])
+
   useEffect(() => {
     const checkUser = async () => {
       const supabase = createClient()
@@ -136,16 +138,16 @@ function PricingContent() {
           setCurrentPlanId(currentPlan.plan_id)
         }
 
-        if (!urlEventId) {
-          const { data: latestEvent } = await supabase
-            .from('events')
-            .select('id')
-            .eq('owner_id', user.id)
-            .order('created_at', { ascending: false })
-            .limit(1)
-            .maybeSingle()
-          if (latestEvent) {
-            setEventId(latestEvent.id)
+        const { data: events } = await supabase
+          .from('events')
+          .select('id, name')
+          .eq('owner_id', user.id)
+          .order('created_at', { ascending: false })
+        
+        if (events && events.length > 0) {
+          setUserEvents(events)
+          if (!urlEventId) {
+            setEventId(events[0].id)
           }
         }
       }
@@ -267,7 +269,27 @@ function PricingContent() {
             className="text-[2rem] font-bold tracking-[-0.02em] text-[#0a0a0a] leading-tight mb-2">
             Escolha seu plano
           </h1>
-          <p className="text-sm text-[#676f7b]">Pagamento único. Sem assinatura.</p>
+          <p className="text-sm text-[#676f7b] mb-4">Pagamento único. Sem assinatura.</p>
+          
+          {userEvents.length > 0 && (
+            <div className="inline-flex flex-col items-center mb-4">
+              <label className="text-xs font-semibold text-stone mb-2">Para qual evento?</label>
+              <div className="relative">
+                <select
+                  value={eventId || ''}
+                  onChange={(e) => setEventId(e.target.value)}
+                  className="appearance-none bg-canvas border border-hairline text-ink text-sm font-semibold rounded-lg pl-4 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-ink/20 focus:border-ink cursor-pointer shadow-sm min-w-[200px]"
+                >
+                  {userEvents.map(ev => (
+                    <option key={ev.id} value={ev.id}>{ev.name}</option>
+                  ))}
+                </select>
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate">
+                  <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+              </div>
+            </div>
+          )}
           
           {activeCoupon && (
             <div className="mt-6 inline-block bg-green-50 border border-green-200 text-green-700 px-6 py-3 rounded-full text-sm font-medium animate-in fade-in slide-in-from-bottom-4">
