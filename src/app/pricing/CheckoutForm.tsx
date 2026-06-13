@@ -148,7 +148,11 @@ export default function CheckoutForm({ intentId, userId, returnUrl }: { intentId
                                 setBrickStatus('erro');
                                 setMessage('Pagamento recusado. Por favor, tente outro cartão.');
                                 reject();
+                              } else if (data.status === 'pending') {
+                                // For PIX or Boleto, resolve the promise so the Brick shows the QR Code
+                                resolve();
                               } else {
+                                // Approved (Credit Card)
                                 const separator = returnUrl.includes('?') ? '&' : '?';
                                 window.location.href = `${returnUrl}${separator}session_id=${data.paymentId}`;
                                 resolve();
