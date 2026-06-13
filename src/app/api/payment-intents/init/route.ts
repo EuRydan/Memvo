@@ -53,7 +53,7 @@ export async function POST(request: Request) {
       // }
       
       // Cobra apenas a diferença
-      price = price - currentPrice
+      // price = price - currentPrice // BYPASSED PARA TESTE
     }
 
     // Voucher validation (Affiliate logic)
