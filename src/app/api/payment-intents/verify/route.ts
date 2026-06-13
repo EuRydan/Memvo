@@ -102,20 +102,44 @@ export async function POST(request: Request) {
         .update({ status: 'approved', processed_at: new Date().toISOString(), mp_payment_id: mpPaymentId?.toString() })
         .eq('id', currentIntentId)
 
-      // 2. Inserir Plano
-      await supabaseAdmin
+      // 2. Atualizar ou Inserir Plano
+      const { data: existingUserPlan } = await supabaseAdmin
         .from('user_plans')
-        .insert({
-          user_id: userId,
-          plan_id: planId,
-          payment_id: mpPaymentId?.toString() || 'manual_verification'
-        })
+        .select('id')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle()
+
+      if (existingUserPlan) {
+        const { error: planErr } = await supabaseAdmin
+          .from('user_plans')
+          .update({
+            plan_id: planId,
+            payment_id: mpPaymentId?.toString() || 'manual_verification'
+          })
+          .eq('id', existingUserPlan.id)
+        if (planErr) console.error('Erro ao atualizar plano:', planErr)
+      } else {
+        const { error: planErr } = await supabaseAdmin
+          .from('user_plans')
+          .insert({
+            user_id: userId,
+            plan_id: planId,
+            payment_id: mpPaymentId?.toString() || 'manual_verification'
+          })
+        if (planErr) console.error('Erro ao inserir plano:', planErr)
+      }
 
       // 3. Ativar Evento
-      await supabaseAdmin
+      const { error: eventUpdateError } = await supabaseAdmin
         .from('events')
         .update({ active: true, status: 'published' })
         .eq('id', eventId)
+        
+      if (eventUpdateError) {
+        console.error('Erro crítico ao atualizar status do evento no Verify:', eventUpdateError)
+      }
         
       console.log(`Verificação manual: Plano ${planId} e evento ${eventId} ativados com sucesso para ${userId}`)
 

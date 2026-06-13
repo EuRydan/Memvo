@@ -162,10 +162,14 @@ export async function POST(request: Request) {
           }
 
           // 3. Ativar Evento
-          await supabaseAdmin
+          const { error: eventUpdateError } = await supabaseAdmin
             .from('events')
             .update({ active: true, status: 'published' }) // ou 'active' se o status for outro
             .eq('id', eventId)
+            
+          if (eventUpdateError) {
+            console.error('Erro crítico ao atualizar status do evento no Webhook:', eventUpdateError)
+          }
             
           console.log(`Plano ${planId} e evento ${eventId} ativados com sucesso via Webhook MercadoPago para o usuário ${userId}`)
 
