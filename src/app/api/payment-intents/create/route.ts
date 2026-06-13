@@ -44,6 +44,8 @@ export async function POST(request: Request) {
     const paymentResponse = await payment.create({
       body: {
         ...formData,
+        transaction_amount: Number(intent.amount),
+        description: `Plano ${intent.plan_id.toUpperCase()} - Memvo`,
         external_reference: intent.id,
         notification_url: notificationUrl,
         statement_descriptor: 'MEMVO',
