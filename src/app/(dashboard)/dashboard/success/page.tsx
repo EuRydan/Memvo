@@ -128,7 +128,7 @@ function SuccessContent() {
           <div className="w-full bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
             <StatusScreen 
               initialization={{ paymentId: paymentId }} 
-              customization={{ visuals: { showExternalReference: true } }}
+              customization={{ visual: { showExternalReference: true } }}
             />
           </div>
         ) : status === 'loading' ? (
