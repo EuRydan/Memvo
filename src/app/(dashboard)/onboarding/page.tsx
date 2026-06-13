@@ -164,12 +164,6 @@ export default function OnboardingWizard() {
         owner_id: user.id,
         active: false,
         status: 'draft',
-        settings: {
-          requireApproval: false,
-          allowDownloads: true,
-          showUploaderName: true,
-          theme: 'light'
-        },
         event_type: eventType,
         time,
         location,

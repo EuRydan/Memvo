@@ -4,6 +4,7 @@ import { MercadoPagoConfig, Payment } from 'mercadopago'
 import crypto from 'crypto'
 
 export async function POST(request: Request) {
+  console.log(`[WEBHOOK RECEBIDO] Chamada recebida na rota /api/webhooks/mercadopago - URL: ${request.url}`)
   try {
     const signatureHeader = request.headers.get('x-signature')
     const requestId = request.headers.get('x-request-id')
