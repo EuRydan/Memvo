@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://memvo.com.br'
     const notificationUrl = process.env.MERCADOPAGO_WEBHOOK_URL || `${baseUrl}/api/webhooks/mercadopago`
 
-    const paymentResponse = await payment.create({
+    const payload = {
       body: {
         ...formData,
         transaction_amount: Number(intent.amount),
@@ -50,7 +50,12 @@ export async function POST(request: Request) {
         notification_url: notificationUrl,
         statement_descriptor: 'MEMVO',
       }
-    })
+    }
+
+    console.log('[MERCADO PAGO PAYLOAD] Enviando requisição para criar pagamento:', JSON.stringify(payload, null, 2))
+    console.log(`[MERCADO PAGO NOTIFICATION URL] ${notificationUrl} (MERCADOPAGO_WEBHOOK_URL: ${process.env.MERCADOPAGO_WEBHOOK_URL}, NEXT_PUBLIC_SITE_URL: ${process.env.NEXT_PUBLIC_SITE_URL})`)
+
+    const paymentResponse = await payment.create(payload)
 
     return NextResponse.json({
       success: true,
