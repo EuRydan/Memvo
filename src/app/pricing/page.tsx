@@ -112,7 +112,8 @@ function PricingContent() {
   const [currentPlanId, setCurrentPlanId] = useState<string | null>(null)
   const router = useRouter()
   const searchParams = useSearchParams()
-  const eventId = searchParams.get('eventId')
+  const urlEventId = searchParams.get('eventId')
+  const [eventId, setEventId] = useState<string | null>(urlEventId)
   const voucherUrlParam = searchParams.get('cupom')
   const [activeCoupon, setActiveCoupon] = useState<{ code: string, partnerName: string } | null>(null)
   const [couponError, setCouponError] = useState<string | null>(null)
@@ -134,10 +135,23 @@ function PricingContent() {
         if (currentPlan) {
           setCurrentPlanId(currentPlan.plan_id)
         }
+
+        if (!urlEventId) {
+          const { data: latestEvent } = await supabase
+            .from('events')
+            .select('id')
+            .eq('owner_id', user.id)
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .maybeSingle()
+          if (latestEvent) {
+            setEventId(latestEvent.id)
+          }
+        }
       }
     }
     checkUser()
-  }, [])
+  }, [urlEventId])
 
   useEffect(() => {
     async function validateCoupon() {
