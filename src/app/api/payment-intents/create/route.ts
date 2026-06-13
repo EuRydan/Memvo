@@ -61,6 +61,7 @@ export async function POST(request: Request) {
 
   } catch (error: any) {
     console.error('Process payment intent error:', error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    const errorMessage = error instanceof Error ? error.message : (error?.message || 'Unknown error')
+    return NextResponse.json({ error: 'Internal Server Error', details: errorMessage, raw: error }, { status: 500 })
   }
 }

@@ -6,6 +6,11 @@ import Link from 'next/link'
 import { Logo } from '@/components/Logo'
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { initMercadoPago, StatusScreen } from '@mercadopago/sdk-react'
+
+if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY) {
+  initMercadoPago(process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY, { locale: 'pt-BR' })
+}
 
 function SuccessContent() {
   const searchParams = useSearchParams()
@@ -119,14 +124,21 @@ function SuccessContent() {
       </div>
 
       <div className="w-full max-w-[600px] relative z-10 flex flex-col items-center text-center">
-        {status === 'loading' ? (
+        {status === 'loading' && paymentId ? (
+          <div className="w-full bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+            <StatusScreen 
+              initialization={{ paymentId: paymentId }} 
+              customization={{ visuals: { showExternalReference: true } }}
+            />
+          </div>
+        ) : status === 'loading' ? (
           <>
             <div className="w-16 h-16 border-4 border-[#0a0a0a]/20 border-t-[#0a0a0a] rounded-full animate-spin mb-6"></div>
             <h2 style={{ fontFamily: 'Georgia, "Times New Roman", serif' }} className="text-2xl font-bold text-ink mb-3">
               Confirmando pagamento...
             </h2>
             <p className="text-sm text-slate mb-8 leading-relaxed max-w-sm">
-              Aguarde um instante enquanto verificamos seu pagamento com o Mercado Pago. Esta página atualizará automaticamente.
+              Aguarde um instante enquanto verificamos seu pagamento. Esta página atualizará automaticamente.
             </p>
           </>
         ) : (
