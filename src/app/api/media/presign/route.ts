@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { createClient as createSupabaseAdmin } from '@supabase/supabase-js'
+import { createClient } from '@/lib/supabase/server'
 import { cookies } from 'next/headers'
 import { getPhotoLimit, isEventLocked } from '@/lib/limits'
 
@@ -33,10 +34,11 @@ export async function POST(request: Request) {
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
-    const supabase = createClient(supabaseUrl, supabaseKey)
+    const supabaseAdmin = createSupabaseAdmin(supabaseUrl, supabaseKey)
+    const supabaseServer = await createClient()
 
     // 1. Obter dono do evento
-    const { data: eventData, error: eventError } = await supabase
+    const { data: eventData, error: eventError } = await supabaseAdmin
       .from('events')
       .select('owner_id')
       .eq('id', event_id)
@@ -47,7 +49,7 @@ export async function POST(request: Request) {
     }
 
     // 2. Obter plano do dono
-    const { data: planData } = await supabase
+    const { data: planData } = await supabaseAdmin
       .from('user_plans')
       .select('plan_id')
       .eq('user_id', eventData.owner_id)
@@ -59,11 +61,11 @@ export async function POST(request: Request) {
 
     // 3. Checar bloqueio de pagamento (se não for dono)
     // Se for o dono (ex: fazendo upload de capa), não bloqueamos o pre-sign da capa (pode alterar no rascunho)
-    const { data: { user } } = await supabase.auth.getUser()
+    const { data: { user } } = await supabaseServer.auth.getUser()
     const isOwner = user?.id === eventData.owner_id
     
     if (!isOwner && !is_cover) {
-      const { data: allEvents } = await supabase
+      const { data: allEvents } = await supabaseAdmin
         .from('events')
         .select('id, date, active, created_at, status')
         .eq('owner_id', eventData.owner_id)
@@ -78,7 +80,7 @@ export async function POST(request: Request) {
       const limit = getPhotoLimit(planId)
       
       if (limit !== Infinity) {
-        let query = supabase.from('media').select('*', { count: 'exact', head: true }).eq('event_id', event_id).eq('guest_id', guestId)
+        let query = supabaseAdmin.from('media').select('*', { count: 'exact', head: true }).eq('event_id', event_id).eq('guest_id', guestId)
         if (challenge_id) query = query.eq('challenge_id', challenge_id)
         else query = query.is('challenge_id', null)
   
@@ -89,7 +91,7 @@ export async function POST(request: Request) {
       }
   
       const oneMinuteAgo = new Date(Date.now() - 60000).toISOString()
-      const { count: recentCount, error: recentError } = await supabase.from('media').select('*', { count: 'exact', head: true }).eq('event_id', event_id).eq('guest_id', guestId).gte('created_at', oneMinuteAgo)
+      const { count: recentCount, error: recentError } = await supabaseAdmin.from('media').select('*', { count: 'exact', head: true }).eq('event_id', event_id).eq('guest_id', guestId).gte('created_at', oneMinuteAgo)
   
       if (!recentError && typeof recentCount === 'number' && recentCount >= 15) {
         return NextResponse.json({ error: 'Muitos envios rápidos. Aguarde um minuto e tente novamente.' }, { status: 429 })
@@ -103,7 +105,7 @@ export async function POST(request: Request) {
     const prefix = is_cover ? 'covers' : event_id
     const fileName = `${prefix}/${Date.now()}-${Math.random().toString(36).slice(2)}.${file_ext}`
 
-    const { data: uploadData, error: uploadError } = await supabase.storage
+    const { data: uploadData, error: uploadError } = await supabaseAdmin.storage
       .from('media')
       .createSignedUploadUrl(fileName)
 
