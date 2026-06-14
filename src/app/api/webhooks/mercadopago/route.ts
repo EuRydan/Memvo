@@ -16,11 +16,7 @@ export async function POST(request: Request) {
     }
 
     const signatureHeader = request.headers.get('x-signature')
-    const userAgentHeader = request.headers.get('user-agent')
     const requestId = request.headers.get('x-request-id')
-    
-    console.log(`[DEBUG MP] x-signature: ${signatureHeader}`)
-    console.log(`[DEBUG MP] user-agent: ${userAgentHeader}`)
 
     const secret = process.env.MERCADOPAGO_WEBHOOK_SECRET
     const enforceSignature = process.env.WEBHOOK_ENFORCE_SIGNATURE === 'true'

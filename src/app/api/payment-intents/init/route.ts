@@ -5,7 +5,7 @@ import { createClient as createSupabaseAdmin } from '@supabase/supabase-js'
 
 const PLAN_PRICES = {
   freemium: 0,
-  essential: 1.00,
+  essential: 79.00,
   classic: 149.00,
   premium: 249.00
 }
