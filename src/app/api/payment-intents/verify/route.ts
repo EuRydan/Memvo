@@ -102,34 +102,17 @@ export async function POST(request: Request) {
         .update({ status: 'approved', processed_at: new Date().toISOString(), mp_payment_id: mpPaymentId?.toString() })
         .eq('id', currentIntentId)
 
-      // 2. Atualizar ou Inserir Plano
-      const { data: existingUserPlan } = await supabaseAdmin
+      // 2. Inserir novo registro de plano vinculado ao evento (histórico por evento)
+      // Nunca sobrescrever: cada pagamento gera um novo registro com event_id
+      const { error: planErr } = await supabaseAdmin
         .from('user_plans')
-        .select('id')
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle()
-
-      if (existingUserPlan) {
-        const { error: planErr } = await supabaseAdmin
-          .from('user_plans')
-          .update({
-            plan_id: planId,
-            payment_id: mpPaymentId?.toString() || 'manual_verification'
-          })
-          .eq('id', existingUserPlan.id)
-        if (planErr) console.error('Erro ao atualizar plano:', planErr)
-      } else {
-        const { error: planErr } = await supabaseAdmin
-          .from('user_plans')
-          .insert({
-            user_id: userId,
-            plan_id: planId,
-            payment_id: mpPaymentId?.toString() || 'manual_verification'
-          })
-        if (planErr) console.error('Erro ao inserir plano:', planErr)
-      }
+        .insert({
+          user_id: userId,
+          plan_id: planId,
+          payment_id: mpPaymentId?.toString() || 'manual_verification',
+          event_id: eventId
+        })
+      if (planErr) console.error('Erro ao inserir plano:', planErr)
 
       // 3. Ativar Evento
       const { error: eventUpdateError } = await supabaseAdmin

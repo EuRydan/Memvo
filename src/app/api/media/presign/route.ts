@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient as createSupabaseAdmin } from '@supabase/supabase-js'
 import { createClient } from '@/lib/supabase/server'
 import { cookies } from 'next/headers'
-import { getPhotoLimit, isEventLocked } from '@/lib/limits'
+import { getPhotoLimit, isEventLocked, UserPlanRecord } from '@/lib/limits'
 
 export async function POST(request: Request) {
   try {
@@ -48,16 +48,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Event not found' }, { status: 404 })
     }
 
-    // 2. Obter plano do dono
-    const { data: planData } = await supabaseAdmin
+    // 2. Obter planos do dono do evento (histórico por evento)
+    // Atenção: usamos owner_id do evento, não o usuário autenticado (convidados não têm user_plans)
+    const { data: ownerPlans } = await supabaseAdmin
       .from('user_plans')
-      .select('plan_id')
+      .select('event_id, plan_id')
       .eq('user_id', eventData.owner_id)
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle()
 
-    const planId = planData?.plan_id || 'none'
+    const userPlans: UserPlanRecord[] = ownerPlans || []
+
+    // Plano para cálculo de limites: preferir o vinculado ao evento, sentar no mais recente
+    const planId = userPlans.find(p => p.event_id === event_id)?.plan_id
+      || userPlans[userPlans.length - 1]?.plan_id
+      || 'none'
 
     // 3. Checar bloqueio de pagamento (se não for dono)
     // Se for o dono (ex: fazendo upload de capa), não bloqueamos o pre-sign da capa (pode alterar no rascunho)
@@ -65,12 +68,7 @@ export async function POST(request: Request) {
     const isOwner = user?.id === eventData.owner_id
     
     if (!isOwner && !is_cover) {
-      const { data: allEvents } = await supabaseAdmin
-        .from('events')
-        .select('id, date, active, created_at, status')
-        .eq('owner_id', eventData.owner_id)
-        
-      if (allEvents && isEventLocked(event_id, allEvents, planId)) {
+      if (isEventLocked(event_id, userPlans)) {
         return NextResponse.json({ error: 'Evento bloqueado aguardando pagamento.' }, { status: 403 })
       }
     }

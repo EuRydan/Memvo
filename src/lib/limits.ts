@@ -50,16 +50,41 @@ export function getPhotoLimit(planId: string): number {
 }
 
 /**
- * Checks if a specific event is locked (exceeds the user's plan limits).
- * Sorts all active events by creation date and verifies the index.
+ * Shape of a user_plans row required for lock checks.
+ */
+export type UserPlanRecord = {
+  event_id: string | null
+  plan_id: string
+}
+
+/**
+ * Checks if a specific event is locked for the given user.
+ *
+ * An event is UNLOCKED if:
+ *   - There is a user_plans record with event_id === eventId (paid for this event), OR
+ *   - There is a legacy record with event_id === null (migrated users — temporary fallback).
+ *
+ * An event is LOCKED if:
+ *   - Its status is 'draft' (not yet published / awaiting payment), AND
+ *   - No qualifying user_plans record exists.
+ *
+ * @param eventId   - The event UUID to check.
+ * @param userPlans - All user_plans rows for the event owner (select event_id, plan_id).
+ * @param event     - Optional event row; if provided, 'draft' status is checked first.
  */
 export function isEventLocked(
   eventId: string,
-  allEvents: any[],
-  planId: string
+  userPlans: UserPlanRecord[],
+  event?: { status?: string }
 ): boolean {
-  const event = allEvents.find(e => e.id === eventId)
-  if (!event) return false
-  if (event.status === 'draft') return true
-  return false
+  // A paid record for this specific event always unlocks it
+  const hasPaidForEvent = userPlans.some((p) => p.event_id === eventId)
+  if (hasPaidForEvent) return false
+
+  // Legacy fallback: a record with no event_id (pre-migration) unlocks all events for the owner
+  const hasLegacyPlan = userPlans.some((p) => p.event_id === null && p.plan_id && p.plan_id !== 'none')
+  if (hasLegacyPlan) return false
+
+  // No qualifying plan found → locked
+  return true
 }

@@ -2,7 +2,7 @@
 
 import { use, useEffect, useRef, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { isEventActive, isEventLocked } from '@/lib/limits'
+import { isEventActive, isEventLocked, UserPlanRecord } from '@/lib/limits'
 import { Media, Challenge } from '@/types'
 import StoryCamera from '@/components/StoryCamera'
 import MediaViewer from '@/components/MediaViewer'
@@ -33,24 +33,21 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
       if (error || !data) { setNotFound(true); return }
       setEvent(data)
 
-      // Fetch owner plan type
-      const { data: planData } = await supabase
+      // Fetch owner plans (all records, to check per-event lock)
+      const { data: ownerPlansData } = await supabase
         .from('user_plans')
-        .select('plan_id')
+        .select('event_id, plan_id')
         .eq('user_id', data.owner_id)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle()
-      
-      const plan = planData?.plan_id || 'none'
+
+      const ownerPlans: UserPlanRecord[] = (ownerPlansData || []) as UserPlanRecord[]
+
+      // Plano vinculado a este evento específico (para controle de limite de upload)
+      const plan = ownerPlans.find(p => p.event_id === data.id)?.plan_id
+        || ownerPlans[ownerPlans.length - 1]?.plan_id
+        || 'none'
       setPlanType(plan)
 
-      const { data: allEvents } = await supabase
-        .from('events')
-        .select('id, date, active, created_at, status')
-        .eq('owner_id', data.owner_id)
-        
-      if (allEvents && isEventLocked(data.id, allEvents, plan)) {
+      if (isEventLocked(data.id, ownerPlans)) {
         setIsLocked(true)
         return
       }

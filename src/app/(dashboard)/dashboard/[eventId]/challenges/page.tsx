@@ -4,7 +4,7 @@ import { use, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Challenge } from '@/types'
-import { isEventLocked } from '@/lib/limits'
+import { isEventLocked, UserPlanRecord } from '@/lib/limits'
 import { SelectNative } from '@/components/ui/select-native'
 import { ButtonColorful } from '@/components/ui/button-colorful'
 
@@ -112,27 +112,25 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
     const { data: { user } } = await supabase.auth.getUser()
     
     if (user) {
-      const { data: planData } = await supabase
+      const { data: plansData } = await supabase
         .from('user_plans')
-        .select('plan_id')
+        .select('event_id, plan_id')
         .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle()
-      
-      const type = planData?.plan_id || 'none'
-      if (type === 'essential') setChallengeLimit(5)
-      else if (type === 'classic') setChallengeLimit(Infinity)
-      else if (type === 'premium') setChallengeLimit(Infinity)
-      else if (type === 'freemium') setChallengeLimit(1)
-      else setChallengeLimit(0) // Sem plano não pode adicionar (embora a view em si devesse estar bloqueada)
 
-      const { data: allEvents } = await supabase
-        .from('events')
-        .select('id, date, active, created_at, status')
-        .eq('owner_id', user.id)
-        
-      if (allEvents && isEventLocked(eventId, allEvents, type)) {
+      const userPlans: UserPlanRecord[] = (plansData || []) as UserPlanRecord[]
+
+      // Plano específico do evento (ou o mais recente como fallback)
+      const eventPlanId = userPlans.find(p => p.event_id === eventId)?.plan_id
+        || userPlans[userPlans.length - 1]?.plan_id
+        || 'none'
+
+      if (eventPlanId === 'essential') setChallengeLimit(5)
+      else if (eventPlanId === 'classic') setChallengeLimit(Infinity)
+      else if (eventPlanId === 'premium') setChallengeLimit(Infinity)
+      else if (eventPlanId === 'freemium') setChallengeLimit(1)
+      else setChallengeLimit(0)
+
+      if (isEventLocked(eventId, userPlans)) {
         setIsLocked(true)
         setLoading(false)
         return

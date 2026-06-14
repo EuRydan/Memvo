@@ -35,11 +35,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid plan' }, { status: 400 })
     }
 
-    // Busca o plano atual
+    // Busca o plano atual para ESTE evento específico
     const { data: currentPlan } = await supabase
       .from('user_plans')
       .select('plan_id')
       .eq('user_id', user.id)
+      .eq('event_id', eventId)
       .order('created_at', { ascending: false })
       .limit(1)
       .maybeSingle()

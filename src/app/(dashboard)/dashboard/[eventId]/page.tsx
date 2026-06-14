@@ -7,7 +7,7 @@ import { Media, Challenge } from '@/types'
 import { Camera, Sparkles, Star, Heart, Share } from 'lucide-react'
 import { StoryGenerator } from '@/components/StoryGenerator'
 import { EventShareCard } from '@/components/EventShareCard'
-import { isEventLocked } from '@/lib/limits'
+import { isEventLocked, UserPlanRecord } from '@/lib/limits'
 
 export default function EventGalleryPage({ params }: { params: Promise<{ eventId: string }> }) {
   const { eventId } = use(params)
@@ -34,21 +34,14 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
       // Check if locked
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
-        const { data: planData } = await supabase
+        const { data: plansData } = await supabase
           .from('user_plans')
-          .select('plan_id')
+          .select('event_id, plan_id')
           .eq('user_id', user.id)
-          .order('created_at', { ascending: false })
-          .limit(1)
-          .maybeSingle()
 
-        const planId = planData?.plan_id || 'none'
-        const { data: allEvents } = await supabase
-          .from('events')
-          .select('id, date, active, created_at, status')
-          .eq('owner_id', user.id)
-          
-        if (allEvents && isEventLocked(eventId, allEvents, planId)) {
+        const userPlans: UserPlanRecord[] = (plansData || []) as UserPlanRecord[]
+
+        if (isEventLocked(eventId, userPlans)) {
           setIsLocked(true)
           setLoading(false)
           return

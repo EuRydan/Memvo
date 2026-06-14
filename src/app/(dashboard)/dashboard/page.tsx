@@ -5,7 +5,7 @@ import { Logo } from '@/components/Logo'
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { isEventActive, countActiveEvents, PLAN_LIMITS, PlanTier, isEventLocked } from '@/lib/limits'
+import { isEventActive, countActiveEvents, PLAN_LIMITS, PlanTier, isEventLocked, UserPlanRecord } from '@/lib/limits'
 import { Event } from '@/types'
 import QRCodeGenerator from '@/components/QRCodeGenerator'
 import { useTranslation } from '@/contexts/I18nContext'
@@ -17,6 +17,7 @@ export default function DashboardPage() {
   const [events, setEvents] = useState<Event[]>([])
   const [loading, setLoading] = useState(true)
   const [planId, setPlanId] = useState<string>('none')
+  const [userPlans, setUserPlans] = useState<UserPlanRecord[]>([])
   const [showUpgradeModal, setShowUpgradeModal] = useState(false)
   const [uploadingCoverFor, setUploadingCoverFor] = useState<string | null>(null)
 
@@ -45,16 +46,16 @@ export default function DashboardPage() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { router.push('/login'); return }
 
-      const { data: planData } = await supabase
+      const { data: plansData } = await supabase
         .from('user_plans')
-        .select('*')
+        .select('event_id, plan_id')
         .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle()
 
-      if (planData) {
-        setPlanId(planData.plan_id || 'none')
+      if (plansData && plansData.length > 0) {
+        setUserPlans(plansData as UserPlanRecord[])
+        // planId for display: most recent plan_id
+        const lastPlan = [...plansData].sort((a, b) => 0).pop()
+        setPlanId(lastPlan?.plan_id || 'none')
       }
       
       // Sempre carrega os eventos, mesmo se não tiver plano
@@ -299,7 +300,7 @@ export default function DashboardPage() {
                       
                       {/* Badges */}
                       <div className="absolute top-4 left-4 flex flex-col gap-1">
-                        {isEventLocked(event.id, events, planId) ? (
+                        {isEventLocked(event.id, userPlans) ? (
                           <div className="bg-canvas text-ink text-[10px] font-bold px-3 py-1.5 rounded-full shadow-sm">
                             {t('mainDashboard.pendingPayment')}
                           </div>
@@ -342,7 +343,7 @@ export default function DashboardPage() {
 
                   {/* Right: Actions */}
                   <div className="grid grid-cols-2 xl:grid-cols-4 flex-1 min-w-0">
-                    {isEventLocked(event.id, events, planId) ? (
+                    {isEventLocked(event.id, userPlans) ? (
                       <div className="flex flex-col items-center justify-center w-full p-6 bg-red-50 dark:bg-red-500/10 transition-colors col-span-2 xl:col-span-4 rounded-r-[24px]">
                          <button
                            onClick={() => router.push(`/pricing?eventId=${event.id}`)}

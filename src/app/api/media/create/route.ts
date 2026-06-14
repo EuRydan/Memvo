@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
-import { getPhotoLimit, isEventLocked } from '@/lib/limits'
+import { getPhotoLimit, isEventLocked, UserPlanRecord } from '@/lib/limits'
 
 export async function POST(request: Request) {
   try {
@@ -42,24 +42,24 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Event not found' }, { status: 404 })
     }
 
-    // 2. Obter plano do dono
-    const { data: planData } = await supabase
+    // 2. Obter planos do dono do evento (histórico por evento)
+    // Atenção: usamos owner_id do evento, não o usuário autenticado (convidados não têm user_plans)
+    const { data: ownerPlans } = await supabase
       .from('user_plans')
-      .select('plan_id')
+      .select('event_id, plan_id')
       .eq('user_id', eventData.owner_id)
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle()
 
-    const planId = planData?.plan_id || 'none'
+    const userPlans: UserPlanRecord[] = ownerPlans || []
+
+    // Plano mais recente para calcular limites de fotos
+    const planId = userPlans.length > 0
+      ? (userPlans.sort((a, b) => 0).find(p => p.event_id === event_id)?.plan_id
+          || userPlans[userPlans.length - 1]?.plan_id
+          || 'none')
+      : 'none'
 
     // 3. Checar se o evento está bloqueado por falta de pagamento
-    const { data: allEvents } = await supabase
-      .from('events')
-      .select('id, date, active, created_at, status')
-      .eq('owner_id', eventData.owner_id)
-      
-    if (allEvents && isEventLocked(event_id, allEvents, planId)) {
+    if (isEventLocked(event_id, userPlans)) {
       return NextResponse.json({ error: 'Evento bloqueado aguardando pagamento.' }, { status: 403 })
     }
 

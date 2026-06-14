@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import { isEventLocked } from '@/lib/limits'
+import { isEventLocked, UserPlanRecord } from '@/lib/limits'
 
 export async function GET(request: Request) {
   try {
@@ -81,30 +81,19 @@ export async function GET(request: Request) {
       for (const ownerId of ownerIds) {
         const ownerEvents = draftEvents.filter(e => e.owner_id === ownerId)
         
-        // Obter plano atual do dono
-        const { data: planData } = await supabase
+        // Obter planos do dono (histórico por evento)
+        const { data: plansData } = await supabase
           .from('user_plans')
-          .select('plan_id')
+          .select('event_id, plan_id')
           .eq('user_id', ownerId)
-          .order('created_at', { ascending: false })
-          .limit(1)
-          .maybeSingle()
           
-        const planId = planData?.plan_id || 'none'
-        
-        // Obter todos os eventos do dono para a checagem do isEventLocked
-        const { data: allOwnerEvents } = await supabase
-          .from('events')
-          .select('id, date, active, created_at, status')
-          .eq('owner_id', ownerId)
-          
-        if (!allOwnerEvents) continue
+        const ownerPlans: UserPlanRecord[] = (plansData || []) as UserPlanRecord[]
 
         const eventsToDelete = []
         const filesToRemove: string[] = []
 
         for (const event of ownerEvents) {
-          if (isEventLocked(event.id, allOwnerEvents, planId)) {
+          if (isEventLocked(event.id, ownerPlans)) {
             eventsToDelete.push(event.id)
             if (event.cover_url) {
               const coverPathMatch = event.cover_url.match(/storage\/v1\/object\/public\/media\/(.*)/)
