@@ -178,7 +178,7 @@ function PricingContent() {
 
   const getDisplayPrice = (plan: typeof PLANS[0]) => {
     if (!currentPlanId) return plan.price
-    const planPrices = { freemium: 0, essential: 79, classic: 1, premium: 249 } as Record<string, number>
+    const planPrices = { freemium: 0, essential: 79, classic: 149, premium: 249 } as Record<string, number>
     const currentPrice = planPrices[currentPlanId] || 0
     const targetPrice = planPrices[plan.id] || 0
     if (targetPrice <= currentPrice) return plan.price

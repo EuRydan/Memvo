@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 const PLAN_PRICES = {
   freemium: 0,
   essential: 79.00,
-  classic: 1.00, // TEMPORÁRIO PARA TESTE
+  classic: 149.00,
   premium: 249.00
 }
 
