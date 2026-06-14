@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
 
 const PLAN_PRICES = {
@@ -60,11 +61,15 @@ export async function POST(request: Request) {
     // Voucher validation (Affiliate logic)
     let appliedAffiliateCode = null
 
-    if (voucher) {
+    const cookieStore = await cookies()
+    const cookieVoucher = cookieStore.get('affiliate_code')?.value
+    const finalVoucher = voucher || cookieVoucher
+
+    if (finalVoucher) {
       const { data: affiliate } = await supabase
         .from('affiliates')
         .select('user_id, affiliate_code, status')
-        .eq('affiliate_code', voucher)
+        .eq('affiliate_code', finalVoucher)
         .maybeSingle()
 
       // Ensure the affiliate is approved and is NOT the user themselves
