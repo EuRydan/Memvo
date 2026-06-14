@@ -65,6 +65,10 @@ export async function POST(request: Request) {
     const cookieVoucher = cookieStore.get('affiliate_code')?.value
     const finalVoucher = voucher || cookieVoucher
 
+    console.log('[INIT DEBUG] voucher (body):', voucher)
+    console.log('[INIT DEBUG] cookie affiliate_code:', cookieVoucher)
+    console.log('[INIT DEBUG] finalVoucher:', finalVoucher)
+
     if (finalVoucher) {
       const { data: affiliate } = await supabase
         .from('affiliates')
