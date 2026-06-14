@@ -76,12 +76,17 @@ export async function POST(request: Request) {
         .eq('affiliate_code', finalVoucher)
         .maybeSingle()
 
+      console.log('[INIT DEBUG] affiliate encontrado:', JSON.stringify(affiliate))
+      console.log('[INIT DEBUG] affiliate.status:', affiliate?.status)
+
       // Ensure the affiliate is approved and is NOT the user themselves
       if (affiliate && affiliate.status === 'approved' && affiliate.user_id !== user.id) {
         // Apply 10% discount
         price = price * 0.90
         appliedAffiliateCode = affiliate.affiliate_code
       }
+      
+      console.log('[INIT DEBUG] appliedAffiliateCode final:', appliedAffiliateCode)
     }
 
     // Cria o intent no banco de dados
