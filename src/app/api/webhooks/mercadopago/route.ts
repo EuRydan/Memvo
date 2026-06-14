@@ -6,6 +6,15 @@ import crypto from 'crypto'
 export async function POST(request: Request) {
   console.log(`[WEBHOOK RECEBIDO] Chamada recebida na rota /api/webhooks/mercadopago - URL: ${request.url}`)
   try {
+    const url = new URL(request.url)
+    const topicParam = url.searchParams.get('topic')
+    const dataIdParam = url.searchParams.get('data.id')
+
+    if (topicParam && !dataIdParam) {
+      console.log(`[WEBHOOK] Notificação legada (Feed/topic) recebida e ignorada - payment_id já processado via Webhook v2`)
+      return NextResponse.json({ received: true })
+    }
+
     const signatureHeader = request.headers.get('x-signature')
     const userAgentHeader = request.headers.get('user-agent')
     const requestId = request.headers.get('x-request-id')
