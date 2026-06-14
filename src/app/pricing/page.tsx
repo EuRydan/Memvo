@@ -50,7 +50,7 @@ const PLANS = [
     id: 'classic',
     name: 'Clássico',
     desc: 'O essencial para a festa',
-    price: 'R$1,00',
+    price: 'R$149',
     popular: true,
     features: [
       { text: 'Até 200 convidados', included: true },
