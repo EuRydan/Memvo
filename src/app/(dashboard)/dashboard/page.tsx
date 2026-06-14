@@ -51,15 +51,11 @@ export default function DashboardPage() {
         .select('event_id, plan_id')
         .eq('user_id', user.id)
 
-      console.log('[DEBUG] plansData raw:', JSON.stringify(plansData))
       if (plansData && plansData.length > 0) {
         setUserPlans(plansData as UserPlanRecord[])
         // planId for display: most recent plan_id
         const lastPlan = [...plansData].sort((a, b) => 0).pop()
         setPlanId(lastPlan?.plan_id || 'none')
-        console.log('[DEBUG] userPlans set to:', JSON.stringify(plansData))
-      } else {
-        console.log('[DEBUG] userPlans permanece [] — sem registros em user_plans')
       }
       
       // Sempre carrega os eventos, mesmo se não tiver plano
@@ -304,7 +300,6 @@ export default function DashboardPage() {
                       
                       {/* Badges */}
                       <div className="absolute top-4 left-4 flex flex-col gap-1">
-                        {(() => { console.log('[DEBUG] card:', event.id, 'status:', event.status, 'active:', event.active, 'userPlans:', JSON.stringify(userPlans), '→ isLocked:', isEventLocked(event.id, userPlans, event)); return null; })()}
                         {isEventLocked(event.id, userPlans, event) ? (
                           <div className="bg-canvas text-ink text-[10px] font-bold px-3 py-1.5 rounded-full shadow-sm">
                             {t('mainDashboard.pendingPayment')}
