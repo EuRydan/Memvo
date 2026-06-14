@@ -5,7 +5,7 @@ import { createClient as createSupabaseAdmin } from '@supabase/supabase-js'
 
 const PLAN_PRICES = {
   freemium: 0,
-  essential: 1.00,
+  essential: 79.00,
   classic: 149.00,
   premium: 249.00
 }
@@ -66,10 +66,6 @@ export async function POST(request: Request) {
     const cookieVoucher = cookieStore.get('affiliate_code')?.value
     const finalVoucher = voucher || cookieVoucher
 
-    console.log('[INIT DEBUG] voucher (body):', voucher)
-    console.log('[INIT DEBUG] cookie affiliate_code:', cookieVoucher)
-    console.log('[INIT DEBUG] finalVoucher:', finalVoucher)
-
     if (finalVoucher) {
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
       const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -81,17 +77,12 @@ export async function POST(request: Request) {
         .eq('affiliate_code', finalVoucher)
         .maybeSingle()
 
-      console.log('[INIT DEBUG] affiliate encontrado:', JSON.stringify(affiliate))
-      console.log('[INIT DEBUG] affiliate.status:', affiliate?.status)
-
       // Ensure the affiliate is approved and is NOT the user themselves
       if (affiliate && affiliate.status === 'approved' && affiliate.user_id !== user.id) {
         // Apply 10% discount
         price = price * 0.90
         appliedAffiliateCode = affiliate.affiliate_code
       }
-      
-      console.log('[INIT DEBUG] appliedAffiliateCode final:', appliedAffiliateCode)
     }
 
     // Cria o intent no banco de dados
