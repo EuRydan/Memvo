@@ -19,7 +19,7 @@ export default async function PartnerDashboardPage() {
     .maybeSingle()
 
   if (!affiliate) {
-    redirect('/')
+    redirect('/parceiros/cadastro')
   }
 
   if (affiliate.status === 'pending') {
