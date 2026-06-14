@@ -173,8 +173,13 @@ export async function POST(request: Request) {
               .eq('affiliate_code', affiliateCode)
               .maybeSingle()
 
-            // Ensure affiliate is approved and the buyer is not the affiliate themselves
-            if (affiliate && affiliate.status === 'approved' && affiliate.user_id !== userId) {
+            if (!affiliate) {
+              console.warn(`[COMISSÃO] Aviso: Afiliado com código ${affiliateCode} não encontrado. Nenhuma comissão gerada.`)
+            } else if (affiliate.status !== 'approved') {
+              console.warn(`[COMISSÃO] Aviso: Afiliado ${affiliateCode} não está aprovado (status: ${affiliate.status}). Nenhuma comissão gerada.`)
+            } else if (affiliate.user_id === userId) {
+              console.warn(`[COMISSÃO] Aviso: Tentativa de self-referral bloqueada para afiliado ${affiliateCode} (user_id: ${userId}). Nenhuma comissão gerada.`)
+            } else {
               const commissionAmount = paidAmount * Number(affiliate.commission_rate)
               
               await supabaseAdmin
@@ -185,12 +190,17 @@ export async function POST(request: Request) {
                   amount: commissionAmount,
                   status: 'pending'
                 })
-                // Ignore conflicts (e.g. if verify already created it due to race condition)
                 .select()
                 .single()
                 .then(({ error }) => {
-                  if (error && error.code !== '23505') { // 23505 = unique_violation
-                    console.error('Error creating commission in webhook:', error)
+                  if (error) {
+                    if (error.code === '23505') { // unique_violation
+                      console.log(`[COMISSÃO] Afiliado ${affiliateCode} — Comissão de R$ ${commissionAmount.toFixed(2)} já havia sido registrada (idempotência) para payment_intent ${intentId}`)
+                    } else {
+                      console.error(`[COMISSÃO] Erro ao criar comissão para ${affiliateCode}:`, error)
+                    }
+                  } else {
+                    console.log(`[COMISSÃO] Afiliado ${affiliateCode} — R$ ${commissionAmount.toFixed(2)} registrado para payment_intent ${intentId}`)
                   }
                 })
             }
