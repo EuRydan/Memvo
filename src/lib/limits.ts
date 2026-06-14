@@ -62,28 +62,32 @@ export type UserPlanRecord = {
  *
  * An event is UNLOCKED if:
  *   - There is a user_plans record with event_id === eventId (paid for this event), OR
- *   - There is a legacy record with event_id === null (migrated users — temporary fallback).
+ *   - There is a legacy record with event_id === null AND the event is already published
+ *     (status === 'published') — i.e. it was activated before today's migration.
  *
  * An event is LOCKED if:
- *   - Its status is 'draft' (not yet published / awaiting payment), AND
- *   - No qualifying user_plans record exists.
+ *   - No qualifying user_plans record exists for this event, AND
+ *   - The event is NOT published (e.g. status === 'draft') even if the owner has legacy records.
  *
  * @param eventId   - The event UUID to check.
  * @param userPlans - All user_plans rows for the event owner (select event_id, plan_id).
- * @param event     - Optional event row; if provided, 'draft' status is checked first.
+ * @param eventMeta - Optional event row fields: status. Required to enforce the legacy
+ *                    fallback correctly — without it, draft events with legacy plans would
+ *                    appear unlocked (bypassing payment).
  */
 export function isEventLocked(
   eventId: string,
   userPlans: UserPlanRecord[],
-  event?: { status?: string }
+  eventMeta?: { status?: string | null; active?: boolean | null }
 ): boolean {
-  // A paid record for this specific event always unlocks it
+  // A paid record for this specific event always unlocks it (new model)
   const hasPaidForEvent = userPlans.some((p) => p.event_id === eventId)
   if (hasPaidForEvent) return false
 
-  // Legacy fallback: a record with no event_id (pre-migration) unlocks all events for the owner
+  // Legacy fallback: a record with no event_id (pre-migration) unlocks ONLY events
+  // that are already published — never new draft events created after the migration.
   const hasLegacyPlan = userPlans.some((p) => p.event_id === null && p.plan_id && p.plan_id !== 'none')
-  if (hasLegacyPlan) return false
+  if (hasLegacyPlan && eventMeta?.status === 'published') return false
 
   // No qualifying plan found → locked
   return true

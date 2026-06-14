@@ -70,7 +70,7 @@ export async function GET(request: Request) {
     // Buscar eventos ativos criados há mais de 48h
     const { data: draftEvents } = await supabase
       .from('events')
-      .select('id, owner_id, cover_url')
+      .select('id, owner_id, cover_url, status, active')
       .lt('created_at', fortyEightHoursAgo)
       .eq('active', true)
 
@@ -93,7 +93,7 @@ export async function GET(request: Request) {
         const filesToRemove: string[] = []
 
         for (const event of ownerEvents) {
-          if (isEventLocked(event.id, ownerPlans)) {
+          if (isEventLocked(event.id, ownerPlans, event)) {
             eventsToDelete.push(event.id)
             if (event.cover_url) {
               const coverPathMatch = event.cover_url.match(/storage\/v1\/object\/public\/media\/(.*)/)

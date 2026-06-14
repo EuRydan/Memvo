@@ -304,8 +304,8 @@ export default function DashboardPage() {
                       
                       {/* Badges */}
                       <div className="absolute top-4 left-4 flex flex-col gap-1">
-                        {(() => { console.log('[DEBUG] card:', event.id, 'status:', event.status, 'active:', event.active, 'userPlans:', JSON.stringify(userPlans), '→ isLocked:', isEventLocked(event.id, userPlans)); return null; })()}
-                        {isEventLocked(event.id, userPlans) ? (
+                        {(() => { console.log('[DEBUG] card:', event.id, 'status:', event.status, 'active:', event.active, 'userPlans:', JSON.stringify(userPlans), '→ isLocked:', isEventLocked(event.id, userPlans, event)); return null; })()}
+                        {isEventLocked(event.id, userPlans, event) ? (
                           <div className="bg-canvas text-ink text-[10px] font-bold px-3 py-1.5 rounded-full shadow-sm">
                             {t('mainDashboard.pendingPayment')}
                           </div>
@@ -348,7 +348,7 @@ export default function DashboardPage() {
 
                   {/* Right: Actions */}
                   <div className="grid grid-cols-2 xl:grid-cols-4 flex-1 min-w-0">
-                    {isEventLocked(event.id, userPlans) ? (
+                    {isEventLocked(event.id, userPlans, event) ? (
                       <div className="flex flex-col items-center justify-center w-full p-6 bg-red-50 dark:bg-red-500/10 transition-colors col-span-2 xl:col-span-4 rounded-r-[24px]">
                          <button
                            onClick={() => router.push(`/pricing?eventId=${event.id}`)}

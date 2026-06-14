@@ -40,7 +40,7 @@ export async function POST(request: Request) {
     // 1. Obter dono do evento
     const { data: eventData, error: eventError } = await supabaseAdmin
       .from('events')
-      .select('owner_id')
+      .select('owner_id, status, active')
       .eq('id', event_id)
       .single()
 
@@ -68,7 +68,7 @@ export async function POST(request: Request) {
     const isOwner = user?.id === eventData.owner_id
     
     if (!isOwner && !is_cover) {
-      if (isEventLocked(event_id, userPlans)) {
+      if (isEventLocked(event_id, userPlans, eventData)) {
         return NextResponse.json({ error: 'Evento bloqueado aguardando pagamento.' }, { status: 403 })
       }
     }

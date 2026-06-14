@@ -29,7 +29,7 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
   useEffect(() => {
     async function loadEvent() {
       const { data, error } = await supabase
-        .from('events').select('id, name, date, active, owner_id').eq('slug', slug).eq('active', true).single()
+        .from('events').select('id, name, date, active, owner_id, status').eq('slug', slug).eq('active', true).single()
       if (error || !data) { setNotFound(true); return }
       setEvent(data)
 
@@ -47,7 +47,7 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
         || 'none'
       setPlanType(plan)
 
-      if (isEventLocked(data.id, ownerPlans)) {
+      if (isEventLocked(data.id, ownerPlans, data)) {
         setIsLocked(true)
         return
       }

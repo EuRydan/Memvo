@@ -25,7 +25,7 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
     async function load() {
       const { data: eventData } = await supabase
         .from('events')
-        .select('id, name, date, slug, google_refresh_token, cover_url')
+        .select('id, name, date, slug, google_refresh_token, cover_url, status, active')
         .eq('id', eventId)
         .single()
 
@@ -41,7 +41,7 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
 
         const userPlans: UserPlanRecord[] = (plansData || []) as UserPlanRecord[]
 
-        if (isEventLocked(eventId, userPlans)) {
+        if (isEventLocked(eventId, userPlans, eventData)) {
           setIsLocked(true)
           setLoading(false)
           return

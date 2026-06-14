@@ -112,6 +112,13 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
     const { data: { user } } = await supabase.auth.getUser()
     
     if (user) {
+      // Buscar status do evento para o check de lock
+      const { data: eventMeta } = await supabase
+        .from('events')
+        .select('status, active')
+        .eq('id', eventId)
+        .single()
+
       const { data: plansData } = await supabase
         .from('user_plans')
         .select('event_id, plan_id')
@@ -130,7 +137,7 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
       else if (eventPlanId === 'freemium') setChallengeLimit(1)
       else setChallengeLimit(0)
 
-      if (isEventLocked(eventId, userPlans)) {
+      if (isEventLocked(eventId, userPlans, eventMeta || undefined)) {
         setIsLocked(true)
         setLoading(false)
         return
