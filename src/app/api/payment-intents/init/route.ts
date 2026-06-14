@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
+import { createClient as createSupabaseAdmin } from '@supabase/supabase-js'
 
 const PLAN_PRICES = {
   freemium: 0,
@@ -70,7 +71,11 @@ export async function POST(request: Request) {
     console.log('[INIT DEBUG] finalVoucher:', finalVoucher)
 
     if (finalVoucher) {
-      const { data: affiliate } = await supabase
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+      const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+      const supabaseAdmin = createSupabaseAdmin(supabaseUrl, supabaseServiceKey)
+
+      const { data: affiliate } = await supabaseAdmin
         .from('affiliates')
         .select('user_id, affiliate_code, status')
         .eq('affiliate_code', finalVoucher)
