@@ -92,7 +92,7 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
 
       {/* Background ring container that controls geometry */}
       <div
-        className="relative mx-auto z-10 mt-8"
+        className="relative mx-auto z-10 -mt-4"
         style={{
           width: '100%',
           height: '140px', // Fixed height since we decouple the huge radius
@@ -128,10 +128,10 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
                   zIndex: count - i,
                 }}
               >
-                <div 
-                  className="rounded-2xl shadow-xl overflow-hidden ring-1 ring-gray-200/50 bg-white transition-transform hover:scale-110 w-full h-full"
-                  style={{ transform: `rotate(6deg)` }}
-                >
+                <div style={{ animation: `drift ${10 + (i % 3) * 2}s ease-in-out ${i * 0.3}s infinite alternate` }} className="w-full h-full">
+                  <div 
+                    className="rounded-2xl shadow-xl overflow-hidden ring-1 ring-gray-200/50 bg-white transition-all duration-500 hover:scale-[1.15] hover:-translate-y-4 hover:shadow-2xl rotate-6 hover:rotate-0 w-full h-full cursor-pointer"
+                  >
                   <img
                     src={src}
                     alt={`Memory ${i + 1}`}
