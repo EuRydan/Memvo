@@ -62,6 +62,7 @@ export default function LandingPage() {
           </h2>
         </div>
 
+        {/* 
         <ZoomParallax
           images={[
             { src: "https://images.unsplash.com/photo-1731596153022-4cedafe3330a?w=2400&q=100&auto=format&fit=crop", challenge: "A melhor dançarina" },
@@ -73,6 +74,7 @@ export default function LandingPage() {
             { src: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=800&h=600&fit=crop&q=80", challenge: "Um brinde" }
           ]}
         />
+        */}
 
         <div className="mt-20 px-6 max-w-3xl mx-auto">
           <Carousel opts={{ align: "start" }} className="w-full">
