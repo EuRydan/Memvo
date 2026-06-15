@@ -265,7 +265,7 @@ function PricingContent() {
 
         <div className="text-center mb-10">
           <p className="text-[11px] font-semibold tracking-[0.2em] text-[#939393] uppercase mb-3">Planos</p>
-          <h1 style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
+          <h1 style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}
             className="text-[2rem] font-bold tracking-[-0.02em] text-[#0a0a0a] leading-tight mb-2">
             Escolha seu plano
           </h1>
@@ -448,7 +448,7 @@ function PricingContent() {
             <div className="rounded-[22px] overflow-hidden bg-white p-7 md:p-8 flex flex-col"
               style={{ boxShadow: '0 8px 40px rgba(0,0,0,0.08)', border: '1px solid rgba(0,0,0,0.04)', minHeight: '400px' }}>
               <div className="flex items-center justify-between mb-1">
-                <h3 className="text-[1.3rem] font-bold text-[#0a0a0a]" style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}>
+                <h3 className="text-[1.3rem] font-bold text-[#0a0a0a]" style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}>
                   Pagamento Seguro
                 </h3>
               </div>
@@ -523,7 +523,7 @@ function PricingContent() {
 
         {/* ── FAQ ── */}
         <section className="mb-14">
-          <h2 style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
+          <h2 style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}
             className="text-[1.3rem] font-bold text-[#0a0a0a] text-center mb-5">
             Perguntas frequentes
           </h2>
@@ -570,7 +570,7 @@ function PricingContent() {
             }} />
           <div className="relative p-8 text-center">
             <p className="text-[11px] font-semibold tracking-[0.2em] text-white/70 uppercase mb-3">Começar agora</p>
-            <h2 style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
+            <h2 style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}
               className="text-[1.7rem] font-bold text-white leading-tight mb-3 tracking-[-0.02em]">
               Pronto para criar sua celebração?
             </h2>

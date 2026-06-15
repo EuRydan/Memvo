@@ -215,7 +215,7 @@ export default function DashboardPage() {
           <div>
             <p className="text-[11px] font-semibold tracking-[0.16em] text-stone uppercase mb-1">{t('mainDashboard.panel')}</p>
             <h2
-              style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
+              style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}
               className="text-[1.9rem] font-bold tracking-[-0.02em] text-ink leading-tight transition-colors duration-200"
             >
               {t('mainDashboard.yourCelebrations')}
@@ -410,7 +410,7 @@ export default function DashboardPage() {
               <div className="w-16 h-16 bg-ink/5 rounded-full flex items-center justify-center mx-auto mb-5 text-4xl">
                 ✨
               </div>
-              <h3 className="text-2xl font-bold text-ink mb-2 transition-colors" style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}>
+              <h3 className="text-2xl font-bold text-ink mb-2 transition-colors" style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}>
                 {t('mainDashboard.premiumAccess')}
               </h3>
               <p className="text-sm text-slate leading-relaxed px-2 transition-colors">
@@ -449,7 +449,7 @@ export default function DashboardPage() {
               </svg>
             </button>
 
-            <h3 className="text-xl font-bold text-ink mb-6 text-center transition-colors" style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}>
+            <h3 className="text-xl font-bold text-ink mb-6 text-center transition-colors" style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}>
               {t('mainDashboard.shareEvent')}
             </h3>
             

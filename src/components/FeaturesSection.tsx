@@ -17,7 +17,7 @@ export function FeaturesSection() {
     <section className="py-16 w-full max-w-6xl mx-auto overflow-hidden">
       <div className="text-center mb-10 px-6 max-w-lg mx-auto">
         <p className="text-[11px] font-semibold tracking-[0.2em] text-[#939393] uppercase mb-3">Recursos</p>
-        <h2 style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
+        <h2 style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}
           className="text-[1.9rem] font-bold tracking-[-0.02em] text-[#0a0a0a] leading-tight">
           Tudo que você precisa
         </h2>

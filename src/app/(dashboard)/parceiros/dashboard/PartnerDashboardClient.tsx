@@ -54,7 +54,7 @@ export function PartnerDashboardClient({
         </div>
 
         {/* Financial Summary */}
-        <h2 className="text-xl font-bold text-ink mb-6 transition-colors" style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}>{t('dashboard.financialSummary')}</h2>
+        <h2 className="text-xl font-bold text-ink mb-6 transition-colors" style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}>{t('dashboard.financialSummary')}</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           <div className="bg-canvas-warm p-6 rounded-3xl border border-hairline shadow-sm transition-colors duration-200">
             <p className="text-xs font-semibold text-slate uppercase tracking-wide mb-2">{t('dashboard.monthCommissions')}</p>
@@ -71,7 +71,7 @@ export function PartnerDashboardClient({
         </div>
 
         {/* Sales History */}
-        <h2 className="text-xl font-bold text-ink mb-6 transition-colors" style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}>{t('dashboard.salesHistory')}</h2>
+        <h2 className="text-xl font-bold text-ink mb-6 transition-colors" style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}>{t('dashboard.salesHistory')}</h2>
         <div className="bg-canvas-warm rounded-3xl border border-hairline shadow-sm overflow-hidden transition-colors duration-200">
           <table className="w-full text-left text-sm">
             <thead className="bg-ink/5 border-b border-hairline text-slate font-semibold">

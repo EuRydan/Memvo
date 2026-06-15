@@ -28,7 +28,7 @@ export function LoadingScreen() {
         >
           <SparklesText
             className="text-[4rem] md:text-[6rem]"
-            style={{ fontFamily: 'var(--font-playfair), Georgia, serif', fontWeight: 700, letterSpacing: "-0.05em" }}
+            style={{ fontFamily: 'var(--font-raleway), Georgia, serif', fontWeight: 700, letterSpacing: "-0.05em" }}
             colors={{ first: "#0a0a0a", second: "#676f7b" }}
           >
             Memvor

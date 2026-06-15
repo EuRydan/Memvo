@@ -292,7 +292,7 @@ export default function OnboardingWizard() {
         
         {step === 1 && (
           <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <h1 className="text-3xl font-bold text-ink transition-colors mb-2" style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}>Bem-vindo!</h1>
+            <h1 className="text-3xl font-bold text-ink transition-colors mb-2" style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}>Bem-vindo!</h1>
             <p className="text-slate transition-colors mb-8">Vamos configurar seu espaço de memórias.</p>
             
             <button onClick={handleNext} className="w-full bg-canvas-warm border border-hairline rounded-[24px] p-6 text-left hover:shadow-lg transition-all group flex items-center justify-between duration-200">
@@ -313,7 +313,7 @@ export default function OnboardingWizard() {
         {step === 2 && (
           <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
             <p className="text-[11px] font-semibold tracking-widest text-stone uppercase mb-2 transition-colors">Etapa 2 de 7</p>
-            <h2 className="text-3xl font-bold text-ink mb-6 transition-colors" style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}>Qual é o tipo de evento?</h2>
+            <h2 className="text-3xl font-bold text-ink mb-6 transition-colors" style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}>Qual é o tipo de evento?</h2>
             
             <div className="grid grid-cols-2 gap-3">
               {['Casamento', 'Aniversário', 'Viagem', 'Celebração', 'Formatura', 'Outros'].map(type => (
@@ -335,7 +335,7 @@ export default function OnboardingWizard() {
         {step === 3 && (
           <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
             <p className="text-[11px] font-semibold tracking-widest text-stone uppercase mb-2 transition-colors">Etapa 3 de 7</p>
-            <h2 className="text-3xl font-bold text-ink mb-6 transition-colors" style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}>Personalize seu álbum</h2>
+            <h2 className="text-3xl font-bold text-ink mb-6 transition-colors" style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}>Personalize seu álbum</h2>
             
             <div className="flex flex-col gap-6">
               <div className="floating-group">
@@ -386,7 +386,7 @@ export default function OnboardingWizard() {
         {step === 4 && (
           <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
             <p className="text-[11px] font-semibold tracking-widest text-stone uppercase mb-2 transition-colors">Etapa 4 de 7</p>
-            <h2 className="text-3xl font-bold text-ink mb-2 transition-colors" style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}>Desafios de Fotos</h2>
+            <h2 className="text-3xl font-bold text-ink mb-2 transition-colors" style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}>Desafios de Fotos</h2>
             <p className="text-sm text-slate mb-6 transition-colors">Sugira desafios para seus convidados. Eles receberão missões diferentes para engajar mais!</p>
             
             <div className="bg-canvas-warm rounded-3xl p-5 shadow-sm border border-hairline flex flex-col gap-3 max-h-[400px] overflow-y-auto transition-colors duration-200">
@@ -415,7 +415,7 @@ export default function OnboardingWizard() {
         {step === 5 && (
           <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
             <p className="text-[11px] font-semibold tracking-widest text-stone uppercase mb-2 transition-colors">Etapa 5 de 7</p>
-            <h2 className="text-3xl font-bold text-ink mb-6 transition-colors" style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}>Detalhes do Evento</h2>
+            <h2 className="text-3xl font-bold text-ink mb-6 transition-colors" style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}>Detalhes do Evento</h2>
             
             <div className="flex flex-col gap-5">
               <div className="flex flex-col items-center mb-2">
@@ -454,7 +454,7 @@ export default function OnboardingWizard() {
         {step === 6 && (
           <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
              <p className="text-[11px] font-semibold tracking-widest text-stone uppercase mb-2 transition-colors">Etapa 6 de 7</p>
-             <h2 className="text-3xl font-bold text-ink mb-2 transition-colors" style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}>Alertas e Mensagens</h2>
+             <h2 className="text-3xl font-bold text-ink mb-2 transition-colors" style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}>Alertas e Mensagens</h2>
              
              <div className="relative mt-8 bg-canvas-warm rounded-3xl p-6 shadow-sm border border-hairline opacity-60 overflow-hidden transition-colors duration-200">
                {/* Lock Badge */}
@@ -479,7 +479,7 @@ export default function OnboardingWizard() {
         {step === 7 && (
           <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-ink mb-2 transition-colors" style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}>Tudo pronto para sua celebração</h2>
+              <h2 className="text-3xl font-bold text-ink mb-2 transition-colors" style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}>Tudo pronto para sua celebração</h2>
               <p className="text-sm text-slate transition-colors">Revise os detalhes abaixo antes de prosseguir.</p>
             </div>
 

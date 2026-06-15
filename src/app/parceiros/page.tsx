@@ -60,7 +60,7 @@ export default function ParceirosLandingPage() {
       {/* ── HOW IT WORKS ── */}
       <section id="how-it-works" className="relative w-full py-20 bg-white z-10">
         <div className="text-center mb-16 px-6 max-w-lg mx-auto">
-          <h2 style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
+          <h2 style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}
             className="text-[2rem] font-bold tracking-[-0.02em] text-[#0a0a0a] leading-tight">
             Como funciona em 3 passos
           </h2>
@@ -101,7 +101,7 @@ export default function ParceirosLandingPage() {
           background: 'linear-gradient(160deg, #f4c5a8 0%, #c8b8e0 55%, #b8d0f0 100%)',
         }}>
         <div className="relative text-center max-w-md mx-auto">
-          <h2 style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
+          <h2 style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}
             className="text-[2rem] font-bold tracking-[-0.02em] text-white leading-tight mb-4">
             Aumente sua renda indicando tecnologia de ponta
           </h2>

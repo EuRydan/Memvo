@@ -285,7 +285,7 @@ export function IntroAnimation() {
                         </div>
 
                         <h1 className="max-w-[340px] sm:max-w-xl"
-                            style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}>
+                            style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}>
                             <span className="block text-[2.4rem] sm:text-[4rem] font-bold leading-[1.05] tracking-[-0.03em] text-[#0a0a0a]">
                                 Cada momento,
                             </span>
@@ -317,7 +317,7 @@ export function IntroAnimation() {
                     style={{ opacity: containerSize.width < 768 ? 0 : contentOpacity, y: contentY }}
                     className="absolute top-[18%] z-10 hidden md:flex flex-col items-center justify-center text-center pointer-events-none px-4"
                 >
-                    <h2 style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }} className="text-3xl md:text-5xl font-bold tracking-tight text-[#0a0a0a] mb-4">
+                    <h2 style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }} className="text-3xl md:text-5xl font-bold tracking-tight text-[#0a0a0a] mb-4">
                         Simples para você,<br/>mágico para seus convidados
                     </h2>
                     <p className="text-sm md:text-base text-[#676f7b] max-w-lg leading-relaxed mb-6">

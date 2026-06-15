@@ -185,7 +185,7 @@ export function WordmarkFooter({
           <span
             ref={textRef}
             style={{
-              fontFamily: 'var(--font-playfair), Georgia, serif',
+              fontFamily: 'var(--font-raleway), Georgia, serif',
               fontSize: "clamp(64px, 17vw, 240px)",
               fontWeight: 700,
               letterSpacing: "-0.05em",

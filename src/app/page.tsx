@@ -55,7 +55,7 @@ export default function LandingPage() {
       <section className="relative w-full py-20">
         <div className="text-center mb-12 px-6 max-w-lg mx-auto">
           <p className="text-[11px] font-semibold tracking-[0.2em] text-[#939393] uppercase mb-3">Como funciona</p>
-          <h2 style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
+          <h2 style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}
             className="text-[1.9rem] font-bold tracking-[-0.02em] text-[#0a0a0a] leading-tight">
             Simples para você,<br />mágico para seus convidados
           </h2>
@@ -195,7 +195,7 @@ export default function LandingPage() {
 
         <div className="relative text-center max-w-xs mx-auto">
           <p className="text-[11px] font-semibold tracking-[0.2em] text-white/70 uppercase mb-4">Comece agora</p>
-          <h2 style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
+          <h2 style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}
             className="text-[2rem] font-bold tracking-[-0.02em] text-white leading-tight mb-3">
             Preserve cada memória preciosa
           </h2>
