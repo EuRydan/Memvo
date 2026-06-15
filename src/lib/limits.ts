@@ -84,6 +84,14 @@ export function isAppearanceEnabled(planId: string): boolean {
 }
 
 /**
+ * Returns whether the plan allows the Slideshow/Telão mode
+ */
+export function isTelaoEnabled(planId: string): boolean {
+  const plan = planId as PlanTier | 'freemium' | 'none'
+  return plan === 'premium'
+}
+
+/**
  * Shape of a user_plans row required for lock checks.
  */
 export type UserPlanRecord = {

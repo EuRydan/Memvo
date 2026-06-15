@@ -7,7 +7,7 @@ import { Media, Challenge } from '@/types'
 import { Camera, Sparkles, Star, Heart, Share, Download } from 'lucide-react'
 import { StoryGenerator } from '@/components/StoryGenerator'
 import { EventShareCard } from '@/components/EventShareCard'
-import { isEventLocked, UserPlanRecord } from '@/lib/limits'
+import { isEventLocked, UserPlanRecord, isTelaoEnabled } from '@/lib/limits'
 import JSZip from 'jszip'
 import { saveAs } from 'file-saver'
 
@@ -24,6 +24,7 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
   const [isLocked, setIsLocked] = useState(false)
   const [isDownloadingZip, setIsDownloadingZip] = useState(false)
   const [downloadProgress, setDownloadProgress] = useState(0)
+  const [planType, setPlanType] = useState<string>('none')
 
   useEffect(() => {
     async function load() {
@@ -44,6 +45,12 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
           .eq('user_id', user.id)
 
         const userPlans: UserPlanRecord[] = (plansData || []) as UserPlanRecord[]
+
+        const eventPlanId = userPlans.find(p => p.event_id === eventId)?.plan_id
+          || userPlans[userPlans.length - 1]?.plan_id
+          || 'none'
+        
+        setPlanType(eventPlanId)
 
         if (isEventLocked(eventId, userPlans, eventData)) {
           setIsLocked(true)
@@ -267,6 +274,24 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
           >
             <Download size={14} className={isDownloadingZip ? 'animate-bounce' : ''} />
             {isDownloadingZip ? `Baixando... ${downloadProgress}%` : 'Baixar ZIP'}
+          </button>
+
+          <button
+            onClick={() => {
+              if (isTelaoEnabled(planType)) {
+                window.open(`/e/${event?.slug}/telao`, '_blank')
+              }
+            }}
+            disabled={!isTelaoEnabled(planType)}
+            className={`flex items-center gap-1.5 text-xs font-semibold transition px-3 py-1.5 rounded-lg shadow-sm ${
+              !isTelaoEnabled(planType)
+                ? 'bg-orange-50 text-orange-600 border border-orange-200 cursor-not-allowed opacity-80'
+                : 'bg-[#0a0a0a] text-white border border-[#0a0a0a] hover:bg-black cursor-pointer'
+            }`}
+            title={!isTelaoEnabled(planType) ? "Disponível no plano Premium" : "Abrir Telão"}
+          >
+            <Camera size={14} />
+            {isTelaoEnabled(planType) ? 'Abrir Telão' : 'Telão (Premium)'}
           </button>
 
           <span className="text-xs text-gray-600 font-medium border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm">
