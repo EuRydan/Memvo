@@ -92,7 +92,7 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
 
       {/* Background ring container that controls geometry */}
       <div
-        className="relative mx-auto z-10 -mt-20"
+        className="relative mx-auto z-10 mt-8"
         style={{
           width: '100%',
           height: '140px', // Fixed height since we decouple the huge radius
