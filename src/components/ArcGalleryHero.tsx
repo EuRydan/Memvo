@@ -23,8 +23,8 @@ type ArcGalleryHeroProps = {
 
 export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
   images,
-  startAngle = 55,
-  endAngle = 125,
+  startAngle = 60,
+  endAngle = 120,
   radiusLg = 1200,
   radiusMd = 1000,
   radiusSm = 600,
@@ -61,7 +61,7 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
   const step = (endAngle - startAngle) / (count - 1);
 
   return (
-    <section className={`relative overflow-hidden bg-[#fafafa] pt-10 flex flex-col min-h-[90vh] ${className}`}>
+    <section className={`relative overflow-hidden bg-[#fafafa] pt-4 flex flex-col min-h-[90vh] ${className}`}>
       
       {/* ── Grid Background ── */}
       <div
@@ -92,10 +92,10 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
 
       {/* Background ring container that controls geometry */}
       <div
-        className="relative mx-auto z-10 -mt-16"
+        className="relative mx-auto z-10 -mt-20"
         style={{
           width: '100%',
-          height: '200px', // Fixed height since we decouple the huge radius
+          height: '140px', // Fixed height since we decouple the huge radius
         }}
       >
         <div className="absolute left-1/2 top-0 -translate-x-1/2 w-full h-full">
@@ -130,7 +130,7 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
               >
                 <div 
                   className="rounded-2xl shadow-xl overflow-hidden ring-1 ring-gray-200/50 bg-white transition-transform hover:scale-110 w-full h-full"
-                  style={{ transform: `rotate(12deg)` }}
+                  style={{ transform: `rotate(6deg)` }}
                 >
                   <img
                     src={src}
