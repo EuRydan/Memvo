@@ -23,11 +23,11 @@ type ArcGalleryHeroProps = {
 
 export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
   images,
-  startAngle = 5,
-  endAngle = 175,
-  radiusLg = 600,
-  radiusMd = 450,
-  radiusSm = 300,
+  startAngle = 10,
+  endAngle = 170,
+  radiusLg = 480,
+  radiusMd = 360,
+  radiusSm = 240,
   cardSizeLg = 140,
   cardSizeMd = 110,
   cardSizeSm = 80,
@@ -126,8 +126,8 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
                 }}
               >
                 <div 
-                  className="rounded-2xl shadow-xl overflow-hidden ring-1 ring-gray-200/50 bg-white transition-transform hover:scale-105 w-full h-full"
-                  style={{ transform: `rotate(${angle / 4}deg)` }}
+                  className="rounded-2xl shadow-xl overflow-hidden ring-1 ring-gray-200/50 bg-white transition-transform hover:scale-110 w-full h-full"
+                  style={{ transform: `rotate(${(angle - 90) * 0.4}deg)` }}
                 >
                   <img
                     src={src}
@@ -147,7 +147,7 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
       </div>
 
       {/* Content positioned below the arc */}
-      <div className="relative z-20 flex-1 flex flex-col items-center justify-center px-6 -mt-16 md:-mt-32 lg:-mt-48">
+      <div className="relative z-20 flex-1 flex flex-col items-center justify-center px-6 -mt-32 md:-mt-40 lg:-mt-48">
         <div className="text-center max-w-4xl px-6 opacity-0 animate-fade-in flex flex-col items-center" style={{ animationDelay: '800ms', animationFillMode: 'forwards' }}>
           
           <div className="mb-6">
