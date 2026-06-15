@@ -87,7 +87,7 @@ export default function QRCodeGenerator({
     // Load logo
     const logoImg = new Image()
     logoImg.crossOrigin = "anonymous"
-    logoImg.src = '/logo.png'
+    logoImg.src = '/logo-preto.svg'
     
     // Draw QR code function
     const drawQRAndFinish = () => {

@@ -218,7 +218,7 @@ export const AwardBadge = () => {
           <text fontFamily="Helvetica-Bold, Helvetica" fontSize="16" fontWeight="bold" fill="#666" x="52" y="40">
             Parceiro Oficial
           </text>
-          <image href="/logo.png" x="12" y="12" width="30" height="30" preserveAspectRatio="xMidYMid meet" filter="url(#logoColor)" />
+          <image href="/logo-preto.svg" x="12" y="12" width="30" height="30" preserveAspectRatio="xMidYMid meet" filter="url(#logoColor)" />
           
           <g style={{ mixBlendMode: "overlay" }} mask="url(#badgeMask)">
             <g style={{
