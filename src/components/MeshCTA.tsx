@@ -1,6 +1,5 @@
 "use client"
 
-import { MeshGradient } from "@paper-design/shaders-react"
 import { useEffect, useState } from "react"
 import Link from 'next/link'
 
@@ -25,19 +24,6 @@ export function MeshCTA() {
       <div className="absolute inset-0 w-full h-full bg-[#f4c5a8]">
         {mounted && (
           <>
-            {/*
-            <MeshGradient
-              width={dimensions.width}
-              height={dimensions.height}
-              colors={["#f4c5a8", "#c8b8e0", "#b8d0f0", "#f4c5a8", "#d4bde8", "#a8c4e0"]}
-              distortion={0.5}
-              swirl={0.4}
-              grainMixer={0}
-              grainOverlay={0}
-              speed={0.2}
-              offsetX={0}
-            />
-            */}
             <div className="absolute inset-0 pointer-events-none bg-white/10" />
           </>
         )}

@@ -25,13 +25,12 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
 
 	const scale4 = useTransform(scrollYProgress, [0, 1], [1, 4]);
 	const inverseScale4 = useTransform(scale4, (s) => 1 / s);
-	// const scale5 = useTransform(scrollYProgress, [0, 1], [1, 5]);
-	// const scale6 = useTransform(scrollYProgress, [0, 1], [1, 6]);
-	// const scale8 = useTransform(scrollYProgress, [0, 1], [1, 8]);
-	// const scale9 = useTransform(scrollYProgress, [0, 1], [1, 9]);
+	const scale5 = useTransform(scrollYProgress, [0, 1], [1, 5]);
+	const scale6 = useTransform(scrollYProgress, [0, 1], [1, 6]);
+	const scale8 = useTransform(scrollYProgress, [0, 1], [1, 8]);
+	const scale9 = useTransform(scrollYProgress, [0, 1], [1, 9]);
 
-	// const scales = [scale4, scale5, scale6, scale5, scale6, scale8, scale9];
-	const scales = [1, 1, 1, 1, 1, 1, 1];
+	const scales = [scale4, scale5, scale6, scale5, scale6, scale8, scale9];
 
 	const mainLabelOpacity = useTransform(scrollYProgress, [0, 0.15, 1], [1, 0, 0]);
 
@@ -60,8 +59,8 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
 
 								{challenge && index === 0 && (
 									<motion.div 
-										style={{ opacity: mainLabelOpacity, scale: 1, transformOrigin: 'top right' }}
-										className="absolute top-3 right-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/60 bg-gradient-to-br from-white/95 via-white/70 to-white/40"
+										style={{ opacity: mainLabelOpacity, scale: inverseScale4, transformOrigin: 'top right' }}
+										className="absolute top-3 right-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/60 shadow-[0_4px_24px_rgba(0,0,0,0.2),inset_0_1px_2px_rgba(255,255,255,0.9)] bg-gradient-to-br from-white/95 via-white/70 to-white/40 backdrop-blur-xl"
 									>
 										<Camera className="w-3 h-3 text-black" />
 										<p className="text-[10px] uppercase tracking-[0.08em] font-extrabold text-black text-center">{challenge}</p>
@@ -70,7 +69,7 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
 
 								{challenge && index !== 0 && (
 									<div 
-										className="absolute top-3 right-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/60 bg-gradient-to-br from-white/95 via-white/70 to-white/40"
+										className="absolute top-3 right-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/60 shadow-[0_4px_24px_rgba(0,0,0,0.2),inset_0_1px_2px_rgba(255,255,255,0.9)] bg-gradient-to-br from-white/95 via-white/70 to-white/40 backdrop-blur-xl"
 									>
 										<Camera className="w-3 h-3 text-black" />
 										<p className="text-[10px] uppercase tracking-[0.08em] font-extrabold text-black text-center">{challenge}</p>
@@ -98,7 +97,7 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
 							className="h-full w-full object-cover hover:scale-105 transition-transform duration-500"
 						/>
 						{challenge && (
-							<div className="absolute top-2 right-2 flex items-start gap-1 px-2 py-1 rounded-xl border border-white/60 bg-gradient-to-br from-white/95 via-white/70 to-white/40 max-w-[90%]">
+							<div className="absolute top-2 right-2 flex items-start gap-1 px-2 py-1 rounded-xl border border-white/60 shadow-[0_4px_24px_rgba(0,0,0,0.2),inset_0_1px_2px_rgba(255,255,255,0.9)] bg-gradient-to-br from-white/95 via-white/70 to-white/40 backdrop-blur-xl max-w-[90%]">
 								<Camera className="w-2.5 h-2.5 text-black flex-shrink-0 mt-[2px]" />
 								<p className="text-[8px] uppercase tracking-[0.08em] font-extrabold text-black leading-tight break-words whitespace-normal">{challenge}</p>
 							</div>
