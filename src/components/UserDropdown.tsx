@@ -62,17 +62,16 @@ export function UserDropdown({ email, name, plan = 'Free' }: UserDropdownProps) 
   }
 
   const MENU_ITEMS = {
-    profile: [
-      { icon: "solar:settings-line-duotone", label: t('userMenu.settings'), action: () => navigateTo('/dashboard/settings') },
+    quickAccess: [
+      { 
+        icon: "solar:plus-circle-bold-duotone", 
+        label: t('userMenu.createEvent'), 
+        action: () => navigateTo('/dashboard/events/new')
+      },
       { icon: "solar:folder-with-files-line-duotone", label: t('userMenu.folders'), action: () => navigateTo('/dashboard/folders') }
     ],
-    premium: [
-      { 
-        icon: "solar:star-bold", 
-        label: t('userMenu.getPlan'), 
-        action: () => navigateTo('/pricing'),
-        iconClass: "text-amber-600 dark:text-amber-500"
-      },
+    accountOptions: [
+      { icon: "solar:settings-line-duotone", label: t('userMenu.settings'), action: () => navigateTo('/dashboard/settings') },
       { 
         icon: "solar:card-bold-duotone", 
         label: t('userMenu.billing'), 
@@ -80,19 +79,14 @@ export function UserDropdown({ email, name, plan = 'Free' }: UserDropdownProps) 
         badge: { text: plan, className: "bg-ink/5 dark:bg-white/10 text-ink dark:text-white text-[11px] font-bold border border-ink/10 dark:border-white/20" }
       }
     ],
-    support: [
-      { 
-        icon: "solar:plus-circle-bold-duotone", 
-        label: t('userMenu.createEvent'), 
-        action: () => navigateTo('/dashboard/events/new')
-      },
+    help: [
       { 
         icon: "solar:question-circle-line-duotone", 
         label: t('userMenu.help'), 
         action: () => navigateTo('/help'),
       }
     ],
-    account: [
+    logout: [
       { icon: "solar:logout-2-bold-duotone", label: t('userMenu.logout'), action: handleSignOut, danger: true }
     ]
   };
@@ -141,8 +135,11 @@ export function UserDropdown({ email, name, plan = 'Free' }: UserDropdownProps) 
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-canvas to-canvas-warm border border-ink/10 shadow-inner flex items-center justify-center text-ink font-bold text-[18px] flex-shrink-0">
                 {initial}
               </div>
-              <div className="overflow-hidden flex flex-col">
-                <h3 className="font-bold text-[15px] text-ink truncate leading-tight">{user.name}</h3>
+              <div className="overflow-hidden flex flex-col w-full">
+                <div className="flex items-center gap-2">
+                  <h3 className="font-bold text-[15px] text-ink truncate leading-tight">{user.name}</h3>
+                  <Badge className="bg-ink/5 dark:bg-white/10 text-ink dark:text-white text-[10px] font-bold border border-ink/10 dark:border-white/20 py-0 px-1.5 h-4 uppercase">{plan}</Badge>
+                </div>
                 <p className="text-slate text-[13px] truncate mt-[2px]">{user.username}</p>
               </div>
             </div>
@@ -150,6 +147,16 @@ export function UserDropdown({ email, name, plan = 'Free' }: UserDropdownProps) 
 
           <div className="px-1 py-1">
             <DropdownMenuGroup>
+              <div className="px-2 py-1.5 text-[11px] font-semibold text-slate/70">Acesso rápido</div>
+              {MENU_ITEMS.quickAccess.map(renderMenuItem)}
+            </DropdownMenuGroup>
+          </div>
+
+          <DropdownMenuSeparator className="bg-hairline mx-2" />
+
+          <div className="px-1 py-1">
+            <DropdownMenuGroup>
+              <div className="px-2 py-1.5 text-[11px] font-semibold text-slate/70">Preferências</div>
               <DropdownMenuSub>
                 <DropdownMenuSubTrigger className="cursor-pointer p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 transition-colors">
                   <span className="flex items-center gap-2 font-medium text-[14px] text-ink">
@@ -204,7 +211,8 @@ export function UserDropdown({ email, name, plan = 'Free' }: UserDropdownProps) 
           
           <div className="px-1 py-1">
             <DropdownMenuGroup>
-              {MENU_ITEMS.profile.map(renderMenuItem)}
+              <div className="px-2 py-1.5 text-[11px] font-semibold text-slate/70">Conta</div>
+              {MENU_ITEMS.accountOptions.map(renderMenuItem)}
             </DropdownMenuGroup>
           </div>
 
@@ -212,22 +220,14 @@ export function UserDropdown({ email, name, plan = 'Free' }: UserDropdownProps) 
           
           <div className="px-1 py-1">
             <DropdownMenuGroup>
-              {MENU_ITEMS.premium.map(renderMenuItem)}
-            </DropdownMenuGroup>
-          </div>
-
-          <DropdownMenuSeparator className="bg-hairline mx-2" />
-          
-          <div className="px-1 py-1">
-            <DropdownMenuGroup>
-              {MENU_ITEMS.support.map(renderMenuItem)}
+              {MENU_ITEMS.help.map(renderMenuItem)}
             </DropdownMenuGroup>
           </div>
         </section>
 
         <section className="p-2 border-t border-hairline bg-canvas-warm dark:bg-[#111111] rounded-b-2xl">
           <DropdownMenuGroup>
-            {MENU_ITEMS.account.map(renderMenuItem)}
+            {MENU_ITEMS.logout.map(renderMenuItem)}
           </DropdownMenuGroup>
         </section>
       </DropdownMenuContent>
