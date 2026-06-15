@@ -150,7 +150,7 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
       </div>
 
       {/* Content positioned below the arc */}
-      <div className="relative z-20 flex-1 flex flex-col items-center justify-center px-6 mt-12 pb-24">
+      <div className="relative z-20 flex-1 flex flex-col items-center justify-center px-6 mt-32 md:mt-40 pb-24">
         <div className="flex flex-col items-center justify-center gap-6 max-w-4xl mx-auto opacity-0 animate-fade-in" style={{ animationDelay: '800ms', animationFillMode: 'forwards' }}>
           
           <AwardBadge />
