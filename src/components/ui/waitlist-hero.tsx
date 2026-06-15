@@ -50,7 +50,7 @@ export const WaitlistHero = () => {
         </h1>
 
         <p className="text-[16px] text-[#676f7b] leading-relaxed max-w-lg text-center mb-4">
-          Cerimonialistas, fotógrafos e assessores: ofereça uma experiência inovadora para seus clientes e receba <strong>30% de comissão</strong> por cada plano vendido através do seu link exclusivo.
+          Cerimonialistas, fotógrafos e assessores: ofereça uma experiência inovadora para seus clientes e receba <strong>25% de comissão</strong> por cada plano vendido através do seu link exclusivo.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 items-center justify-center w-full mt-4">

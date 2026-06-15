@@ -16,8 +16,8 @@ export function BenefitsSection() {
     },
     {
       icon: <CheckCircle2 className="w-6 h-6" />,
-      title: "30% de Comissão",
-      description: "Receba 30% do valor de cada plano vendido através do seu link. Pagamentos realizados direto no seu PIX.",
+      title: "25% de Comissão",
+      description: "Receba comissões automáticas para cada plano ativado usando seu cupom exclusivo. Pagamento rápido via PIX.",
       color: "bg-purple-100 text-purple-700"
     },
     {
