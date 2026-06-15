@@ -1,16 +1,21 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Raleway, Hind_Guntur, Signika_Negative } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
+const raleway = Raleway({
+  variable: "--font-raleway",
   subsets: ["latin"],
 });
 
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
+const hindGuntur = Hind_Guntur({
+  variable: "--font-hind",
   subsets: ["latin"],
-  weight: ["400", "600", "700", "800"],
+  weight: ["300", "400", "500", "600", "700"],
+});
+
+const signika = Signika_Negative({
+  variable: "--font-signika",
+  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
@@ -30,7 +35,7 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
-      className={`${inter.variable} ${playfair.variable} h-full antialiased`}
+      className={`${raleway.variable} ${hindGuntur.variable} ${signika.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>

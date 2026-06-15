@@ -80,7 +80,16 @@ export async function POST(request: Request) {
       const client = new MercadoPagoConfig({ accessToken })
       const paymentClient = new Payment(client)
 
-      const paymentInfo = await paymentClient.get({ id: paymentId })
+      let paymentInfo;
+      try {
+        paymentInfo = await paymentClient.get({ id: paymentId })
+      } catch (err: any) {
+        if (err.message?.includes('Payment not found') || err.status === 404 || paymentId === '123456' || paymentId === 123456) {
+          console.log(`[WEBHOOK TESTE] Pagamento ${paymentId} não encontrado. Assumindo como teste do Mercado Pago.`);
+          return NextResponse.json({ success: true, message: 'Test webhook ignored' });
+        }
+        throw err;
+      }
 
       if (paymentInfo.status === 'approved') {
         const externalReference = paymentInfo.external_reference
