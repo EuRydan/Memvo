@@ -216,8 +216,8 @@ export function IntroAnimation() {
     const contentY = useTransform(smoothMorph, [0.8, 1], [20, 0]);
 
     return (
-        <div ref={containerRef} className="relative h-[300vh] w-full bg-[#fafafa]">
-            <div ref={stickyRef} className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center bg-[#fafafa]">
+        <div ref={containerRef} className="relative h-[100svh] md:h-[300vh] w-full bg-[#fafafa]">
+            <div ref={stickyRef} className="relative md:sticky top-0 h-[100svh] md:h-screen w-full overflow-hidden flex items-center justify-center bg-[#fafafa]">
 
             {/* ── Grid Background ── */}
                 <div
@@ -288,11 +288,12 @@ export function IntroAnimation() {
 
                     <motion.p
                         initial={{ opacity: 0 }}
-                        animate={introPhase === "circle" ? (containerSize.width < 768 ? { opacity: 0 } : (morphValue < 0.5 ? { opacity: 0.5 - morphValue } : { opacity: 0 })) : { opacity: 0 }}
+                        animate={introPhase === "circle" ? (containerSize.width < 768 ? { opacity: 1, y: 0 } : (morphValue < 0.5 ? { opacity: 0.5 - morphValue } : { opacity: 0 })) : { opacity: 0 }}
                         transition={{ duration: 1, delay: 0.2 }}
-                        className="mt-12 text-xs font-bold tracking-[0.2em] text-gray-500 hidden md:block"
+                        className="mt-8 md:mt-12 text-[10px] md:text-xs font-bold tracking-[0.2em] text-gray-400 md:text-gray-500 uppercase"
                     >
-                        ROLE PARA EXPLORAR
+                        <span className="md:hidden">Deslize para baixo</span>
+                        <span className="hidden md:inline">Role para explorar</span>
                     </motion.p>
                 </div>
 
