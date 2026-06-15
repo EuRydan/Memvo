@@ -61,7 +61,7 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
   const step = (endAngle - startAngle) / (count - 1);
 
   return (
-    <section className={`relative overflow-hidden bg-[#fafafa] pt-20 flex flex-col min-h-[90vh] ${className}`}>
+    <section className={`relative overflow-hidden bg-[#fafafa] pt-10 flex flex-col min-h-[90vh] ${className}`}>
       
       {/* ── Grid Background ── */}
       <div
@@ -92,10 +92,10 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
 
       {/* Background ring container that controls geometry */}
       <div
-        className="relative mx-auto z-10"
+        className="relative mx-auto z-10 -mt-16"
         style={{
           width: '100%',
-          height: '240px', // Fixed height since we decouple the huge radius
+          height: '200px', // Fixed height since we decouple the huge radius
         }}
       >
         <div className="absolute left-1/2 top-0 -translate-x-1/2 w-full h-full">
