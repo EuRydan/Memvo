@@ -41,7 +41,14 @@ export default function PrivacyPolicy() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">2. Compartilhamento de Fotos</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">2. Processamento de Pagamentos e Parceiros</h2>
+            <p>
+              Ao realizar a compra de um plano para o seu evento, os pagamentos são processados de forma segura através do Mercado Pago. <strong>A Memvor não armazena os dados do seu cartão de crédito</strong> ou informações financeiras sensíveis. Se você se cadastrar em nosso Programa de Parceiros, poderemos coletar a sua chave PIX exclusivamente para o repasse automático de suas comissões.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">3. Compartilhamento de Fotos</h2>
             <p>
               As fotos enviadas para os eventos são armazenadas de forma segura e só podem ser visualizadas por 
               pessoas que possuem o link exclusivo do álbum ou que escanearem o QR Code gerado pelo anfitrião. 
@@ -50,7 +57,7 @@ export default function PrivacyPolicy() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">3. Retenção e Exclusão de Dados</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">4. Retenção e Exclusão de Dados</h2>
             <p>
               Nós armazenamos suas informações e os arquivos de mídia pelo tempo necessário para fornecer nossos 
               serviços. Para otimização de infraestrutura, arquivos de mídia de eventos que ocorreram há mais de 
@@ -61,7 +68,7 @@ export default function PrivacyPolicy() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">4. Contato</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">5. Contato</h2>
             <p>
               Se você tiver dúvidas sobre esta Política de Privacidade ou sobre o uso de seus dados, entre em contato 
               conosco através do painel de suporte na plataforma.

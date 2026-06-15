@@ -43,13 +43,26 @@ export default function TermsOfUse() {
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">2. Descrição do Serviço</h2>
             <p>
               A Memvor é uma plataforma para criação de álbuns de fotos colaborativos para eventos. 
-              Permitimos que anfitriões criem eventos, estabeleçam "missões/desafios" fotográficos e 
-              recebam mídias de seus convidados através de um álbum compartilhado.
+              Permitimos que anfitriões criem eventos personalizados e recebam mídias de seus convidados através de um álbum compartilhado via link ou QR Code. O acesso às funcionalidades premium é concedido mediante um <strong>pagamento único por evento</strong>, sem cobranças de assinaturas recorrentes.
             </p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">3. Responsabilidades do Usuário</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">3. Pagamentos e Reembolsos</h2>
+            <p>
+              Todos os pagamentos são processados de forma segura através do Mercado Pago. Por se tratar de um pagamento único por evento criado, o usuário tem o direito de solicitar o reembolso em até 7 (sete) dias após a compra, conforme o Código de Defesa do Consumidor, desde que o evento não tenha ocorrido e a plataforma não tenha sido utilizada ativamente para recebimento de fotos.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">4. Programa de Parceiros</h2>
+            <p>
+              Profissionais do setor de eventos (como cerimonialistas, fotógrafos e assessores) podem se cadastrar em nosso Programa de Parceiros. Os parceiros recebem uma comissão de 25% sobre cada plano vendido através de seu link ou cupom exclusivo. Os pagamentos das comissões são realizados através de transferência via PIX, processados automaticamente pela nossa plataforma.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">5. Responsabilidades do Usuário</h2>
             <p>
               Você é o único responsável por todas as fotos, vídeos e outros conteúdos enviados à plataforma. 
               Ao usar a Memvor, você concorda em não enviar conteúdo que seja ilegal, difamatório, ameaçador, 
@@ -59,17 +72,16 @@ export default function TermsOfUse() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">4. Limitação de Responsabilidade</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">6. Limitação de Responsabilidade</h2>
             <p>
               A Memvor é fornecida "como está" e "conforme disponível". Não garantimos que a plataforma será 
-              ininterrupta ou livre de erros. Devido à nossa política de limpeza de armazenamento para contas, 
-              os arquivos não salvos via integração do Google Drive poderão ser excluídos 30 dias após o evento. 
-              A Memvor não se responsabiliza pela perda definitiva de fotos caso o backup não tenha sido ativado.
+              ininterrupta ou livre de erros. Para garantir a viabilidade do sistema, os arquivos armazenados em nossos servidores poderão ser excluídos 30 dias após a data do evento. 
+              Recomendamos que os anfitriões baixem as fotos ou ativem a integração de backup em nuvem (como Google Drive). A Memvor não se responsabiliza pela perda definitiva de fotos após este prazo.
             </p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">5. Modificações dos Termos</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">7. Modificações dos Termos</h2>
             <p>
               Podemos modificar estes Termos de Uso a qualquer momento. Quaisquer alterações entrarão em vigor 
               imediatamente após a publicação. O uso continuado da plataforma após a modificação constitui sua 
