@@ -32,7 +32,7 @@ const PLANS = [
     id: 'essential',
     name: 'Essencial',
     desc: 'Perfeito para pequenas reuniões',
-    price: 'R$1',
+    price: 'R$79',
     popular: false,
     features: [
       { text: 'Até 50 convidados', included: true },
