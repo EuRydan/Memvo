@@ -31,6 +31,18 @@ export default function CheckoutForm({ intentId, userId, returnUrl }: { intentId
       creditCard: 'all',
       mercadoPago: 'all',
     },
+    visual: {
+      style: {
+        theme: 'flat',
+        customVariables: {
+          textPrimaryColor: '#0a0a0a',
+          textSecondaryColor: '#676f7b',
+          baseColor: '#0a0a0a',
+          formBackgroundColor: 'transparent',
+          borderRadiusFull: '12px',
+        }
+      }
+    }
   } as any), []);
 
   React.useEffect(() => {
@@ -67,15 +79,16 @@ export default function CheckoutForm({ intentId, userId, returnUrl }: { intentId
            ) : (
              <>
                {/* Coupon Section */}
-               <div className="mb-6 p-4 bg-white border border-gray-100 rounded-2xl shadow-sm">
-                 <h3 className="text-sm font-semibold text-ink mb-3">Possui um cupom de desconto?</h3>
-                 <div className="flex gap-2">
+               <div className="mb-6 p-5 bg-[#fafafa] border border-gray-200/60 rounded-2xl">
+                 <h3 className="text-sm font-bold text-ink mb-1">Cupom de Desconto</h3>
+                 <p className="text-xs text-[#676f7b] mb-4">Se você possui um código promocional, insira abaixo.</p>
+                 <div className="flex flex-col sm:flex-row gap-3">
                    <input
                      type="text"
                      value={couponInput}
                      onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
                      placeholder="Ex: PARCEIRO10"
-                     className="flex-1 bg-gray-50 border border-gray-200 text-ink text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#d5c5ff]"
+                     className="w-full sm:flex-1 bg-white border border-gray-200 text-ink text-sm font-medium rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#0a0a0a] transition-shadow placeholder:font-normal"
                    />
                    <button
                      onClick={async () => {
@@ -105,9 +118,9 @@ export default function CheckoutForm({ intentId, userId, returnUrl }: { intentId
                        setApplyingCoupon(false)
                      }}
                      disabled={applyingCoupon || !couponInput}
-                     className="bg-ink text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
+                     className="w-full sm:w-auto bg-ink text-white px-6 py-3 rounded-xl text-sm font-bold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
                    >
-                     {applyingCoupon ? '...' : 'Aplicar'}
+                     {applyingCoupon ? 'Aplicando...' : 'Aplicar Cupom'}
                    </button>
                  </div>
                  {couponMessage && (
