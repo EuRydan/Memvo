@@ -184,7 +184,9 @@ export default function LandingPage() {
       {/* ── FINAL CTA ── */}
       <section className="relative px-6 py-20 overflow-hidden mx-5 mb-10 rounded-[28px]"
         style={{
-          background: 'linear-gradient(160deg, #f4c5a8 0%, #c8b8e0 55%, #b8d0f0 100%)',
+          background: 'linear-gradient(160deg, #f4c5a8 0%, #c8b8e0 55%, #b8d0f0 100%, #f4c5a8 150%)',
+          backgroundSize: '200% 200%',
+          animation: 'bg-pan 12s ease-in-out infinite',
         }}>
         {/* Inner orb */}
         <div className="absolute top-[-40px] right-[-40px] w-[260px] h-[260px] rounded-full pointer-events-none"
