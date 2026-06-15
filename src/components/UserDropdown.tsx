@@ -1,13 +1,28 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { motion, AnimatePresence } from 'framer-motion'
-import { CreditCard, Settings, FolderHeart, Globe, Moon, HelpCircle, Power, ChevronDown, Plus } from 'lucide-react'
+import { Icon } from "@iconify/react"
 
 import { useTranslation } from '@/contexts/I18nContext'
 import { useTheme } from 'next-themes'
+import { Badge } from "@/components/ui/badge"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuPortal,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { cn } from "@/lib/utils"
 
 interface UserDropdownProps {
   email: string
@@ -16,8 +31,6 @@ interface UserDropdownProps {
 }
 
 export function UserDropdown({ email, name, plan = 'Free' }: UserDropdownProps) {
-  const [isOpen, setIsOpen] = useState(false)
-  const dropdownRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
   const supabase = createClient()
 
@@ -25,21 +38,10 @@ export function UserDropdown({ email, name, plan = 'Free' }: UserDropdownProps) 
   const { t, locale, setLocale } = useTranslation()
   const { theme, setTheme } = useTheme()
 
-  // Prevent hydration mismatch on themes/locales by ensuring client-side only render for selects
+  // Prevent hydration mismatch on themes/locales
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
     setMounted(true)
-  }, [])
-
-  // Handle click outside to close
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false)
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
   const handleSignOut = async () => {
@@ -48,162 +50,187 @@ export function UserDropdown({ email, name, plan = 'Free' }: UserDropdownProps) 
   }
 
   const navigateTo = (path: string) => {
-    setIsOpen(false)
     router.push(path)
   }
 
-  // Generate initial
   const initial = name ? name.charAt(0).toUpperCase() : (email ? email.charAt(0).toUpperCase() : '?')
 
-  const MenuItem = ({ icon, label, badge, onClick, danger }: { icon: React.ReactNode, label: string, badge?: string, onClick: () => void, danger?: boolean }) => (
-    <button onClick={onClick} className="w-full flex items-center justify-between px-5 py-2.5 hover:bg-black/5 dark:hover:bg-white/10 transition-colors group">
-      <div className={`flex items-center gap-3 transition-colors ${danger ? 'text-red-500 group-hover:text-red-600 dark:group-hover:text-red-400' : 'text-gray-500 dark:text-gray-400 group-hover:text-ink transition-colors'}`}>
-        {icon}
-        <span className={`text-[14px] font-medium transition-colors ${danger ? 'text-red-600 dark:text-red-500' : 'text-slate dark:text-gray-300 group-hover:text-ink'}`}>{label}</span>
-      </div>
-      {badge && (
-        <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-ink/5 dark:bg-white/10 text-ink border border-ink/10 dark:border-white/20 shadow-sm">
-          {badge}
-        </span>
-      )}
-    </button>
-  )
+  const user = {
+    name: name || t('userMenu.defaultUser'),
+    username: email,
+    initials: initial,
+  }
 
-  const MenuSelect = ({ icon, label, value, options, onChange }: { icon: React.ReactNode, label: string, value: string, options: { value: string, label: string }[], onChange: (val: string) => void }) => (
-    <div className="w-full flex items-center justify-between px-5 py-1.5 hover:bg-black/5 dark:hover:bg-white/10 transition-colors group">
-      <div className="flex items-center gap-3 text-gray-500 dark:text-gray-400 group-hover:text-ink transition-colors">
-        {icon}
-        <span className="text-[14px] text-slate dark:text-gray-300 group-hover:text-ink font-medium transition-colors">{label}</span>
+  const MENU_ITEMS = {
+    profile: [
+      { icon: "solar:settings-line-duotone", label: t('userMenu.settings'), action: () => navigateTo('/dashboard/settings') },
+      { icon: "solar:folder-with-files-line-duotone", label: t('userMenu.folders'), action: () => navigateTo('/dashboard/folders') }
+    ],
+    premium: [
+      { 
+        icon: "solar:star-bold", 
+        label: t('userMenu.getPlan'), 
+        action: () => navigateTo('/pricing'),
+        iconClass: "text-amber-600 dark:text-amber-500"
+      },
+      { 
+        icon: "solar:card-bold-duotone", 
+        label: t('userMenu.billing'), 
+        action: () => navigateTo('/dashboard/billing'),
+        badge: { text: plan, className: "bg-ink/5 dark:bg-white/10 text-ink dark:text-white text-[11px] font-bold border border-ink/10 dark:border-white/20" }
+      }
+    ],
+    support: [
+      { 
+        icon: "solar:plus-circle-bold-duotone", 
+        label: t('userMenu.createEvent'), 
+        action: () => navigateTo('/dashboard/events/new')
+      },
+      { 
+        icon: "solar:question-circle-line-duotone", 
+        label: t('userMenu.help'), 
+        action: () => navigateTo('/help'),
+      }
+    ],
+    account: [
+      { icon: "solar:logout-2-bold-duotone", label: t('userMenu.logout'), action: handleSignOut, danger: true }
+    ]
+  };
+
+  const renderMenuItem = (item: any, index: number) => (
+    <DropdownMenuItem 
+      key={index}
+      className={cn(item.badge ? "justify-between" : "", "p-2 rounded-lg cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10")}
+      onClick={item.action}
+    >
+      <span className={cn("flex items-center gap-2 font-medium text-[14px]", item.danger ? "text-red-600 dark:text-red-500" : "text-slate dark:text-gray-300")}>
+        <Icon
+          icon={item.icon}
+          className={`size-[18px] ${item.danger ? "text-red-600 dark:text-red-500" : item.iconClass || "text-gray-500 dark:text-gray-400"}`}
+        />
+        <span className={item.danger ? "" : "text-ink"}>{item.label}</span>
+      </span>
+      {item.badge && (
+        <Badge className={item.badge.className} variant="outline">
+          {item.badge.text}
+        </Badge>
+      )}
+    </DropdownMenuItem>
+  );
+
+  if (!mounted) {
+    return (
+      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-canvas to-canvas-warm border border-ink/10 shadow-sm flex items-center justify-center text-ink font-bold animate-pulse">
+        {initial}
       </div>
-      <div className="relative">
-        {mounted ? (
-          <select 
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            className="appearance-none bg-canvas border border-hairline dark:border-white/20 text-ink text-[13px] font-semibold rounded-md pl-3 pr-8 py-1 focus:outline-none focus:ring-2 focus:ring-ink/20 focus:border-ink hover:border-hairline-soft cursor-pointer transition-colors shadow-sm"
-          >
-            {options.map((opt) => (
-              <option key={opt.value} value={opt.value} className="bg-canvas text-ink py-1">{opt.label}</option>
-            ))}
-          </select>
-        ) : (
-          <div className="w-[100px] h-[28px] bg-canvas/50 animate-pulse rounded-md" />
-        )}
-        <ChevronDown size={14} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-stone pointer-events-none" />
-      </div>
-    </div>
-  )
+    )
+  }
 
   return (
-    <div className="relative z-50" ref={dropdownRef}>
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-10 h-10 rounded-full bg-gradient-to-br from-canvas to-canvas-warm border border-ink/10 shadow-sm flex items-center justify-center text-ink font-bold hover:ring-2 hover:ring-ink/5 transition-all"
-      >
-        {initial}
-      </button>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button className="w-10 h-10 rounded-full bg-gradient-to-br from-canvas to-canvas-warm border border-ink/10 shadow-sm flex items-center justify-center text-ink font-bold hover:ring-2 hover:ring-ink/5 transition-all outline-none">
+          {initial}
+        </button>
+      </DropdownMenuTrigger>
 
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: 10, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            transition={{ duration: 0.15, ease: "easeOut" }}
-            className="absolute right-0 mt-3 w-[320px] bg-canvas/90 backdrop-blur-xl border border-ink/10 dark:border-white/10 rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,0.12)] overflow-hidden origin-top-right font-sans"
-          >
-            {/* Header info */}
-            <div className="px-5 pt-5 pb-4 flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-canvas to-canvas-warm border border-ink/10 shadow-inner flex items-center justify-center text-ink font-bold text-xl flex-shrink-0">
+      <DropdownMenuContent className="w-[310px] rounded-2xl bg-canvas dark:bg-canvas-warm p-0 border border-hairline shadow-xl font-sans mr-4" align="end">
+        <section className="bg-canvas dark:bg-[#151515] rounded-2xl p-1 shadow-sm border border-transparent">
+          <div className="flex items-center p-3 mb-1 bg-black/5 dark:bg-white/5 rounded-xl mx-1 mt-1">
+            <div className="flex-1 flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-canvas to-canvas-warm border border-ink/10 shadow-inner flex items-center justify-center text-ink font-bold text-[18px] flex-shrink-0">
                 {initial}
               </div>
-              <div className="overflow-hidden">
-                <p className="text-[16px] font-bold text-ink truncate leading-tight">{name || t('userMenu.defaultUser')}</p>
-                <p className="text-[13px] text-slate truncate mt-0.5">{email}</p>
+              <div className="overflow-hidden flex flex-col">
+                <h3 className="font-bold text-[15px] text-ink truncate leading-tight">{user.name}</h3>
+                <p className="text-slate text-[13px] truncate mt-[2px]">{user.username}</p>
               </div>
             </div>
+          </div>
 
-            {/* Actions */}
-            <div className="px-5 pb-4 flex flex-col gap-2.5">
-              <button 
-                onClick={() => navigateTo('/pricing')} 
-                className="w-full py-2.5 bg-ink hover:opacity-85 text-canvas text-[14px] font-bold rounded-xl transition-all active:scale-95 shadow-md flex justify-center items-center"
-              >
-                {t('userMenu.getPlan')}
-              </button>
-              <button 
-                onClick={() => navigateTo('/dashboard/events/new')} 
-                className="w-full py-2.5 bg-canvas border border-hairline hover:bg-canvas-warm text-ink text-[14px] font-bold rounded-xl transition-all active:scale-95 shadow-sm flex justify-center items-center gap-2"
-              >
-                <Plus size={16} /> {t('userMenu.createEvent')}
-              </button>
-            </div>
+          <div className="px-1 py-1">
+            <DropdownMenuGroup>
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger className="cursor-pointer p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 transition-colors">
+                  <span className="flex items-center gap-2 font-medium text-[14px] text-ink">
+                    <Icon icon="solar:moon-sleep-line-duotone" className="size-[18px] text-gray-500 dark:text-gray-400" />
+                    {t('userMenu.theme')}
+                  </span>
+                </DropdownMenuSubTrigger>
+                <DropdownMenuPortal>
+                  <DropdownMenuSubContent className="bg-canvas dark:bg-[#1a1a1a] border-hairline shadow-lg rounded-xl p-1 min-w-[140px]">
+                    <DropdownMenuRadioGroup value={theme || 'system'} onValueChange={setTheme}>
+                      <DropdownMenuRadioItem value="system" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-2">
+                        <span className="text-ink font-medium text-[13px]">{t('themes.system')}</span>
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="light" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-2">
+                        <span className="text-ink font-medium text-[13px]">{t('themes.light')}</span>
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="dark" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-2">
+                        <span className="text-ink font-medium text-[13px]">{t('themes.dark')}</span>
+                      </DropdownMenuRadioItem>
+                    </DropdownMenuRadioGroup>
+                  </DropdownMenuSubContent>
+                </DropdownMenuPortal>
+              </DropdownMenuSub>
 
-            <div className="h-px w-full bg-ink/5 dark:bg-white/10" />
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger className="cursor-pointer p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 transition-colors mt-0.5">
+                  <span className="flex items-center gap-2 font-medium text-[14px] text-ink">
+                    <Icon icon="solar:globe-line-duotone" className="size-[18px] text-gray-500 dark:text-gray-400" />
+                    {t('userMenu.language')}
+                  </span>
+                </DropdownMenuSubTrigger>
+                <DropdownMenuPortal>
+                  <DropdownMenuSubContent className="bg-canvas dark:bg-[#1a1a1a] border-hairline shadow-lg rounded-xl p-1 min-w-[140px]">
+                    <DropdownMenuRadioGroup value={locale} onValueChange={(val) => setLocale(val as any)}>
+                      <DropdownMenuRadioItem value="pt" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-2">
+                        <span className="text-ink font-medium text-[13px]">{t('languages.pt')}</span>
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="en" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-2">
+                        <span className="text-ink font-medium text-[13px]">{t('languages.en')}</span>
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="es" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-2">
+                        <span className="text-ink font-medium text-[13px]">{t('languages.es')}</span>
+                      </DropdownMenuRadioItem>
+                    </DropdownMenuRadioGroup>
+                  </DropdownMenuSubContent>
+                </DropdownMenuPortal>
+              </DropdownMenuSub>
+            </DropdownMenuGroup>
+          </div>
 
-            {/* Links */}
-            <div className="py-2 flex flex-col">
-              <MenuItem 
-                icon={<CreditCard size={18} strokeWidth={2} />} 
-                label={t('userMenu.billing')} 
-                badge={plan} 
-                onClick={() => navigateTo('/dashboard/billing')} 
-              />
-              <MenuItem 
-                icon={<Settings size={18} strokeWidth={2} />} 
-                label={t('userMenu.settings')} 
-                onClick={() => navigateTo('/dashboard/settings')} 
-              />
-              <MenuItem 
-                icon={<FolderHeart size={18} strokeWidth={2} />} 
-                label={t('userMenu.folders')} 
-                onClick={() => navigateTo('/dashboard/folders')} 
-              />
-              
-              {/* Select items */}
-              <MenuSelect 
-                icon={<Globe size={18} strokeWidth={2} />} 
-                label={t('userMenu.language')} 
-                value={locale} 
-                options={[
-                  { value: 'pt', label: t('languages.pt') },
-                  { value: 'en', label: t('languages.en') },
-                  { value: 'es', label: t('languages.es') }
-                ]} 
-                onChange={(val: string) => setLocale(val as any)}
-              />
-              <MenuSelect 
-                icon={<Moon size={18} strokeWidth={2} />} 
-                label={t('userMenu.theme')} 
-                value={theme || 'system'} 
-                options={[
-                  { value: 'system', label: t('themes.system') },
-                  { value: 'light', label: t('themes.light') },
-                  { value: 'dark', label: t('themes.dark') }
-                ]} 
-                onChange={setTheme}
-              />
-              
-              <MenuItem 
-                icon={<HelpCircle size={18} strokeWidth={2} />} 
-                label={t('userMenu.help')} 
-                onClick={() => navigateTo('/help')} 
-              />
-            </div>
+          <DropdownMenuSeparator className="bg-hairline mx-2" />
+          
+          <div className="px-1 py-1">
+            <DropdownMenuGroup>
+              {MENU_ITEMS.profile.map(renderMenuItem)}
+            </DropdownMenuGroup>
+          </div>
 
-            <div className="h-px w-full bg-ink/5 dark:bg-white/10" />
+          <DropdownMenuSeparator className="bg-hairline mx-2" />
+          
+          <div className="px-1 py-1">
+            <DropdownMenuGroup>
+              {MENU_ITEMS.premium.map(renderMenuItem)}
+            </DropdownMenuGroup>
+          </div>
 
-            <div className="py-2">
-              <MenuItem 
-                danger
-                icon={<Power size={18} strokeWidth={2} />} 
-                label={t('userMenu.logout')} 
-                onClick={handleSignOut} 
-              />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  )
+          <DropdownMenuSeparator className="bg-hairline mx-2" />
+          
+          <div className="px-1 py-1">
+            <DropdownMenuGroup>
+              {MENU_ITEMS.support.map(renderMenuItem)}
+            </DropdownMenuGroup>
+          </div>
+        </section>
+
+        <section className="p-2 border-t border-hairline bg-canvas-warm dark:bg-[#111111] rounded-b-2xl">
+          <DropdownMenuGroup>
+            {MENU_ITEMS.account.map(renderMenuItem)}
+          </DropdownMenuGroup>
+        </section>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 }
