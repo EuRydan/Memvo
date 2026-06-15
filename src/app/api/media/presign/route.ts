@@ -13,7 +13,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    if (file_size > 10 * 1024 * 1024) {
+    const isVideo = file_ext && ['mp4', 'mov', 'webm'].includes(file_ext.toLowerCase())
+    const MAX_PHOTO_SIZE = 10 * 1024 * 1024 // 10MB
+    const MAX_VIDEO_SIZE = 150 * 1024 * 1024 // 150MB
+
+    if (isVideo && file_size > MAX_VIDEO_SIZE) {
+      return NextResponse.json({ error: 'Video exceeds 150MB limit' }, { status: 400 })
+    } else if (!isVideo && file_size > MAX_PHOTO_SIZE) {
       return NextResponse.json({ error: 'File exceeds 10MB limit' }, { status: 400 })
     }
 

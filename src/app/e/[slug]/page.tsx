@@ -2,7 +2,7 @@
 
 import { use, useEffect, useRef, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { isEventActive, isEventLocked, UserPlanRecord } from '@/lib/limits'
+import { isEventActive, isEventLocked, UserPlanRecord, MAX_PHOTO_SIZE, MAX_VIDEO_SIZE, getVideoDurationLimit } from '@/lib/limits'
 import { Media, Challenge } from '@/types'
 import StoryCamera from '@/components/StoryCamera'
 import MediaViewer from '@/components/MediaViewer'
@@ -95,22 +95,45 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
 
     const allowedImageMimes = ['image/jpeg', 'image/png', 'image/heic', 'image/webp']
     const allowedVideoMimes = ['video/mp4', 'video/quicktime', 'video/webm']
-    const MAX_PHOTO_SIZE = 10 * 1024 * 1024 // 10MB
-    const MAX_VIDEO_SIZE = 50 * 1024 * 1024 // 50MB
 
     for (const file of Array.from(files)) {
       const isVideo = file.type.startsWith('video/')
       
       // Validação de MIME type e Tamanho
       if (isVideo) {
+        const durationLimit = getVideoDurationLimit(planType)
+        if (durationLimit === 0) {
+          alert('Envio de vídeos é exclusivo dos planos Clássico e Premium.')
+          continue
+        }
+
         if (!allowedVideoMimes.includes(file.type)) {
           alert(`Formato de vídeo não suportado: ${file.name}. Use MP4, MOV ou WebM.`)
           continue
         }
         if (file.size > MAX_VIDEO_SIZE) {
-          alert(`O vídeo ${file.name} excede o limite de 50MB.`)
+          alert(`O vídeo ${file.name} excede o limite de ${MAX_VIDEO_SIZE / (1024 * 1024)}MB.`)
           continue
         }
+
+        // Validação de duração
+        try {
+          const duration = await new Promise<number>((resolve, reject) => {
+            const video = document.createElement('video')
+            video.preload = 'metadata'
+            video.onloadedmetadata = () => resolve(video.duration)
+            video.onerror = () => reject('Error loading video')
+            video.src = URL.createObjectURL(file)
+          })
+          
+          if (duration > durationLimit) {
+            alert(`O vídeo tem ${Math.round(duration)}s. O limite do seu plano é de ${durationLimit}s.`)
+            continue
+          }
+        } catch (e) {
+          console.warn('Could not read video duration', e)
+        }
+
       } else {
         if (!allowedImageMimes.includes(file.type)) {
           alert(`Formato de imagem não suportado: ${file.name}. Use JPG, PNG, WEBP ou HEIC.`)

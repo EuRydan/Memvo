@@ -50,6 +50,32 @@ export function getPhotoLimit(planId: string): number {
 }
 
 /**
+ * Returns the maximum number of challenges an event can have
+ */
+export function getChallengeLimit(planId: string): number {
+  const plan = planId as PlanTier | 'freemium' | 'none'
+  if (plan === 'freemium') return 1
+  if (plan === 'essential') return 4
+  if (plan === 'classic') return 7
+  if (plan === 'premium') return Infinity
+  return 0
+}
+
+/**
+ * Returns the maximum duration of a video in seconds
+ */
+export function getVideoDurationLimit(planId: string): number {
+  const plan = planId as PlanTier | 'freemium' | 'none'
+  if (plan === 'essential' || plan === 'freemium' || plan === 'none') return 0
+  if (plan === 'classic') return 60
+  if (plan === 'premium') return 180
+  return 0
+}
+
+export const MAX_PHOTO_SIZE = 10 * 1024 * 1024 // 10MB
+export const MAX_VIDEO_SIZE = 150 * 1024 * 1024 // 150MB
+
+/**
  * Shape of a user_plans row required for lock checks.
  */
 export type UserPlanRecord = {

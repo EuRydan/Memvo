@@ -4,7 +4,7 @@ import { use, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Challenge } from '@/types'
-import { isEventLocked, UserPlanRecord } from '@/lib/limits'
+import { isEventLocked, UserPlanRecord, getChallengeLimit } from '@/lib/limits'
 import { SelectNative } from '@/components/ui/select-native'
 import { ButtonColorful } from '@/components/ui/button-colorful'
 
@@ -131,11 +131,7 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
         || userPlans[userPlans.length - 1]?.plan_id
         || 'none'
 
-      if (eventPlanId === 'essential') setChallengeLimit(5)
-      else if (eventPlanId === 'classic') setChallengeLimit(Infinity)
-      else if (eventPlanId === 'premium') setChallengeLimit(Infinity)
-      else if (eventPlanId === 'freemium') setChallengeLimit(1)
-      else setChallengeLimit(0)
+      setChallengeLimit(getChallengeLimit(eventPlanId))
 
       if (isEventLocked(eventId, userPlans, eventMeta || undefined)) {
         setIsLocked(true)
@@ -156,11 +152,24 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
       alert(`Você atingiu o limite de ${challengeLimit} desafios do seu plano.`)
       return
     }
-    const { data } = await supabase
-      .from('challenges')
-      .insert({ event_id: eventId, title: title.trim(), order_index: challenges.length })
-      .select().single()
-    if (data) { setChallenges(prev => [...prev, data]); setNewTitle('') }
+
+    const res = await fetch('/api/challenges', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'add', event_id: eventId, title: title.trim() })
+    })
+
+    const result = await res.json()
+    
+    if (!res.ok) {
+      alert(result.error || 'Erro ao adicionar desafio.')
+      return
+    }
+
+    if (result.data) {
+      setChallenges(prev => [...prev, result.data])
+      setNewTitle('')
+    }
   }
 
   async function removeChallenge(id: string) {
@@ -170,12 +179,22 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
 
   async function loadDefaults() {
     setSaving(true)
-    await supabase.from('challenges').delete().eq('event_id', eventId)
-    // Limita a quantidade de desafios padrão pelo limite do plano
-    const challengesToInsert = DEFAULT_CHALLENGES[selectedCategory].slice(0, challengeLimit)
-    const toInsert = challengesToInsert.map((title, i) => ({ event_id: eventId, title, order_index: i }))
-    const { data } = await supabase.from('challenges').insert(toInsert).select()
-    if (data) setChallenges(data)
+    const titles = DEFAULT_CHALLENGES[selectedCategory]
+    
+    const res = await fetch('/api/challenges', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'load_defaults', event_id: eventId, titles })
+    })
+
+    const result = await res.json()
+
+    if (!res.ok) {
+      alert(result.error || 'Erro ao carregar desafios.')
+    } else if (result.data) {
+      setChallenges(result.data)
+    }
+
     setSaving(false)
   }
 
