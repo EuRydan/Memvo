@@ -25,12 +25,13 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
 
 	const scale4 = useTransform(scrollYProgress, [0, 1], [1, 4]);
 	const inverseScale4 = useTransform(scale4, (s) => 1 / s);
-	const scale5 = useTransform(scrollYProgress, [0, 1], [1, 5]);
-	const scale6 = useTransform(scrollYProgress, [0, 1], [1, 6]);
-	const scale8 = useTransform(scrollYProgress, [0, 1], [1, 8]);
-	const scale9 = useTransform(scrollYProgress, [0, 1], [1, 9]);
+	// const scale5 = useTransform(scrollYProgress, [0, 1], [1, 5]);
+	// const scale6 = useTransform(scrollYProgress, [0, 1], [1, 6]);
+	// const scale8 = useTransform(scrollYProgress, [0, 1], [1, 8]);
+	// const scale9 = useTransform(scrollYProgress, [0, 1], [1, 9]);
 
-	const scales = [scale4, scale5, scale6, scale5, scale6, scale8, scale9];
+	// const scales = [scale4, scale5, scale6, scale5, scale6, scale8, scale9];
+	const scales = [1, 1, 1, 1, 1, 1, 1];
 
 	const mainLabelOpacity = useTransform(scrollYProgress, [0, 0.15, 1], [1, 0, 0]);
 
