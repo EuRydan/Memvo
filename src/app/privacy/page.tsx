@@ -41,20 +41,7 @@ export default function PrivacyPolicy() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">2. Uso do Google Drive (Integração)</h2>
-            <p>
-              A Memvor oferece uma integração opcional com o Google Drive para permitir que anfitriões façam backup 
-              automático das fotos de seus eventos. 
-            </p>
-            <ul className="list-disc pl-5 mt-2 space-y-2">
-              <li><strong>Permissões:</strong> Solicitamos acesso apenas para criar pastas e fazer upload de arquivos que pertencem aos eventos gerenciados por você na Memvor. Não lemos, modificamos ou excluímos arquivos preexistentes no seu Drive pessoal.</li>
-              <li><strong>Uso dos Dados:</strong> Os tokens de acesso (OAuth) concedidos são armazenados de forma segura e utilizados estritamente para o processo automatizado de envio das fotos para sua própria conta do Google Drive.</li>
-              <li><strong>Retenção:</strong> Após 30 dias da data do evento, os arquivos pesados são deletados dos nossos servidores para preservar o armazenamento, mas permanecem intactos na sua conta do Google Drive se a integração estiver ativa.</li>
-            </ul>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">3. Compartilhamento de Fotos</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">2. Compartilhamento de Fotos</h2>
             <p>
               As fotos enviadas para os eventos são armazenadas de forma segura e só podem ser visualizadas por 
               pessoas que possuem o link exclusivo do álbum ou que escanearem o QR Code gerado pelo anfitrião. 
@@ -63,7 +50,7 @@ export default function PrivacyPolicy() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">4. Retenção e Exclusão de Dados</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">3. Retenção e Exclusão de Dados</h2>
             <p>
               Nós armazenamos suas informações e os arquivos de mídia pelo tempo necessário para fornecer nossos 
               serviços. Para otimização de infraestrutura, arquivos de mídia de eventos que ocorreram há mais de 
@@ -74,7 +61,7 @@ export default function PrivacyPolicy() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">5. Contato</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">4. Contato</h2>
             <p>
               Se você tiver dúvidas sobre esta Política de Privacidade ou sobre o uso de seus dados, entre em contato 
               conosco através do painel de suporte na plataforma.

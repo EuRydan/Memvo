@@ -4,10 +4,12 @@ import { use, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Media, Challenge } from '@/types'
-import { Camera, Sparkles, Star, Heart, Share } from 'lucide-react'
+import { Camera, Sparkles, Star, Heart, Share, Download } from 'lucide-react'
 import { StoryGenerator } from '@/components/StoryGenerator'
 import { EventShareCard } from '@/components/EventShareCard'
 import { isEventLocked, UserPlanRecord } from '@/lib/limits'
+import JSZip from 'jszip'
+import { saveAs } from 'file-saver'
 
 export default function EventGalleryPage({ params }: { params: Promise<{ eventId: string }> }) {
   const { eventId } = use(params)
@@ -20,6 +22,8 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
   const [loading, setLoading] = useState(true)
   const [isShareModalOpen, setIsShareModalOpen] = useState(false)
   const [isLocked, setIsLocked] = useState(false)
+  const [isDownloadingZip, setIsDownloadingZip] = useState(false)
+  const [downloadProgress, setDownloadProgress] = useState(0)
 
   useEffect(() => {
     async function load() {
@@ -104,6 +108,61 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
     ...challenges.map(c => ({ id: c.id, label: c.title }))
   ]
 
+  async function handleDownloadZip() {
+    if (medias.length === 0) {
+      alert("Não há mídia para baixar.")
+      return
+    }
+    
+    setIsDownloadingZip(true)
+    setDownloadProgress(0)
+    
+    try {
+      const zip = new JSZip()
+      const folderName = `Memvor_${event?.name || 'Evento'}`
+      const folder = zip.folder(folderName)
+      
+      let downloaded = 0
+      
+      const BATCH_SIZE = 5;
+      for (let i = 0; i < medias.length; i += BATCH_SIZE) {
+        const batch = medias.slice(i, i + BATCH_SIZE);
+        
+        await Promise.all(batch.map(async (media) => {
+          try {
+            const url = getPublicUrl(media.storage_path)
+            const response = await fetch(url)
+            if (!response.ok) throw new Error(`Falha ao baixar ${media.id}`)
+            const blob = await response.blob()
+            
+            let ext = media.storage_path.split('.').pop() || 'jpg'
+            if (media.type === 'video' && ext === 'jpg') ext = 'mp4'
+            
+            const uploaderName = media.uploader_name ? media.uploader_name.replace(/[^a-z0-9]/gi, '_') : 'Convite'
+            const filename = `${uploaderName}_${media.id.substring(0, 8)}.${ext}`
+            folder?.file(filename, blob)
+            
+            downloaded++
+            setDownloadProgress(Math.round((downloaded / medias.length) * 100))
+          } catch (e) {
+            console.error('Erro ao baixar arquivo para o ZIP:', e)
+          }
+        }))
+      }
+      
+      setDownloadProgress(100)
+      const zipBlob = await zip.generateAsync({ type: 'blob' })
+      saveAs(zipBlob, `${folderName}.zip`)
+      
+    } catch (err) {
+      console.error('Erro geral no ZIP:', err)
+      alert("Ocorreu um erro ao gerar o arquivo ZIP.")
+    } finally {
+      setIsDownloadingZip(false)
+      setDownloadProgress(0)
+    }
+  }
+
   if (isLocked) {
     return (
       <div className="min-h-screen bg-[#fafafa] flex flex-col items-center justify-center p-6 text-center relative z-10 pt-24 pb-28">
@@ -180,20 +239,16 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
           </button>
           
           <button
-            onClick={() => {
-              if (event?.google_refresh_token) {
-                alert("Google Drive já está conectado!")
-              } else {
-                window.location.href = `/api/auth/google?eventId=${eventId}`
-              }
-            }}
-            className={`text-xs font-medium transition px-3 py-1.5 rounded-lg shadow-sm ${
-              event?.google_refresh_token
-                ? 'bg-green-50 text-green-700 border border-green-200 hover:bg-green-100'
-                : 'bg-white text-blue-600 border border-blue-200 hover:bg-blue-50'
+            onClick={handleDownloadZip}
+            disabled={isDownloadingZip || medias.length === 0}
+            className={`flex items-center gap-1.5 text-xs font-semibold transition px-3 py-1.5 rounded-lg shadow-sm ${
+              isDownloadingZip 
+                ? 'bg-blue-50 text-blue-600 border border-blue-200 cursor-not-allowed'
+                : 'bg-white text-gray-900 border border-gray-200 hover:bg-gray-50 cursor-pointer'
             }`}
           >
-            {event?.google_refresh_token ? 'Drive Conectado ✓' : 'Conectar GDrive'}
+            <Download size={14} className={isDownloadingZip ? 'animate-bounce' : ''} />
+            {isDownloadingZip ? `Baixando... ${downloadProgress}%` : 'Baixar ZIP'}
           </button>
 
           <span className="text-xs text-gray-600 font-medium border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm">

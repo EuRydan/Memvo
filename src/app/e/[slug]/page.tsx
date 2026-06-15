@@ -181,15 +181,6 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
         setMyUploads(updatedUploads)
         localStorage.setItem('memvor_uploads', JSON.stringify(updatedUploads))
       }
-      
-      // Trigger background upload to Google Drive
-      if (res.ok && !isVideo) {
-        fetch('/api/drive/upload', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ eventId: event.id, storagePath: path })
-        }).catch(err => console.error('Drive upload trigger failed', err))
-      }
     }
     setUploadingId(null)
   }

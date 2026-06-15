@@ -59,17 +59,7 @@ export default function TermsOfUse() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">4. Integrações de Terceiros (Google Drive)</h2>
-            <p>
-              Anfitriões podem optar por conectar suas contas do Google Drive à Memvor para backup automático 
-              das fotos dos convidados. Ao utilizar este recurso, você concorda com as políticas do Google. 
-              Nossa aplicação não fará upload de conteúdos não relacionados ao seu evento na Memvor, e nós 
-              não assumimos a responsabilidade pela organização do armazenamento na sua conta pessoal.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">5. Limitação de Responsabilidade</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">4. Limitação de Responsabilidade</h2>
             <p>
               A Memvor é fornecida "como está" e "conforme disponível". Não garantimos que a plataforma será 
               ininterrupta ou livre de erros. Devido à nossa política de limpeza de armazenamento para contas, 
@@ -79,7 +69,7 @@ export default function TermsOfUse() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">6. Modificações dos Termos</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">5. Modificações dos Termos</h2>
             <p>
               Podemos modificar estes Termos de Uso a qualquer momento. Quaisquer alterações entrarão em vigor 
               imediatamente após a publicação. O uso continuado da plataforma após a modificação constitui sua 
