@@ -244,7 +244,7 @@ function PricingContent() {
           </svg>
         </Link>
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-          <Logo className="h-6 w-auto text-[#0a0a0a]" />
+          <Logo className="h-6 w-auto text-[#0a0a0a]" theme="light" />
         </div>
         {user ? (
           <Link href="/dashboard"

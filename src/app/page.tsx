@@ -27,7 +27,7 @@ export default function LandingPage() {
           }}
         >
           <Link href="/" className="flex items-center gap-2" aria-label="Memvor Home">
-            <Logo className="h-6 w-auto text-black" />
+            <Logo className="h-6 w-auto text-black" theme="light" />
             <span className="sr-only">Memvor</span>
           </Link>
           <div className="flex items-center gap-4">
