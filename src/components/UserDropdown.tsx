@@ -40,6 +40,8 @@ export function UserDropdown({ email, name, plan = 'Free' }: UserDropdownProps) 
 
   // Prevent hydration mismatch on themes/locales
   const [mounted, setMounted] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
+  
   useEffect(() => {
     setMounted(true)
   }, [])
@@ -121,16 +123,27 @@ export function UserDropdown({ email, name, plan = 'Free' }: UserDropdownProps) 
   }
 
   return (
-    <DropdownMenu>
+    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
         <button className="w-10 h-10 rounded-full bg-gradient-to-br from-canvas to-canvas-warm border border-ink/10 shadow-sm flex items-center justify-center text-ink font-bold hover:ring-2 hover:ring-ink/5 transition-all outline-none">
           {initial}
         </button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="w-[310px] rounded-2xl bg-canvas dark:bg-canvas-warm p-0 border border-hairline shadow-xl font-sans mr-4" align="end">
-        <section className="bg-canvas dark:bg-[#151515] rounded-2xl p-1 shadow-sm border border-transparent">
-          <div className="flex items-center p-3 mb-1 bg-black/5 dark:bg-white/5 rounded-xl mx-1 mt-1">
+      <DropdownMenuContent 
+        className={cn(
+          "font-sans shadow-xl overflow-y-auto sm:overflow-visible p-0 flex flex-col",
+          "w-screen max-w-[100vw] h-[calc(100dvh-64px)] rounded-none border-0 mt-2",
+          "sm:w-[310px] sm:max-w-[310px] sm:h-auto sm:rounded-2xl sm:border sm:border-hairline sm:mr-4 sm:mt-0",
+          "bg-canvas dark:bg-[#151515] sm:dark:bg-canvas-warm"
+        )} 
+        align="end"
+      >
+        <section className="bg-canvas dark:bg-[#151515] sm:rounded-2xl p-2 sm:p-1 shadow-sm border-0 border-transparent">
+          <div 
+            className="flex items-center p-3 mb-1 bg-black/5 dark:bg-white/5 rounded-xl mx-1 mt-1 cursor-pointer sm:cursor-default"
+            onClick={() => { if (window.innerWidth < 640) setIsOpen(false) }}
+          >
             <div className="flex-1 flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-canvas to-canvas-warm border border-ink/10 shadow-inner flex items-center justify-center text-ink font-bold text-[18px] flex-shrink-0">
                 {initial}
@@ -225,7 +238,7 @@ export function UserDropdown({ email, name, plan = 'Free' }: UserDropdownProps) 
           </div>
         </section>
 
-        <section className="p-2 border-t border-hairline bg-canvas-warm dark:bg-[#111111] rounded-b-2xl">
+        <section className="p-4 sm:p-2 border-t border-hairline bg-canvas-warm dark:bg-[#111111] sm:rounded-b-2xl mt-auto">
           <DropdownMenuGroup>
             {MENU_ITEMS.logout.map(renderMenuItem)}
           </DropdownMenuGroup>
