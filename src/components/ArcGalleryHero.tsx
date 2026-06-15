@@ -143,6 +143,7 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
                   />
                 </div>
               </div>
+            </div>
             );
           })}
         </div>
