@@ -23,14 +23,14 @@ type ArcGalleryHeroProps = {
 
 export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
   images,
-  startAngle = 10,
-  endAngle = 170,
-  radiusLg = 480,
-  radiusMd = 360,
-  radiusSm = 240,
+  startAngle = 55,
+  endAngle = 125,
+  radiusLg = 1200,
+  radiusMd = 1000,
+  radiusSm = 600,
   cardSizeLg = 140,
-  cardSizeMd = 110,
-  cardSizeSm = 80,
+  cardSizeMd = 120,
+  cardSizeSm = 90,
   className = '',
 }) => {
   const [dimensions, setDimensions] = useState({
@@ -61,7 +61,7 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
   const step = (endAngle - startAngle) / (count - 1);
 
   return (
-    <section className={`relative overflow-hidden bg-[#fafafa] pt-32 pb-16 flex flex-col min-h-screen ${className}`}>
+    <section className={`relative overflow-hidden bg-[#fafafa] pt-20 flex flex-col min-h-[90vh] ${className}`}>
       
       {/* ── Grid Background ── */}
       <div
@@ -92,14 +92,13 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
 
       {/* Background ring container that controls geometry */}
       <div
-        className="relative mx-auto z-10 -mt-10"
+        className="relative mx-auto z-10"
         style={{
           width: '100%',
-          height: dimensions.radius * 0.9,
+          height: '240px', // Fixed height since we decouple the huge radius
         }}
       >
-        {/* Center pivot for transforms - positioned at bottom center */}
-        <div className="absolute left-1/2 bottom-0 -translate-x-1/2">
+        <div className="absolute left-1/2 top-0 -translate-x-1/2 w-full h-full">
           {/* Each image is positioned on the circle and rotated to face outward */}
           {images.map((src, i) => {
             const angle = startAngle + step * i; // degrees
@@ -109,6 +108,11 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
             const x = Math.cos(angleRad) * dimensions.radius;
             const y = Math.sin(angleRad) * dimensions.radius;
             
+            // Peak of the arc is at angle 90 (sin(90) = 1)
+            const peakY = dimensions.radius;
+            // How far down from the peak is this point?
+            const yOffset = peakY - y;
+            
             return (
               <div
                 key={i}
@@ -117,8 +121,8 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
                   width: dimensions.cardSize,
                   height: dimensions.cardSize,
                   left: `calc(50% + ${x}px)`,
-                  bottom: `${y}px`,
-                  transform: `translate(-50%, 50%)`,
+                  top: `${yOffset}px`,
+                  transform: `translate(-50%, -50%)`,
                   animationDelay: `${i * 100}ms`,
                   animationFillMode: 'forwards',
                   zIndex: count - i,
@@ -126,14 +130,13 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
               >
                 <div 
                   className="rounded-2xl shadow-xl overflow-hidden ring-1 ring-gray-200/50 bg-white transition-transform hover:scale-110 w-full h-full"
-                  style={{ transform: `rotate(${(angle - 90) * 0.4}deg)` }}
+                  style={{ transform: `rotate(12deg)` }}
                 >
                   <img
                     src={src}
                     alt={`Memory ${i + 1}`}
                     className="block w-full h-full object-cover"
                     draggable={false}
-                    // Add a fallback in case an image fails to load
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = `https://placehold.co/400x400/334155/e2e8f0?text=Memoria`;
                     }}
@@ -146,7 +149,7 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
       </div>
 
       {/* Content positioned below the arc */}
-      <div className="relative z-20 flex-1 flex flex-col items-center justify-center px-6 -mt-8 md:-mt-16 lg:-mt-20 pb-20">
+      <div className="relative z-20 flex-1 flex flex-col items-center justify-center px-6 mt-12 pb-24">
         <div className="flex flex-col items-center justify-center gap-6 max-w-4xl mx-auto opacity-0 animate-fade-in" style={{ animationDelay: '800ms', animationFillMode: 'forwards' }}>
           
           <AwardBadge />
