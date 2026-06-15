@@ -14,7 +14,7 @@ export function EarningsCalculator() {
   }
 
   const baseTicket = plans[selectedPlan].price
-  const commissionRate = 0.30 // 30%
+  const commissionRate = 0.25 // 25%
   
   const earningsPerEvent = baseTicket * commissionRate
   const monthlyEarnings = eventsPerMonth * earningsPerEvent

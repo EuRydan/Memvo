@@ -25,7 +25,7 @@ export function ParceirosFAQ() {
     },
     {
       question: "A comissão vale para renovações ou upgrades?",
-      answer: "A comissão de 30% é aplicada sobre o valor do plano contratado inicialmente através da sua indicação para aquele evento."
+      answer: "A comissão de 25% é aplicada sobre o valor do plano contratado inicialmente através da sua indicação para aquele evento."
     }
   ]
 

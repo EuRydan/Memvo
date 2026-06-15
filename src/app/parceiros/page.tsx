@@ -70,7 +70,7 @@ export default function ParceirosLandingPage() {
           {[
             { step: '01', title: 'Cadastre-se', desc: 'Preencha o formulário e crie seu perfil de profissional parceiro.' },
             { step: '02', title: 'Compartilhe seu link', desc: 'Receba seu link exclusivo e envie para os noivos ou debutantes.' },
-            { step: '03', title: 'Receba sua comissão', desc: 'Acompanhe as vendas no seu painel e receba 30% diretamente no seu PIX.' }
+            { step: '03', title: 'Receba sua comissão', desc: 'Acompanhe as vendas no seu painel e receba 25% diretamente no seu PIX.' }
           ].map((item, i) => (
             <div key={i} className="text-center p-8 rounded-3xl bg-[#fafafa] border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
               <div className="w-12 h-12 rounded-full bg-[#0a0a0a] text-white flex items-center justify-center font-bold mx-auto mb-6">
