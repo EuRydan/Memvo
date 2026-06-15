@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { Logo } from '@/components/Logo'
 import { WordmarkFooter } from '@/components/WordmarkFooter'
-import { WaitlistHero } from '@/components/ui/waitlist-hero'
+import { ArcGalleryHero } from '@/components/ArcGalleryHero'
 import { BenefitsSection } from '@/components/parceiros/BenefitsSection'
 import { TargetAudience } from '@/components/parceiros/TargetAudience'
 import { EarningsCalculator } from '@/components/parceiros/EarningsCalculator'
@@ -55,7 +55,16 @@ export default function ParceirosLandingPage() {
       </div>
 
       {/* ── HERO ── */}
-      <WaitlistHero />
+      <ArcGalleryHero 
+        images={[
+          'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=800',
+          'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800',
+          'https://images.unsplash.com/photo-1530103862676-de8892bfafc9?auto=format&fit=crop&q=80&w=800',
+          'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=800',
+          'https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&q=80&w=800',
+          'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&q=80&w=800'
+        ]}
+      />
 
       {/* ── HOW IT WORKS ── */}
       <section id="how-it-works" className="relative w-full py-20 bg-white z-10">
