@@ -9,6 +9,7 @@ import { WordmarkFooter } from '@/components/WordmarkFooter'
 import { FeaturesSection } from '@/components/FeaturesSection'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
 import { LoadingScreen } from '@/components/LoadingScreen'
+import { MeshCTA } from '@/components/MeshCTA'
 
 export default function LandingPage() {
   return (
@@ -182,35 +183,7 @@ export default function LandingPage() {
       </div>
 
       {/* ── FINAL CTA ── */}
-      <section className="relative px-6 py-20 overflow-hidden mx-5 mb-10 rounded-[28px]"
-        style={{
-          background: 'linear-gradient(160deg, #f4c5a8 0%, #c8b8e0 55%, #b8d0f0 100%, #f4c5a8 150%)',
-          backgroundSize: '200% 200%',
-          animation: 'bg-pan 12s ease-in-out infinite',
-        }}>
-        {/* Inner orb */}
-        <div className="absolute top-[-40px] right-[-40px] w-[260px] h-[260px] rounded-full pointer-events-none"
-          style={{
-            background: 'radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%)',
-            filter: 'blur(40px)',
-          }} />
-
-        <div className="relative text-center max-w-xs mx-auto">
-          <p className="text-[11px] font-semibold tracking-[0.2em] text-white/70 uppercase mb-4">Comece agora</p>
-          <h2 style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}
-            className="text-[2rem] font-bold tracking-[-0.02em] text-white leading-tight mb-3">
-            Preserve cada memória preciosa
-          </h2>
-          <p className="text-sm text-white/80 mb-8 leading-relaxed">
-            Crie seu álbum em menos de 2 minutos. Pagamento único, sem assinatura.
-          </p>
-          <Link href="/pricing"
-            className="inline-block bg-white text-[#0a0a0a] text-sm font-bold px-8 py-4 rounded-full hover:bg-[#fafafa] transition-all active:scale-95"
-            style={{ boxShadow: '0 6px 24px rgba(0,0,0,0.15)' }}>
-            Ver planos e preços
-          </Link>
-        </div>
-      </section>
+      <MeshCTA />
 
       {/* ── FOOTER ── */}
       <WordmarkFooter />
