@@ -52,12 +52,26 @@ function FlipCard({
             className="cursor-pointer group"
         >
             <motion.div
-                className="relative h-full w-full"
+                animate={{
+                    y: [0, -12, 0],
+                    rotateZ: [0, index % 2 === 0 ? 3 : -3, 0]
+                }}
+                transition={{
+                    duration: 4 + (index % 3) * 0.5,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: index * 0.1
+                }}
+                className="w-full h-full"
                 style={{ transformStyle: "preserve-3d" }}
-                transition={{ duration: 0.6, type: "spring", stiffness: 260, damping: 20 }}
-                whileHover={{ rotateY: 180 }}
             >
-                {/* Front Face */}
+                <motion.div
+                    className="relative h-full w-full"
+                    style={{ transformStyle: "preserve-3d" }}
+                    transition={{ duration: 0.6, type: "spring", stiffness: 260, damping: 20 }}
+                    whileHover={{ rotateY: 180 }}
+                >
+                    {/* Front Face */}
                 <div
                     className="absolute inset-0 h-full w-full overflow-hidden rounded-xl shadow-lg bg-gray-200"
                     style={{ backfaceVisibility: "hidden" }}
@@ -81,6 +95,7 @@ function FlipCard({
                         </div>
                     </div>
                 </div>
+                </motion.div>
             </motion.div>
         </motion.div>
     );
@@ -100,7 +115,7 @@ const IMAGES = [
     "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=300&q=80",
     "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=300&q=80",
     "https://images.pexels.com/photos/18060956/pexels-photo-18060956.jpeg?auto=compress&cs=tinysrgb&w=300",
-    "https://images.unsplash.com/photo-1530103862676-de8892ebe829?w=300&q=80",
+    "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=300&q=80",
     "https://images.pexels.com/photos/17931371/pexels-photo-17931371.jpeg?auto=compress&cs=tinysrgb&w=300",
     "https://images.unsplash.com/photo-1511895426328-dc8714191300?w=300&q=80",
     "https://images.unsplash.com/photo-1595877786462-ea6dc03f1695?w=300&q=80",
@@ -356,10 +371,10 @@ export function IntroAnimation() {
                             const baseRadius = Math.min(containerSize.width, containerSize.height * 1.5);
                             const arcRadius = baseRadius * (isMobile ? 1.4 : 1.1);
 
-                            const arcApexY = containerSize.height * (isMobile ? 0.45 : 0.25);
+                            const arcApexY = containerSize.height * (isMobile ? 0.35 : 0.25);
                             const arcCenterY = arcApexY + arcRadius;
 
-                            const spreadAngle = isMobile ? 100 : 130;
+                            const spreadAngle = isMobile ? 140 : 130;
                             const startAngle = -90 - (spreadAngle / 2);
                             const step = spreadAngle / (TOTAL_IMAGES - 1);
 
@@ -374,7 +389,7 @@ export function IntroAnimation() {
                                 x: Math.cos(arcRad) * arcRadius + parallaxValue,
                                 y: Math.sin(arcRad) * arcRadius + arcCenterY,
                                 rotation: currentArcAngle + 90,
-                                scale: isMobile ? 1.0 : 1.8,
+                                scale: isMobile ? 1.3 : 1.8,
                             };
 
                             const mValue = isMobile ? 1 : morphValue;
