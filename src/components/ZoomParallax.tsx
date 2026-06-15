@@ -79,7 +79,7 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
 
 			{/* Mobile Static Grid */}
 			<div className="md:hidden grid grid-cols-2 gap-3 px-6 py-4">
-				{images.slice(0, 4).map(({ src, alt, challenge }, index) => (
+				{images.slice(0, 5).map(({ src, alt, challenge }, index) => (
 					<div 
 						key={`mobile-${index}`}
 						className={`relative w-full overflow-hidden rounded-2xl shadow-sm ${index === 0 ? 'col-span-2 aspect-[2/1]' : 'aspect-square'}`}
@@ -90,9 +90,9 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
 							className="h-full w-full object-cover hover:scale-105 transition-transform duration-500"
 						/>
 						{challenge && (
-							<div className="absolute top-2 right-2 flex items-center gap-1 px-2 py-1 rounded-full border border-white/60 shadow-[0_4px_24px_rgba(0,0,0,0.2),inset_0_1px_2px_rgba(255,255,255,0.9)] bg-gradient-to-br from-white/95 via-white/70 to-white/40 backdrop-blur-xl max-w-[85%]">
-								<Camera className="w-2.5 h-2.5 text-black flex-shrink-0" />
-								<p className="text-[8px] uppercase tracking-[0.08em] font-extrabold text-black text-center truncate">{challenge}</p>
+							<div className="absolute top-2 right-2 flex items-start gap-1 px-2 py-1 rounded-xl border border-white/60 shadow-[0_4px_24px_rgba(0,0,0,0.2),inset_0_1px_2px_rgba(255,255,255,0.9)] bg-gradient-to-br from-white/95 via-white/70 to-white/40 backdrop-blur-xl max-w-[90%]">
+								<Camera className="w-2.5 h-2.5 text-black flex-shrink-0 mt-[2px]" />
+								<p className="text-[8px] uppercase tracking-[0.08em] font-extrabold text-black leading-tight break-words whitespace-normal">{challenge}</p>
 							</div>
 						)}
 					</div>

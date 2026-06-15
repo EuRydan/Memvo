@@ -251,9 +251,15 @@ export function IntroAnimation() {
                 <div className="absolute z-20 flex flex-col items-center justify-center text-center pointer-events-none top-1/2 -translate-y-1/2 w-full px-4">
                     <motion.div
                         initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
-                        animate={introPhase === "circle" && morphValue < 0.5 ? { opacity: 1 - morphValue * 2, y: 0, filter: "blur(0px)" } : { opacity: 0, filter: "blur(10px)" }}
+                        animate={
+                            introPhase === "circle" 
+                                ? (containerSize.width < 768 
+                                    ? { opacity: 1, y: 0, filter: "blur(0px)" } 
+                                    : (morphValue < 0.5 ? { opacity: 1 - morphValue * 2, y: 0, filter: "blur(0px)" } : { opacity: 0, filter: "blur(10px)" }))
+                                : { opacity: 0, filter: "blur(10px)" }
+                        }
                         transition={{ duration: 1 }}
-                        className="flex flex-col items-center gap-4"
+                        className="flex flex-col items-center gap-4 mt-[-5vh] md:mt-0"
                     >
                         <div className="flex items-center gap-2 mb-2">
                             <div className="w-5 h-px bg-[#939393]" />
@@ -282,9 +288,9 @@ export function IntroAnimation() {
 
                     <motion.p
                         initial={{ opacity: 0 }}
-                        animate={introPhase === "circle" && morphValue < 0.5 ? { opacity: 0.5 - morphValue } : { opacity: 0 }}
+                        animate={introPhase === "circle" ? (containerSize.width < 768 ? { opacity: 0 } : (morphValue < 0.5 ? { opacity: 0.5 - morphValue } : { opacity: 0 })) : { opacity: 0 }}
                         transition={{ duration: 1, delay: 0.2 }}
-                        className="mt-12 text-xs font-bold tracking-[0.2em] text-gray-500"
+                        className="mt-12 text-xs font-bold tracking-[0.2em] text-gray-500 hidden md:block"
                     >
                         ROLE PARA EXPLORAR
                     </motion.p>
@@ -292,8 +298,8 @@ export function IntroAnimation() {
 
                 {/* Arc Active Content (Fades in) */}
                 <motion.div
-                    style={{ opacity: contentOpacity, y: contentY }}
-                    className="absolute top-[18%] z-10 flex flex-col items-center justify-center text-center pointer-events-none px-4"
+                    style={{ opacity: containerSize.width < 768 ? 0 : contentOpacity, y: contentY }}
+                    className="absolute top-[18%] z-10 hidden md:flex flex-col items-center justify-center text-center pointer-events-none px-4"
                 >
                     <h2 style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }} className="text-3xl md:text-5xl font-bold tracking-tight text-[#0a0a0a] mb-4">
                         Simples para você,<br/>mágico para seus convidados
@@ -349,7 +355,7 @@ export function IntroAnimation() {
                             const baseRadius = Math.min(containerSize.width, containerSize.height * 1.5);
                             const arcRadius = baseRadius * (isMobile ? 1.4 : 1.1);
 
-                            const arcApexY = containerSize.height * (isMobile ? 0.35 : 0.25);
+                            const arcApexY = containerSize.height * (isMobile ? 0.45 : 0.25);
                             const arcCenterY = arcApexY + arcRadius;
 
                             const spreadAngle = isMobile ? 100 : 130;
@@ -358,7 +364,7 @@ export function IntroAnimation() {
 
                             const scrollProgress = Math.min(Math.max(rotateValue / 360, 0), 1);
                             const maxRotation = spreadAngle * 0.8;
-                            const boundedRotation = -scrollProgress * maxRotation;
+                            const boundedRotation = -(isMobile ? 0 : scrollProgress) * maxRotation;
 
                             const currentArcAngle = startAngle + (i * step) + boundedRotation;
                             const arcRad = (currentArcAngle * Math.PI) / 180;
@@ -370,11 +376,13 @@ export function IntroAnimation() {
                                 scale: isMobile ? 1.0 : 1.8,
                             };
 
+                            const mValue = isMobile ? 1 : morphValue;
+
                             target = {
-                                x: lerp(circlePos.x, arcPos.x, morphValue),
-                                y: lerp(circlePos.y, arcPos.y, morphValue),
-                                rotation: lerp(circlePos.rotation, arcPos.rotation, morphValue),
-                                scale: lerp(baseScale, arcPos.scale, morphValue),
+                                x: lerp(circlePos.x, arcPos.x, mValue),
+                                y: lerp(circlePos.y, arcPos.y, mValue),
+                                rotation: lerp(circlePos.rotation, arcPos.rotation, mValue),
+                                scale: lerp(baseScale, arcPos.scale, mValue),
                                 opacity: 1,
                             };
                         }
