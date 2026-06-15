@@ -248,6 +248,7 @@ export function IntroAnimation() {
                 </div>
 
                 {/* Orbs */}
+                {/* 
                 <div className="absolute top-[-80px] right-[-100px] w-[480px] h-[480px] rounded-full pointer-events-none"
                     style={{
                         background: 'radial-gradient(circle, rgba(244,197,168,0.65) 0%, rgba(200,184,224,0.4) 60%, transparent 80%)',
@@ -260,6 +261,7 @@ export function IntroAnimation() {
                         filter: 'blur(70px)',
                         animation: 'drift2 16s ease-in-out infinite alternate',
                     }} />
+                */}
 
 
                 {/* Intro Text (Fades out) */}
