@@ -51,9 +51,9 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
 								<NextImage
 									src={src || '/placeholder.svg'}
 									alt={alt || `Parallax image ${index + 1}`}
-									width={480}
-									height={270}
-									quality={75}
+									width={1600}
+									height={900}
+									quality={85}
 									className="h-full w-full object-cover rounded-lg shadow-lg"
 								/>
 
@@ -91,9 +91,9 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
 						<NextImage
 							src={src || '/placeholder.svg'}
 							alt={alt || `Mobile image ${index + 1}`}
-							width={480}
-							height={270}
-							quality={75}
+							width={1600}
+							height={900}
+							quality={85}
 							className="h-full w-full object-cover hover:scale-105 transition-transform duration-500"
 						/>
 						{challenge && (

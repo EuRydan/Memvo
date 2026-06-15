@@ -64,13 +64,13 @@ export default function LandingPage() {
 
         <ZoomParallax
           images={[
-            { src: "https://images.unsplash.com/photo-1731596153022-4cedafe3330a?w=800&q=75&auto=format&fit=crop", challenge: "A melhor dançarina" },
-            { src: "https://images.pexels.com/photos/17931371/pexels-photo-17931371.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop", challenge: "Valsa da debutante" },
-            { src: "https://images.unsplash.com/photo-1723373457175-31b09fa7d405?w=800&h=600&fit=crop&q=75", challenge: "Uma foto do grupo da mesa" },
-            { src: "https://images.unsplash.com/photo-1595877786462-ea6dc03f1695?w=800&h=600&fit=crop&q=75", challenge: "Reúna as madrinhas para uma foto espontânea" },
-            { src: "https://images.unsplash.com/photo-1628551019393-46e6a870b94b?w=800&h=600&fit=crop&q=75", challenge: "As donas da festa" },
-            { src: "https://images.unsplash.com/photo-1633657322446-ed5784d121e4?w=800&h=600&fit=crop&q=75", challenge: "Um momento muito louco" },
-            { src: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=800&h=600&fit=crop&q=75", challenge: "Um brinde" }
+            { src: "https://images.unsplash.com/photo-1731596153022-4cedafe3330a?w=1600&q=85&auto=format&fit=crop", challenge: "A melhor dançarina" },
+            { src: "https://images.pexels.com/photos/17931371/pexels-photo-17931371.jpeg?auto=compress&cs=tinysrgb&w=1600&h=900&fit=crop", challenge: "Valsa da debutante" },
+            { src: "https://images.unsplash.com/photo-1723373457175-31b09fa7d405?w=1600&h=900&fit=crop&q=85", challenge: "Uma foto do grupo da mesa" },
+            { src: "https://images.unsplash.com/photo-1595877786462-ea6dc03f1695?w=1600&h=900&fit=crop&q=85", challenge: "Reúna as madrinhas para uma foto espontânea" },
+            { src: "https://images.unsplash.com/photo-1628551019393-46e6a870b94b?w=1600&h=900&fit=crop&q=85", challenge: "As donas da festa" },
+            { src: "https://images.unsplash.com/photo-1633657322446-ed5784d121e4?w=1600&h=900&fit=crop&q=85", challenge: "Um momento muito louco" },
+            { src: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=1600&h=900&fit=crop&q=85", challenge: "Um brinde" }
           ]}
         />
 
