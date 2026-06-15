@@ -25,6 +25,7 @@ export function MeshCTA() {
       <div className="absolute inset-0 w-full h-full bg-[#f4c5a8]">
         {mounted && (
           <>
+            {/*
             <MeshGradient
               width={dimensions.width}
               height={dimensions.height}
@@ -36,6 +37,7 @@ export function MeshCTA() {
               speed={0.2}
               offsetX={0}
             />
+            */}
             <div className="absolute inset-0 pointer-events-none bg-white/10" />
           </>
         )}
