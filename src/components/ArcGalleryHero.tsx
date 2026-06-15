@@ -92,11 +92,10 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
 
       {/* Background ring container that controls geometry */}
       <div
-        className="relative mx-auto z-10"
+        className="relative mx-auto z-10 -mt-10"
         style={{
           width: '100%',
-          // Give it a bit more height to prevent clipping
-          height: dimensions.radius * 1.2,
+          height: dimensions.radius * 0.9,
         }}
       >
         {/* Center pivot for transforms - positioned at bottom center */}
@@ -147,7 +146,7 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
       </div>
 
       {/* Content positioned below the arc */}
-      <div className="relative z-20 flex-1 flex flex-col items-center justify-center px-6 -mt-16 md:-mt-24 lg:-mt-32 pb-24">
+      <div className="relative z-20 flex-1 flex flex-col items-center justify-center px-6 -mt-8 md:-mt-16 lg:-mt-20 pb-20">
         <div className="flex flex-col items-center justify-center gap-6 max-w-4xl mx-auto opacity-0 animate-fade-in" style={{ animationDelay: '800ms', animationFillMode: 'forwards' }}>
           
           <AwardBadge />
