@@ -14,6 +14,8 @@ interface MediaViewerProps {
 export default function MediaViewer({ media, publicUrl, onClose, onDelete, canDelete = true }: MediaViewerProps) {
   const [isDeleting, setIsDeleting] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [deleteConfirmCount, setDeleteConfirmCount] = useState(0)
 
   const handleDownload = async () => {
     try {
@@ -41,8 +43,57 @@ export default function MediaViewer({ media, publicUrl, onClose, onDelete, canDe
     // onClose will be handled by the parent when the media is removed
   }
 
+  const handlePopupDeleteClick = () => {
+    if (deleteConfirmCount === 0) {
+      setDeleteConfirmCount(1)
+    } else {
+      handleDelete()
+    }
+  }
+
+  const handleCancelDelete = () => {
+    setShowDeleteConfirm(false)
+    setDeleteConfirmCount(0)
+  }
+
   return (
     <div className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-md flex flex-col animate-fade-in touch-none">
+      
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 z-[110] bg-black/50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl flex flex-col items-center text-center animate-in zoom-in-95 duration-200">
+            <div className="w-12 h-12 bg-red-50 text-red-500 rounded-full flex items-center justify-center mb-4">
+              <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-bold text-gray-900 mb-2">Deletar Mídia</h3>
+            <p className="text-sm text-gray-500 mb-6">
+              A ação é irreversível e não tem como recuperar este arquivo.
+            </p>
+            <div className="flex flex-col w-full gap-2">
+              <button
+                onClick={handlePopupDeleteClick}
+                disabled={isDeleting}
+                className={`w-full py-2.5 rounded-xl font-medium transition-all ${
+                  deleteConfirmCount === 0 
+                    ? 'bg-red-50 text-red-600 hover:bg-red-100' 
+                    : 'bg-red-600 text-white animate-pulse'
+                }`}
+              >
+                {isDeleting ? 'Deletando...' : deleteConfirmCount === 0 ? 'Deletar' : 'Tem certeza? Essa ação é irreversível!'}
+              </button>
+              <button
+                onClick={handleCancelDelete}
+                disabled={isDeleting}
+                className="w-full py-2.5 bg-gray-50 text-gray-700 rounded-xl font-medium hover:bg-gray-100 transition-colors"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       
       {/* Top Bar */}
       <div className="absolute top-0 left-0 w-full p-4 flex justify-between items-center z-10 bg-gradient-to-b from-black/50 to-transparent">
@@ -75,7 +126,7 @@ export default function MediaViewer({ media, publicUrl, onClose, onDelete, canDe
 
           {canDelete && (
             <button 
-              onClick={handleDelete}
+              onClick={() => setShowDeleteConfirm(true)}
               disabled={isDeleting}
               className="w-10 h-10 flex items-center justify-center rounded-full bg-red-500/20 text-red-500 backdrop-blur-md active:scale-90 transition disabled:opacity-50"
             >
