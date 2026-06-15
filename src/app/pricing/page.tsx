@@ -444,10 +444,10 @@ function PricingContent() {
               </button>
             </div>
 
-            {/* Right: Payment Gateway via Stripe Elements */}
-            <div className="rounded-[22px] overflow-hidden bg-white p-7 md:p-8 flex flex-col"
-              style={{ boxShadow: '0 8px 40px rgba(0,0,0,0.08)', border: '1px solid rgba(0,0,0,0.04)', minHeight: '400px' }}>
-              <div className="flex items-center justify-between mb-1">
+            {/* Right: Payment Gateway */}
+            <div className="rounded-[22px] overflow-hidden bg-white p-5 sm:p-7 md:p-8 flex flex-col w-full max-w-[320px] mx-auto md:max-w-none shadow-sm md:shadow-2xl"
+              style={{ border: '1px solid rgba(0,0,0,0.04)', minHeight: '400px' }}>
+              <div className="flex items-center justify-between mb-1 hidden md:flex">
                 <h3 className="text-[1.3rem] font-bold text-[#0a0a0a]" style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}>
                   Pagamento Seguro
                 </h3>
@@ -465,15 +465,17 @@ function PricingContent() {
               <p className="text-[11px] font-semibold text-[#939393] uppercase tracking-widest mb-6">Ambiente protegido</p>
 
               {intentId && (
-                <div className="mt-8 bg-white rounded-3xl p-6 md:p-8" style={{ boxShadow: '0 8px 40px rgba(0,0,0,0.08)' }}>
-                  <h2 className="text-xl font-bold text-ink mb-6 text-center" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
+                <div className="mt-4 md:mt-6">
+                  <h2 className="text-xl font-bold text-ink mb-6 text-center" style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}>
                     Finalizar Pagamento
                   </h2>
-                  <CheckoutForm 
-                    intentId={intentId}
-                    userId={user?.id} 
-                    returnUrl={`${process.env.NEXT_PUBLIC_SITE_URL || ''}/dashboard/success`}
-                  />
+                  <div className="w-full">
+                    <CheckoutForm 
+                      intentId={intentId}
+                      userId={user?.id} 
+                      returnUrl={`${process.env.NEXT_PUBLIC_SITE_URL || ''}/dashboard/success`}
+                    />
+                  </div>
                 </div>
               )}
             </div>
