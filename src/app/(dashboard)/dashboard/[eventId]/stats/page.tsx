@@ -79,6 +79,20 @@ export default function EventStatsPage({ params }: { params: Promise<{ eventId: 
       
       {/* Header */}
       <div className="px-5 py-6 border-b border-gray-200/50 flex flex-col gap-2 bg-white/40 backdrop-blur-xl">
+        <div className="flex gap-2">
+          <button
+            onClick={() => router.push(`/dashboard/${eventId}/appearance`)}
+            className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm cursor-pointer"
+          >
+            🎨 Aparência
+          </button>
+          <button
+            onClick={() => router.push(`/dashboard/${eventId}/challenges`)}
+            className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm cursor-pointer"
+          >
+            Desafios
+          </button>
+        </div>
         <button
           onClick={() => router.push(`/dashboard/${eventId}`)}
           className="flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors w-fit text-sm font-medium mb-2 cursor-pointer"

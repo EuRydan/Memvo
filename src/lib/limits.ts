@@ -76,10 +76,18 @@ export const MAX_PHOTO_SIZE = 10 * 1024 * 1024 // 10MB
 export const MAX_VIDEO_SIZE = 150 * 1024 * 1024 // 150MB
 
 /**
+ * Returns whether the plan allows appearance customization
+ */
+export function isAppearanceEnabled(planId: string): boolean {
+  const plan = planId as PlanTier | 'freemium' | 'none'
+  return plan === 'classic' || plan === 'premium'
+}
+
+/**
  * Shape of a user_plans row required for lock checks.
  */
 export type UserPlanRecord = {
-  event_id: string | null
+  event_id: string
   plan_id: string
 }
 

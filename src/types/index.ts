@@ -13,6 +13,8 @@ export type Event = {
   location?: string
   additional_info?: string
   status?: string
+  theme_color?: string
+  welcome_message?: string
 }
 
 export type Media = {

@@ -254,6 +254,20 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
         {/* Header */}
         <div className="mb-6">
           <p className="text-[11px] font-semibold tracking-[0.16em] text-stone uppercase mb-2">Configuração</p>
+          <div className="flex items-center gap-2 mb-3">
+          <button
+            onClick={() => router.push(`/dashboard/${eventId}/appearance`)}
+            className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm cursor-pointer"
+          >
+            🎨 Aparência
+          </button>
+
+          <div
+            className="text-xs text-gray-900 font-medium border border-gray-200 bg-white px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-1.5"
+          >
+            Desafios Fotográficos
+          </div>
+          </div>
           <h1
             style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
             className="text-[1.85rem] font-bold tracking-[-0.02em] text-ink leading-tight"

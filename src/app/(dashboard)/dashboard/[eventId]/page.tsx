@@ -140,7 +140,18 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
             
             const uploaderName = media.uploader_name ? media.uploader_name.replace(/[^a-z0-9]/gi, '_') : 'Convite'
             const filename = `${uploaderName}_${media.id.substring(0, 8)}.${ext}`
-            folder?.file(filename, blob)
+            
+            let challengeFolderName = 'Galeria Livre'
+            if (media.challenge_id) {
+              const ch = challenges.find(c => c.id === media.challenge_id)
+              if (ch) {
+                const idxStr = String(ch.order_index + 1).padStart(2, '0')
+                const titleSafe = ch.title.replace(/[<>:"\/\\|?*]+/g, '_')
+                challengeFolderName = `${idxStr} - ${titleSafe}`
+              }
+            }
+
+            folder?.folder(challengeFolderName)?.file(filename, blob)
             
             downloaded++
             setDownloadProgress(Math.round((downloaded / medias.length) * 100))
@@ -221,6 +232,13 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
             className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-1.5 cursor-pointer"
           >
             📊 Estatísticas
+          </button>
+
+          <button
+            onClick={() => router.push(`/dashboard/${eventId}/appearance`)}
+            className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm cursor-pointer"
+          >
+            🎨 Aparência
           </button>
 
           <button

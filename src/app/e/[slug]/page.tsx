@@ -10,7 +10,7 @@ import MediaViewer from '@/components/MediaViewer'
 export default function EventPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params)
   const supabase = createClient()
-  const [event, setEvent] = useState<{ id: string; name: string; date: string; active: boolean } | null>(null)
+  const [event, setEvent] = useState<{ id: string; name: string; date: string; active: boolean; theme_color?: string; welcome_message?: string } | null>(null)
   const [medias, setMedias] = useState<Media[]>([])
   const [challenges, setChallenges] = useState<Challenge[]>([])
   const [uploaderName, setUploaderName] = useState('')
@@ -29,7 +29,7 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
   useEffect(() => {
     async function loadEvent() {
       const { data, error } = await supabase
-        .from('events').select('id, name, date, active, owner_id, status').eq('slug', slug).eq('active', true).single()
+        .from('events').select('id, name, date, active, owner_id, status, theme_color, welcome_message').eq('slug', slug).eq('active', true).single()
       if (error || !data) { setNotFound(true); return }
       setEvent(data)
 
@@ -341,11 +341,17 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
         >
           {event.name}
         </h1>
-        <p className="relative text-sm text-white/75">
+        <p className="relative text-sm text-white/75 mb-4">
           {new Date(event.date + 'T12:00:00').toLocaleDateString('pt-BR', {
             day: '2-digit', month: 'long', year: 'numeric'
           })}
         </p>
+        
+        {event.welcome_message && (
+          <div className="relative text-sm text-white/90 font-medium italic mt-2 px-4 max-w-sm mx-auto drop-shadow-sm">
+            "{event.welcome_message}"
+          </div>
+        )}
       </div>
 
       <div className="max-w-lg mx-auto px-5 pb-12 flex flex-col gap-5 -mt-4 relative z-10">
@@ -378,7 +384,7 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
                 className="h-full rounded-full transition-all duration-500"
                 style={{
                   width: `${progress}%`,
-                  background: 'linear-gradient(90deg, #4ac550, #22c55e)',
+                  background: event.theme_color || '#4ac550',
                 }}
               />
             </div>
@@ -420,15 +426,15 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
               const isUploading = uploadingId === challenge.id
 
               return (
-                <div
+                  <div
                   key={challenge.id}
                   className="rounded-[18px] overflow-hidden"
                   style={{
                     background: '#fff',
                     boxShadow: done
-                      ? '0 4px 20px rgba(74,197,80,0.12)'
+                      ? `0 4px 20px ${event.theme_color ? event.theme_color + '25' : 'rgba(74,197,80,0.12)'}`
                       : '0 4px 20px rgba(0,0,0,0.05)',
-                    border: done ? '1.5px solid rgba(74,197,80,0.3)' : '1.5px solid transparent',
+                    border: done ? `1.5px solid ${event.theme_color ? event.theme_color + '40' : 'rgba(74,197,80,0.3)'}` : '1.5px solid transparent',
                   }}
                 >
                   <div className="flex items-center gap-4 px-5 py-4">
@@ -436,7 +442,7 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
                     <div
                       className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold transition-all"
                       style={done
-                        ? { background: '#4ac550', color: '#fff' }
+                        ? { background: event.theme_color || '#4ac550', color: '#fff' }
                         : { background: '#f3f3f3', color: '#939393', border: '1.5px solid #e0e0e0' }
                       }
                     >
