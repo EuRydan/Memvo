@@ -147,27 +147,39 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
       </div>
 
       {/* Content positioned below the arc */}
-      <div className="relative z-20 flex-1 flex flex-col items-center justify-center px-6 -mt-32 md:-mt-40 lg:-mt-48">
-        <div className="text-center max-w-4xl px-6 opacity-0 animate-fade-in flex flex-col items-center" style={{ animationDelay: '800ms', animationFillMode: 'forwards' }}>
+      <div className="relative z-20 flex-1 flex flex-col items-center justify-center px-6 -mt-16 md:-mt-24 lg:-mt-32 pb-24">
+        <div className="flex flex-col items-center justify-center gap-6 max-w-4xl mx-auto opacity-0 animate-fade-in" style={{ animationDelay: '800ms', animationFillMode: 'forwards' }}>
           
-          <div className="mb-6">
-            <AwardBadge />
-          </div>
-
-          <span className="inline-block py-1 px-3 rounded-full bg-[#0a0a0a]/5 border border-[#0a0a0a]/10 text-xs font-semibold tracking-wider text-[#0a0a0a] uppercase mb-4">
-            Programa de Parceiros
-          </span>
-          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-[-0.02em] text-[#0a0a0a] leading-tight" style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}>
-            Indique o Memvor e ganhe <br/><span className="text-[#676f7b]">por cada celebração.</span>
+          <AwardBadge />
+          
+          <p className="text-[11px] font-semibold tracking-[0.2em] text-[#939393] uppercase mb-0 mt-4">
+            Para Profissionais de Eventos
+          </p>
+          
+          <h1 
+            style={{ fontFamily: 'var(--font-raleway), Georgia, serif', color: '#0a0a0a' }} 
+            className="text-[2.5rem] md:text-[3.5rem] font-bold text-center tracking-[-0.02em] leading-tight max-w-3xl"
+          >
+            Indique o Memvor e ganhe por cada celebração
           </h1>
-          <p className="mt-6 text-[16px] text-[#676f7b] max-w-2xl mx-auto leading-relaxed">
+
+          <p className="text-[16px] text-[#676f7b] leading-relaxed max-w-lg text-center mb-4">
             Cerimonialistas, fotógrafos e assessores: ofereça uma experiência inovadora para seus clientes e receba <strong className="text-[#0a0a0a]">25% de comissão</strong> por cada plano vendido através do seu link exclusivo.
           </p>
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
-            <Link href="/parceiros/cadastro" className="w-full sm:w-auto px-10 py-4 rounded-full bg-[#0a0a0a] text-white font-bold hover:bg-black/80 transition-all duration-200 shadow-xl hover:shadow-2xl transform hover:-translate-y-0.5">
+
+          <div className="flex flex-col sm:flex-row gap-4 items-center justify-center w-full mt-4">
+            <Link 
+              href="/parceiros/cadastro"
+              className="inline-block bg-[#0a0a0a] text-white text-sm font-bold px-10 py-4 rounded-full hover:opacity-90 transition-all active:scale-95 shadow-xl text-center w-full sm:w-auto"
+            >
               Quero ser parceiro
             </Link>
-            <a href="https://wa.me/5521978949944" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto px-10 py-4 rounded-full border border-[#0a0a0a]/10 hover:bg-[#0a0a0a]/5 font-semibold text-[#0a0a0a] transition-all duration-200 bg-white/40 backdrop-blur-md">
+            <a 
+              href="https://wa.me/5521978949944" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-block border border-black/10 text-[#0a0a0a] text-sm font-bold px-10 py-4 rounded-full hover:bg-black/5 transition-all active:scale-95 text-center w-full sm:w-auto bg-white/40 backdrop-blur-md"
+            >
               Falar com a equipe
             </a>
           </div>
