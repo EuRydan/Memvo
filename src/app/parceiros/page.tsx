@@ -64,10 +64,10 @@ export default function ParceirosLandingPage() {
           'https://images.unsplash.com/photo-1628551019393-46e6a870b94b?w=400&h=400&fit=crop&q=80',
           'https://images.unsplash.com/photo-1633657322446-ed5784d121e4?w=400&h=400&fit=crop&q=80',
           'https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=400&h=400&fit=crop&q=80',
-          'https://images.unsplash.com/photo-1731596153022-4cedafe3330a?w=400&q=80&auto=format&fit=crop',
-          'https://images.pexels.com/photos/17931371/pexels-photo-17931371.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
-          'https://images.unsplash.com/photo-1723373457175-31b09fa7d405?w=400&h=400&fit=crop&q=80',
-          'https://images.unsplash.com/photo-1595877786462-ea6dc03f1695?w=400&h=400&fit=crop&q=80'
+          'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400&h=400&fit=crop&q=80',
+          'https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=400&fit=crop&q=80',
+          'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=400&fit=crop&q=80',
+          'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400&h=400&fit=crop&q=80'
         ]}
       />
 
