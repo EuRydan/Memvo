@@ -134,3 +134,41 @@ export function isEventLocked(
   // No qualifying plan found → locked
   return true
 }
+/**
+ * Returns the maximum number of collaborators an event can have
+ */
+export function getCollaboratorLimit(planId: string): { max: number, accessLevel: 'full' | 'challenges_only' | null } {
+  const plan = planId as PlanTier | 'freemium' | 'none'
+  if (plan === 'premium') return { max: 2, accessLevel: 'full' }
+  if (plan === 'classic') return { max: 1, accessLevel: 'challenges_only' }
+  return { max: 0, accessLevel: null }
+}
+
+export type EventAccessResult = {
+  isOwner: boolean
+  accessLevel: 'full' | 'challenges_only' | null
+}
+
+/**
+ * Checks if a user has access to an event (either as owner or accepted collaborator)
+ */
+export async function hasEventAccess(supabase: any, userId: string, eventId: string): Promise<EventAccessResult> {
+  const { data: event } = await supabase.from('events').select('owner_id').eq('id', eventId).single()
+  
+  if (event && event.owner_id === userId) {
+    return { isOwner: true, accessLevel: 'full' }
+  }
+
+  const { data: collab } = await supabase.from('event_collaborators')
+    .select('access_level')
+    .eq('event_id', eventId)
+    .eq('user_id', userId)
+    .eq('status', 'accepted')
+    .maybeSingle()
+
+  if (collab) {
+    return { isOwner: false, accessLevel: collab.access_level as 'full' | 'challenges_only' }
+  }
+
+  return { isOwner: false, accessLevel: null }
+}

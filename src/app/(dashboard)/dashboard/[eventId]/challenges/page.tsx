@@ -4,7 +4,7 @@ import { use, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Challenge } from '@/types'
-import { isEventLocked, UserPlanRecord, getChallengeLimit } from '@/lib/limits'
+import { isEventLocked, UserPlanRecord, getChallengeLimit, hasEventAccess } from '@/lib/limits'
 import { SelectNative } from '@/components/ui/select-native'
 import { ButtonColorful } from '@/components/ui/button-colorful'
 
@@ -104,6 +104,7 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
   const [selectedCategory, setSelectedCategory] = useState<EventCategory>('wedding')
   const [challengeLimit, setChallengeLimit] = useState<number>(Infinity)
   const [isLocked, setIsLocked] = useState(false)
+  const [isOwner, setIsOwner] = useState(true)
 
   useEffect(() => { loadChallenges() }, [eventId])
 
@@ -130,6 +131,13 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
       const eventPlanId = userPlans.find(p => p.event_id === eventId)?.plan_id
         || userPlans[userPlans.length - 1]?.plan_id
         || 'none'
+
+      const access = await hasEventAccess(supabase, user.id, eventId)
+      if (!access.accessLevel) {
+        router.push('/dashboard')
+        return
+      }
+      setIsOwner(access.isOwner)
 
       setChallengeLimit(getChallengeLimit(eventPlanId))
 
@@ -231,7 +239,7 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
 
       {/* Top Bar */}
       <header
-        className="fixed top-0 left-0 right-0 z-50 flex items-center px-5 h-16"
+        className="fixed top-0 left-0 right-0 z-50 flex flex-col px-5 h-24 pt-4"
         style={{
           background: 'rgba(250,250,250,0.88)',
           backdropFilter: 'blur(20px)',
@@ -239,14 +247,17 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
           borderBottom: '1px solid rgba(0,0,0,0.06)',
         }}
       >
-        <button
-          onClick={() => router.push('/dashboard')}
-          className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-hairline transition-colors text-slate hover:text-ink"
-        >
-          <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-            <polyline points="15 18 9 12 15 6"/>
-          </svg>
-        </button>
+        {isOwner && (
+          <button
+            onClick={() => router.push(`/dashboard/${eventId}`)}
+            className="flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors w-fit text-sm font-medium mb-2 cursor-pointer"
+          >
+            <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Voltar para Visão Geral
+          </button>
+        )}
       </header>
 
       <main className="relative z-10 pt-20 px-5 pb-36 max-w-lg mx-auto">
@@ -255,12 +266,23 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
         <div className="mb-6">
           <p className="text-[11px] font-semibold tracking-[0.16em] text-stone uppercase mb-2">Configuração</p>
           <div className="flex items-center gap-2 mb-3">
-          <button
-            onClick={() => router.push(`/dashboard/${eventId}/appearance`)}
-            className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm cursor-pointer"
-          >
-            🎨 Aparência
-          </button>
+          {isOwner && (
+            <button
+              onClick={() => router.push(`/dashboard/${eventId}/team`)}
+              className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm cursor-pointer"
+            >
+              👥 Equipe
+            </button>
+          )}
+
+          {isOwner && (
+            <button
+              onClick={() => router.push(`/dashboard/${eventId}/appearance`)}
+              className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm cursor-pointer"
+            >
+              🎨 Aparência
+            </button>
+          )}
 
           <div
             className="text-xs text-gray-900 font-medium border border-gray-200 bg-white px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-1.5"

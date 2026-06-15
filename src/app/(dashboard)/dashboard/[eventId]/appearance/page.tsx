@@ -3,7 +3,7 @@
 import { use, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { isEventLocked, UserPlanRecord, isAppearanceEnabled } from '@/lib/limits'
+import { isEventLocked, UserPlanRecord, isAppearanceEnabled, hasEventAccess } from '@/lib/limits'
 import { ButtonColorful } from '@/components/ui/button-colorful'
 
 const THEME_COLORS = [
@@ -23,6 +23,7 @@ export default function AppearancePage({ params }: { params: Promise<{ eventId: 
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [isLocked, setIsLocked] = useState(false)
+  const [isOwner, setIsOwner] = useState(true)
   const [appearanceEnabled, setAppearanceEnabled] = useState(false)
   
   const [themeColor, setThemeColor] = useState('#4ac550')
@@ -55,6 +56,18 @@ export default function AppearancePage({ params }: { params: Promise<{ eventId: 
         || userPlans[userPlans.length - 1]?.plan_id
         || 'none'
 
+      const access = await hasEventAccess(supabase, user.id, eventId)
+      if (!access.accessLevel) {
+        router.push('/dashboard')
+        return
+      }
+      
+      if (access.accessLevel === 'challenges_only') {
+        router.push(`/dashboard/${eventId}/challenges`)
+        return
+      }
+
+      setIsOwner(access.isOwner)
       setAppearanceEnabled(isAppearanceEnabled(eventPlanId))
 
       if (isEventLocked(eventId, userPlans, eventData || undefined)) {
@@ -104,10 +117,18 @@ export default function AppearancePage({ params }: { params: Promise<{ eventId: 
         {/* Header Tabs */}
         <div className="mb-6">
           <p className="text-[11px] font-semibold tracking-[0.16em] text-stone uppercase mb-2">Configuração</p>
-          <div className="flex items-center gap-2 mb-3">
+          <div className="flex flex-wrap items-center gap-2 mb-3">
             <div className="text-xs text-gray-900 font-medium border border-gray-200 bg-white px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-1.5">
               🎨 Aparência
             </div>
+            {isOwner && (
+              <button
+                onClick={() => router.push(`/dashboard/${eventId}/team`)}
+                className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm cursor-pointer"
+              >
+                👥 Equipe
+              </button>
+            )}
             <button
               onClick={() => router.push(`/dashboard/${eventId}/challenges`)}
               className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm cursor-pointer"

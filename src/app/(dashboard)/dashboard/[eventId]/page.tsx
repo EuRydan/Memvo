@@ -7,7 +7,7 @@ import { Media, Challenge } from '@/types'
 import { Camera, Sparkles, Star, Heart, Share, Download } from 'lucide-react'
 import { StoryGenerator } from '@/components/StoryGenerator'
 import { EventShareCard } from '@/components/EventShareCard'
-import { isEventLocked, UserPlanRecord, isTelaoEnabled } from '@/lib/limits'
+import { isEventLocked, UserPlanRecord, isTelaoEnabled, hasEventAccess } from '@/lib/limits'
 import JSZip from 'jszip'
 import { saveAs } from 'file-saver'
 
@@ -51,6 +51,17 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
           || 'none'
         
         setPlanType(eventPlanId)
+
+        const access = await hasEventAccess(supabase, user.id, eventId)
+        if (!access.accessLevel) {
+          router.push('/dashboard')
+          return
+        }
+
+        if (access.accessLevel === 'challenges_only') {
+          router.push(`/dashboard/${eventId}/challenges`)
+          return
+        }
 
         if (isEventLocked(eventId, userPlans, eventData)) {
           setIsLocked(true)
@@ -239,6 +250,13 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
             className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-1.5 cursor-pointer"
           >
             📊 Estatísticas
+          </button>
+
+          <button
+            onClick={() => router.push(`/dashboard/${eventId}/team`)}
+            className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm cursor-pointer"
+          >
+            👥 Equipe
           </button>
 
           <button
