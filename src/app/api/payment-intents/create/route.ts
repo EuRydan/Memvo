@@ -39,7 +39,8 @@ export async function POST(request: Request) {
     const payment = new Payment(client)
 
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://memvor.app'
-    const notificationUrl = process.env.MERCADOPAGO_WEBHOOK_URL || `${baseUrl}/api/webhooks/mercadopago`
+    // Usamos o baseUrl como fonte de verdade para a notificação, ignorando a variável antiga caso esteja desatualizada
+    const notificationUrl = `${baseUrl.replace(/\/$/, '')}/api/webhooks/mercadopago`
 
     const payload = {
       body: {
