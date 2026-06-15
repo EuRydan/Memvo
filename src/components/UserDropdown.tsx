@@ -170,55 +170,84 @@ export function UserDropdown({ email, name, plan = 'Free' }: UserDropdownProps) 
           <div className="px-1 py-1">
             <DropdownMenuGroup>
               <div className="px-2 py-1.5 text-[11px] font-semibold text-slate/70">Preferências</div>
-              <DropdownMenuSub>
-                <DropdownMenuSubTrigger className="cursor-pointer p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 transition-colors">
-                  <span className="flex items-center gap-2 font-medium text-[14px] text-ink">
-                    <Icon icon="solar:moon-sleep-line-duotone" className="size-[18px] text-gray-500 dark:text-gray-400" />
-                    {t('userMenu.theme')}
-                  </span>
-                </DropdownMenuSubTrigger>
-                <DropdownMenuPortal>
-                  <DropdownMenuSubContent className="bg-canvas dark:bg-[#1a1a1a] border border-hairline shadow-lg rounded-xl p-1 min-w-[140px] max-sm:!fixed max-sm:!bottom-0 max-sm:!left-0 max-sm:!right-0 max-sm:!top-auto max-sm:!w-full max-sm:!transform-none max-sm:rounded-b-none max-sm:rounded-t-2xl max-sm:p-6 max-sm:border-x-0 max-sm:border-b-0 max-sm:shadow-[0_-10px_40px_rgba(0,0,0,0.1)] z-50">
-                    <div className="sm:hidden text-[13px] font-bold text-slate mb-3 px-2 uppercase tracking-wide">{t('userMenu.theme')}</div>
-                    <DropdownMenuRadioGroup value={theme || 'system'} onValueChange={setTheme}>
-                      <DropdownMenuRadioItem value="system" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-3 sm:py-2">
-                        <span className="text-ink font-medium text-[15px] sm:text-[13px]">{t('themes.system')}</span>
-                      </DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="light" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-3 sm:py-2">
-                        <span className="text-ink font-medium text-[15px] sm:text-[13px]">{t('themes.light')}</span>
-                      </DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="dark" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-3 sm:py-2">
-                        <span className="text-ink font-medium text-[15px] sm:text-[13px]">{t('themes.dark')}</span>
-                      </DropdownMenuRadioItem>
-                    </DropdownMenuRadioGroup>
-                  </DropdownMenuSubContent>
-                </DropdownMenuPortal>
-              </DropdownMenuSub>
+              
+              {/* Desktop Submenus */}
+              <div className="hidden sm:block">
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger className="cursor-pointer p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 transition-colors">
+                    <span className="flex items-center gap-2 font-medium text-[14px] text-ink">
+                      <Icon icon="solar:moon-sleep-line-duotone" className="size-[18px] text-gray-500 dark:text-gray-400" />
+                      {t('userMenu.theme')}
+                    </span>
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent className="bg-canvas dark:bg-[#1a1a1a] border border-hairline shadow-lg rounded-xl p-1 min-w-[140px] z-50">
+                      <DropdownMenuRadioGroup value={theme || 'system'} onValueChange={setTheme}>
+                        <DropdownMenuRadioItem value="system" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-2">
+                          <span className="text-ink font-medium text-[13px]">{t('themes.system')}</span>
+                        </DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="light" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-2">
+                          <span className="text-ink font-medium text-[13px]">{t('themes.light')}</span>
+                        </DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="dark" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-2">
+                          <span className="text-ink font-medium text-[13px]">{t('themes.dark')}</span>
+                        </DropdownMenuRadioItem>
+                      </DropdownMenuRadioGroup>
+                    </DropdownMenuSubContent>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
 
-              <DropdownMenuSub>
-                <DropdownMenuSubTrigger className="cursor-pointer p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 transition-colors mt-0.5">
-                  <span className="flex items-center gap-2 font-medium text-[14px] text-ink">
-                    <Icon icon="solar:globe-line-duotone" className="size-[18px] text-gray-500 dark:text-gray-400" />
-                    {t('userMenu.language')}
-                  </span>
-                </DropdownMenuSubTrigger>
-                <DropdownMenuPortal>
-                  <DropdownMenuSubContent className="bg-canvas dark:bg-[#1a1a1a] border border-hairline shadow-lg rounded-xl p-1 min-w-[140px] max-sm:!fixed max-sm:!bottom-0 max-sm:!left-0 max-sm:!right-0 max-sm:!top-auto max-sm:!w-full max-sm:!transform-none max-sm:rounded-b-none max-sm:rounded-t-2xl max-sm:p-6 max-sm:border-x-0 max-sm:border-b-0 max-sm:shadow-[0_-10px_40px_rgba(0,0,0,0.1)] z-50">
-                    <div className="sm:hidden text-[13px] font-bold text-slate mb-3 px-2 uppercase tracking-wide">{t('userMenu.language')}</div>
-                    <DropdownMenuRadioGroup value={locale} onValueChange={(val) => setLocale(val as any)}>
-                      <DropdownMenuRadioItem value="pt" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-3 sm:py-2">
-                        <span className="text-ink font-medium text-[15px] sm:text-[13px]">{t('languages.pt')}</span>
-                      </DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="en" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-3 sm:py-2">
-                        <span className="text-ink font-medium text-[15px] sm:text-[13px]">{t('languages.en')}</span>
-                      </DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="es" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-3 sm:py-2">
-                        <span className="text-ink font-medium text-[15px] sm:text-[13px]">{t('languages.es')}</span>
-                      </DropdownMenuRadioItem>
-                    </DropdownMenuRadioGroup>
-                  </DropdownMenuSubContent>
-                </DropdownMenuPortal>
-              </DropdownMenuSub>
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger className="cursor-pointer p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 transition-colors mt-0.5">
+                    <span className="flex items-center gap-2 font-medium text-[14px] text-ink">
+                      <Icon icon="solar:globe-line-duotone" className="size-[18px] text-gray-500 dark:text-gray-400" />
+                      {t('userMenu.language')}
+                    </span>
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent className="bg-canvas dark:bg-[#1a1a1a] border border-hairline shadow-lg rounded-xl p-1 min-w-[140px] z-50">
+                      <DropdownMenuRadioGroup value={locale} onValueChange={(val) => setLocale(val as any)}>
+                        <DropdownMenuRadioItem value="pt" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-2">
+                          <span className="text-ink font-medium text-[13px]">{t('languages.pt')}</span>
+                        </DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="en" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-2">
+                          <span className="text-ink font-medium text-[13px]">{t('languages.en')}</span>
+                        </DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="es" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-2">
+                          <span className="text-ink font-medium text-[13px]">{t('languages.es')}</span>
+                        </DropdownMenuRadioItem>
+                      </DropdownMenuRadioGroup>
+                    </DropdownMenuSubContent>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
+              </div>
+
+              {/* Mobile Inline Controls */}
+              <div className="sm:hidden px-2 pt-1 pb-3 flex flex-col gap-4 mt-1">
+                <div>
+                  <div className="flex items-center gap-2 mb-2 text-slate dark:text-gray-400">
+                    <Icon icon="solar:moon-sleep-line-duotone" className="size-[16px]" />
+                    <span className="text-[13px] font-medium">{t('userMenu.theme')}</span>
+                  </div>
+                  <div className="flex bg-black/5 dark:bg-white/5 p-1 rounded-[10px]">
+                    <button onClick={() => setTheme('system')} className={cn("flex-1 text-[13px] font-medium py-1.5 rounded-[7px] transition-all", theme === 'system' ? 'bg-canvas dark:bg-[#222] shadow-sm text-ink font-bold' : 'text-slate hover:text-ink')}>Sistema</button>
+                    <button onClick={() => setTheme('light')} className={cn("flex-1 text-[13px] font-medium py-1.5 rounded-[7px] transition-all", theme === 'light' ? 'bg-canvas dark:bg-[#222] shadow-sm text-ink font-bold' : 'text-slate hover:text-ink')}>Claro</button>
+                    <button onClick={() => setTheme('dark')} className={cn("flex-1 text-[13px] font-medium py-1.5 rounded-[7px] transition-all", theme === 'dark' ? 'bg-canvas dark:bg-[#222] shadow-sm text-ink font-bold' : 'text-slate hover:text-ink')}>Escuro</button>
+                  </div>
+                </div>
+                
+                <div>
+                  <div className="flex items-center gap-2 mb-2 text-slate dark:text-gray-400">
+                    <Icon icon="solar:globe-line-duotone" className="size-[16px]" />
+                    <span className="text-[13px] font-medium">{t('userMenu.language')}</span>
+                  </div>
+                  <div className="flex bg-black/5 dark:bg-white/5 p-1 rounded-[10px]">
+                    <button onClick={() => setLocale('pt')} className={cn("flex-1 text-[13px] font-medium py-1.5 rounded-[7px] transition-all", locale === 'pt' ? 'bg-canvas dark:bg-[#222] shadow-sm text-ink font-bold' : 'text-slate hover:text-ink')}>PT</button>
+                    <button onClick={() => setLocale('en')} className={cn("flex-1 text-[13px] font-medium py-1.5 rounded-[7px] transition-all", locale === 'en' ? 'bg-canvas dark:bg-[#222] shadow-sm text-ink font-bold' : 'text-slate hover:text-ink')}>EN</button>
+                    <button onClick={() => setLocale('es')} className={cn("flex-1 text-[13px] font-medium py-1.5 rounded-[7px] transition-all", locale === 'es' ? 'bg-canvas dark:bg-[#222] shadow-sm text-ink font-bold' : 'text-slate hover:text-ink')}>ES</button>
+                  </div>
+                </div>
+              </div>
             </DropdownMenuGroup>
           </div>
 
