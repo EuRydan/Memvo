@@ -53,14 +53,8 @@ function FlipCard({
         >
             <motion.div
                 animate={{
-                    y: [0, -12, 0],
-                    rotateZ: [0, index % 2 === 0 ? 3 : -3, 0]
-                }}
-                transition={{
-                    duration: 4 + (index % 3) * 0.5,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: index * 0.1
+                    y: 0,
+                    rotateZ: 0
                 }}
                 className="w-full h-full"
                 style={{ transformStyle: "preserve-3d" }}
