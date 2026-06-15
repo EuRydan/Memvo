@@ -26,6 +26,7 @@ export const metadata: Metadata = {
 import { RealtimeToast } from "@/components/RealtimeToast";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { I18nProvider } from "@/contexts/I18nContext";
+import { CookieConsentWrapper } from "@/components/CookieConsentWrapper";
 
 export default function RootLayout({
   children,
@@ -46,6 +47,7 @@ export default function RootLayout({
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             {children}
             <RealtimeToast />
+            <CookieConsentWrapper />
           </ThemeProvider>
         </I18nProvider>
       </body>

@@ -161,3 +161,13 @@ body {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   background: transparent;
 }
+
+@keyframes cookie-enter {
+  from { opacity: 0; transform: translateY(100%) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes cookie-leave {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(100%) scale(0.95); }
+}
