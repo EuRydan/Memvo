@@ -36,8 +36,8 @@ export function PartnerDashboardClient({
           <div className="flex-1 bg-canvas-warm p-6 rounded-3xl border border-hairline shadow-sm flex items-center justify-between transition-colors duration-200">
             <div>
               <p className="text-[11px] font-bold tracking-wider text-slate uppercase mb-1">{t('dashboard.discountLink')}</p>
-              <p className="text-ink font-mono text-sm sm:text-base font-semibold bg-ink/5 px-3 py-1.5 rounded-md inline-block max-w-full overflow-hidden text-ellipsis whitespace-nowrap border border-ink/10" title={`memvo.com.br/pricing?cupom=${affiliate.affiliate_code}`}>
-                memvo.com.br/pricing?cupom={affiliate.affiliate_code}
+              <p className="text-ink font-mono text-sm sm:text-base font-semibold bg-ink/5 px-3 py-1.5 rounded-md inline-block max-w-full overflow-hidden text-ellipsis whitespace-nowrap border border-ink/10" title={`memvor.app/pricing?cupom=${affiliate.affiliate_code}`}>
+                memvor.app/pricing?cupom={affiliate.affiliate_code}
               </p>
             </div>
             <PartnerDashboardContent affiliateCode={affiliate.affiliate_code} />
