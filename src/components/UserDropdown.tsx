@@ -68,7 +68,7 @@ export function UserDropdown({ email, name, plan = 'Free' }: UserDropdownProps) 
       { 
         icon: "solar:plus-circle-bold-duotone", 
         label: t('userMenu.createEvent'), 
-        action: () => navigateTo('/dashboard/events/new')
+        action: () => navigateTo('/onboarding?new=true')
       },
       { icon: "solar:folder-with-files-line-duotone", label: t('userMenu.folders'), action: () => navigateTo('/dashboard/folders') }
     ],
