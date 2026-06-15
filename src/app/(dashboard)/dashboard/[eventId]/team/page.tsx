@@ -30,7 +30,7 @@ export default function EventTeamPage({ params }: { params: Promise<{ eventId: s
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { router.push('/login'); return }
 
-      const { data: eventData } = await supabase.from('events').select('id, name').eq('id', eventId).single()
+      const { data: eventData } = await supabase.from('events').select('id, name, status, active').eq('id', eventId).single()
       if (!eventData) { router.push('/dashboard'); return }
 
       const access = await hasEventAccess(supabase, user.id, eventId)

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { POST as checkoutPOST } from '@/app/api/payment-intents/init/route'
-import { POST as uploadPOST } from '@/app/api/drive/upload/route'
+import { POST as uploadPOST } from '@/app/api/media/presign/route'
 
 describe('Security API Tests (SAST / DAST Mocked)', () => {
   describe('Zod Validation - Checkout Session', () => {
