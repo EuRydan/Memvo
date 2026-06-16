@@ -74,7 +74,7 @@ export async function POST(request: Request) {
       const { data: affiliate } = await supabaseAdmin
         .from('affiliates')
         .select('user_id, affiliate_code, status')
-        .eq('affiliate_code', finalVoucher)
+        .ilike('affiliate_code', finalVoucher.trim())
         .maybeSingle()
 
       // Ensure the affiliate is approved and is NOT the user themselves

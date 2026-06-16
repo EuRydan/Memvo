@@ -28,7 +28,7 @@ export async function POST(request: Request) {
     const { data: affiliate } = await supabase
       .from('affiliates')
       .select('user_id, affiliate_code, status, name')
-      .eq('affiliate_code', couponCode)
+      .ilike('affiliate_code', couponCode.trim())
       .maybeSingle()
 
     if (!affiliate || affiliate.status !== 'approved') {
