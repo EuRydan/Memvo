@@ -22,6 +22,11 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
   const response = NextResponse.redirect(new URL('/', request.url))
 
+  // Disable caching on the edge
+  response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate')
+  response.headers.set('CDN-Cache-Control', 'no-store')
+  response.headers.set('Vercel-CDN-Cache-Control', 'no-store')
+
   // Only track if the affiliate exists and is approved
   if (affiliate && affiliate.status === 'approved') {
     // Set cookie for 30 days
