@@ -17,10 +17,14 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     .eq('affiliate_code', code)
     .maybeSingle()
 
+  console.log('[DEBUG /r/[code]] Code from URL param:', code)
+  console.log('[DEBUG /r/[code]] Affiliate query result:', affiliate)
+
   const response = NextResponse.redirect(new URL('/', request.url))
 
   // Only track if the affiliate exists and is approved
   if (affiliate && affiliate.status === 'approved') {
+    console.log('[DEBUG /r/[code]] Affiliate found and approved. Setting cookie.')
     // Set cookie for 30 days
     response.cookies.set({
       name: 'affiliate_code',
@@ -29,6 +33,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       path: '/',
       sameSite: 'lax',
     })
+  } else {
+    console.log('[DEBUG /r/[code]] Affiliate not found or not approved. NOT setting cookie.')
   }
 
   return response
