@@ -54,7 +54,7 @@ export default function EventTeamPage({ params }: { params: Promise<{ eventId: s
       const userPlans: UserPlanRecord[] = (plansData || []) as UserPlanRecord[]
       
       const eventPlanId = userPlans.find(p => p.event_id === eventId)?.plan_id
-        || userPlans[userPlans.length - 1]?.plan_id
+        || userPlans.find(p => p.event_id === null)?.plan_id
         || 'none'
 
       setLimitInfo(getCollaboratorLimit(eventPlanId))

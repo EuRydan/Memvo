@@ -42,7 +42,7 @@ export async function POST(request: Request) {
 
     const userPlans: UserPlanRecord[] = plansData || []
     const planId = userPlans.find(p => p.event_id === event_id)?.plan_id
-      || userPlans[userPlans.length - 1]?.plan_id
+      || userPlans.find(p => p.event_id === null)?.plan_id
       || 'none'
 
     const limit = getChallengeLimit(planId)

@@ -59,9 +59,9 @@ export default function OnboardingWizard() {
         .select('id, plan_id, event_id')
         .eq('user_id', user.id)
         
-      setHasPlan(!!plansData && plansData.length > 0)
-
       const legacyPlan = plansData?.find(p => p.event_id === null && p.plan_id && p.plan_id !== 'none')
+      setHasPlan(!!legacyPlan)
+
       const planLimit = legacyPlan ? getChallengeLimit(legacyPlan.plan_id) : 1
       setChallengeLimit(planLimit)
 

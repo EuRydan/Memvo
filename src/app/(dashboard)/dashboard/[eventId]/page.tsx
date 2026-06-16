@@ -47,7 +47,7 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
         const userPlans: UserPlanRecord[] = (plansData || []) as UserPlanRecord[]
 
         const eventPlanId = userPlans.find(p => p.event_id === eventId)?.plan_id
-          || userPlans[userPlans.length - 1]?.plan_id
+          || userPlans.find(p => p.event_id === null)?.plan_id
           || 'none'
         
         setPlanType(eventPlanId)

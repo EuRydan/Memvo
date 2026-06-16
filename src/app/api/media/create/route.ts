@@ -53,8 +53,8 @@ export async function POST(request: Request) {
 
     // Plano mais recente para calcular limites de fotos
     const planId = userPlans.length > 0
-      ? (userPlans.sort((a, b) => 0).find(p => p.event_id === event_id)?.plan_id
-          || userPlans[userPlans.length - 1]?.plan_id
+      ? (userPlans.find(p => p.event_id === event_id)?.plan_id
+          || userPlans.find(p => p.event_id === null)?.plan_id
           || 'none')
       : 'none'
 

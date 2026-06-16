@@ -63,9 +63,9 @@ export async function POST(request: Request) {
 
     const userPlans: UserPlanRecord[] = ownerPlans || []
 
-    // Plano para cálculo de limites: preferir o vinculado ao evento, sentar no mais recente
+    // Plano para cálculo de limites: preferir o vinculado ao evento, fallback para plano global (legado) se existir
     const planId = userPlans.find(p => p.event_id === event_id)?.plan_id
-      || userPlans[userPlans.length - 1]?.plan_id
+      || userPlans.find(p => p.event_id === null)?.plan_id
       || 'none'
 
     // 3. Checar bloqueio de pagamento (se não for dono)

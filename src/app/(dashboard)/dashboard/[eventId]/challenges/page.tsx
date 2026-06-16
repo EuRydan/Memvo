@@ -127,9 +127,9 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
 
       const userPlans: UserPlanRecord[] = (plansData || []) as UserPlanRecord[]
 
-      // Plano específico do evento (ou o mais recente como fallback)
+      // Plano específico do evento (ou o global/legacy se existir)
       const eventPlanId = userPlans.find(p => p.event_id === eventId)?.plan_id
-        || userPlans[userPlans.length - 1]?.plan_id
+        || userPlans.find(p => p.event_id === null)?.plan_id
         || 'none'
 
       const access = await hasEventAccess(supabase, user.id, eventId)
