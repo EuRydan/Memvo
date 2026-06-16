@@ -104,7 +104,7 @@ export function UserDropdown({ email, name, plan = 'Free' }: UserDropdownProps) 
           icon={item.icon}
           className={`size-[18px] ${item.danger ? "text-red-600 dark:text-red-500" : item.iconClass || "text-gray-500 dark:text-gray-400"}`}
         />
-        <span className={item.danger ? "" : "text-ink"}>{item.label}</span>
+        <span className={item.danger ? "" : "text-ink dark:text-gray-200"}>{item.label}</span>
       </span>
       {item.badge && (
         <Badge className={item.badge.className} variant="outline">
@@ -150,7 +150,7 @@ export function UserDropdown({ email, name, plan = 'Free' }: UserDropdownProps) 
               </div>
               <div className="overflow-hidden flex flex-col w-full">
                 <div className="flex items-center gap-2">
-                  <h3 className="font-bold text-[15px] text-ink truncate leading-tight">{user.name}</h3>
+                  <h3 className="font-bold text-[15px] text-ink dark:text-white truncate leading-tight">{user.name}</h3>
                   <Badge className="bg-ink/5 dark:bg-white/10 text-ink dark:text-white text-[10px] font-bold border border-ink/10 dark:border-white/20 py-0 px-1.5 h-4 uppercase">{plan}</Badge>
                 </div>
                 <p className="text-slate text-[13px] truncate mt-[2px]">{user.username}</p>
@@ -175,7 +175,7 @@ export function UserDropdown({ email, name, plan = 'Free' }: UserDropdownProps) 
               <div className="hidden sm:block">
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger className="cursor-pointer p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 transition-colors">
-                    <span className="flex items-center gap-2 font-medium text-[14px] text-ink">
+                    <span className="flex items-center gap-2 font-medium text-[14px] text-ink dark:text-gray-200">
                       <Icon icon="solar:moon-sleep-line-duotone" className="size-[18px] text-gray-500 dark:text-gray-400" />
                       {t('userMenu.theme')}
                     </span>
@@ -184,13 +184,13 @@ export function UserDropdown({ email, name, plan = 'Free' }: UserDropdownProps) 
                     <DropdownMenuSubContent className="bg-canvas dark:bg-[#1a1a1a] border border-hairline shadow-lg rounded-xl p-1 min-w-[140px] z-50">
                       <DropdownMenuRadioGroup value={theme || 'system'} onValueChange={setTheme}>
                         <DropdownMenuRadioItem value="system" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-2">
-                          <span className="text-ink font-medium text-[13px]">{t('themes.system')}</span>
+                          <span className="text-ink dark:text-gray-200 font-medium text-[13px]">{t('themes.system')}</span>
                         </DropdownMenuRadioItem>
                         <DropdownMenuRadioItem value="light" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-2">
-                          <span className="text-ink font-medium text-[13px]">{t('themes.light')}</span>
+                          <span className="text-ink dark:text-gray-200 font-medium text-[13px]">{t('themes.light')}</span>
                         </DropdownMenuRadioItem>
                         <DropdownMenuRadioItem value="dark" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-2">
-                          <span className="text-ink font-medium text-[13px]">{t('themes.dark')}</span>
+                          <span className="text-ink dark:text-gray-200 font-medium text-[13px]">{t('themes.dark')}</span>
                         </DropdownMenuRadioItem>
                       </DropdownMenuRadioGroup>
                     </DropdownMenuSubContent>
@@ -199,7 +199,7 @@ export function UserDropdown({ email, name, plan = 'Free' }: UserDropdownProps) 
 
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger className="cursor-pointer p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 transition-colors mt-0.5">
-                    <span className="flex items-center gap-2 font-medium text-[14px] text-ink">
+                    <span className="flex items-center gap-2 font-medium text-[14px] text-ink dark:text-gray-200">
                       <Icon icon="solar:globe-line-duotone" className="size-[18px] text-gray-500 dark:text-gray-400" />
                       {t('userMenu.language')}
                     </span>
@@ -208,13 +208,13 @@ export function UserDropdown({ email, name, plan = 'Free' }: UserDropdownProps) 
                     <DropdownMenuSubContent className="bg-canvas dark:bg-[#1a1a1a] border border-hairline shadow-lg rounded-xl p-1 min-w-[140px] z-50">
                       <DropdownMenuRadioGroup value={locale} onValueChange={(val) => setLocale(val as any)}>
                         <DropdownMenuRadioItem value="pt" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-2">
-                          <span className="text-ink font-medium text-[13px]">{t('languages.pt')}</span>
+                          <span className="text-ink dark:text-gray-200 font-medium text-[13px]">{t('languages.pt')}</span>
                         </DropdownMenuRadioItem>
                         <DropdownMenuRadioItem value="en" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-2">
-                          <span className="text-ink font-medium text-[13px]">{t('languages.en')}</span>
+                          <span className="text-ink dark:text-gray-200 font-medium text-[13px]">{t('languages.en')}</span>
                         </DropdownMenuRadioItem>
                         <DropdownMenuRadioItem value="es" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-2">
-                          <span className="text-ink font-medium text-[13px]">{t('languages.es')}</span>
+                          <span className="text-ink dark:text-gray-200 font-medium text-[13px]">{t('languages.es')}</span>
                         </DropdownMenuRadioItem>
                       </DropdownMenuRadioGroup>
                     </DropdownMenuSubContent>
@@ -230,9 +230,9 @@ export function UserDropdown({ email, name, plan = 'Free' }: UserDropdownProps) 
                     <span className="text-[13px] font-medium">{t('userMenu.theme')}</span>
                   </div>
                   <div className="flex bg-black/5 dark:bg-white/5 p-1 rounded-[10px]">
-                    <button onClick={() => setTheme('system')} className={cn("flex-1 text-[13px] font-medium py-1.5 rounded-[7px] transition-all", theme === 'system' ? 'bg-canvas dark:bg-[#222] shadow-sm text-ink font-bold' : 'text-slate hover:text-ink')}>Sistema</button>
-                    <button onClick={() => setTheme('light')} className={cn("flex-1 text-[13px] font-medium py-1.5 rounded-[7px] transition-all", theme === 'light' ? 'bg-canvas dark:bg-[#222] shadow-sm text-ink font-bold' : 'text-slate hover:text-ink')}>Claro</button>
-                    <button onClick={() => setTheme('dark')} className={cn("flex-1 text-[13px] font-medium py-1.5 rounded-[7px] transition-all", theme === 'dark' ? 'bg-canvas dark:bg-[#222] shadow-sm text-ink font-bold' : 'text-slate hover:text-ink')}>Escuro</button>
+                    <button onClick={() => setTheme('system')} className={cn("flex-1 text-[13px] font-medium py-1.5 rounded-[7px] transition-all", theme === 'system' ? 'bg-canvas dark:bg-[#222] shadow-sm text-ink dark:text-white font-bold' : 'text-slate hover:text-ink dark:hover:text-white')}>Sistema</button>
+                    <button onClick={() => setTheme('light')} className={cn("flex-1 text-[13px] font-medium py-1.5 rounded-[7px] transition-all", theme === 'light' ? 'bg-canvas dark:bg-[#222] shadow-sm text-ink dark:text-white font-bold' : 'text-slate hover:text-ink dark:hover:text-white')}>Claro</button>
+                    <button onClick={() => setTheme('dark')} className={cn("flex-1 text-[13px] font-medium py-1.5 rounded-[7px] transition-all", theme === 'dark' ? 'bg-canvas dark:bg-[#222] shadow-sm text-ink dark:text-white font-bold' : 'text-slate hover:text-ink dark:hover:text-white')}>Escuro</button>
                   </div>
                 </div>
                 
@@ -242,9 +242,9 @@ export function UserDropdown({ email, name, plan = 'Free' }: UserDropdownProps) 
                     <span className="text-[13px] font-medium">{t('userMenu.language')}</span>
                   </div>
                   <div className="flex bg-black/5 dark:bg-white/5 p-1 rounded-[10px]">
-                    <button onClick={() => setLocale('pt')} className={cn("flex-1 text-[13px] font-medium py-1.5 rounded-[7px] transition-all", locale === 'pt' ? 'bg-canvas dark:bg-[#222] shadow-sm text-ink font-bold' : 'text-slate hover:text-ink')}>PT</button>
-                    <button onClick={() => setLocale('en')} className={cn("flex-1 text-[13px] font-medium py-1.5 rounded-[7px] transition-all", locale === 'en' ? 'bg-canvas dark:bg-[#222] shadow-sm text-ink font-bold' : 'text-slate hover:text-ink')}>EN</button>
-                    <button onClick={() => setLocale('es')} className={cn("flex-1 text-[13px] font-medium py-1.5 rounded-[7px] transition-all", locale === 'es' ? 'bg-canvas dark:bg-[#222] shadow-sm text-ink font-bold' : 'text-slate hover:text-ink')}>ES</button>
+                    <button onClick={() => setLocale('pt')} className={cn("flex-1 text-[13px] font-medium py-1.5 rounded-[7px] transition-all", locale === 'pt' ? 'bg-canvas dark:bg-[#222] shadow-sm text-ink dark:text-white font-bold' : 'text-slate hover:text-ink dark:hover:text-white')}>PT</button>
+                    <button onClick={() => setLocale('en')} className={cn("flex-1 text-[13px] font-medium py-1.5 rounded-[7px] transition-all", locale === 'en' ? 'bg-canvas dark:bg-[#222] shadow-sm text-ink dark:text-white font-bold' : 'text-slate hover:text-ink dark:hover:text-white')}>EN</button>
+                    <button onClick={() => setLocale('es')} className={cn("flex-1 text-[13px] font-medium py-1.5 rounded-[7px] transition-all", locale === 'es' ? 'bg-canvas dark:bg-[#222] shadow-sm text-ink dark:text-white font-bold' : 'text-slate hover:text-ink dark:hover:text-white')}>ES</button>
                   </div>
                 </div>
               </div>
