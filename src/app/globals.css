@@ -121,15 +121,16 @@ body {
 }
 
 .input-field {
-  background: rgba(248, 248, 248, 0.9);
-  border: 1.5px solid #ebebeb;
+  background: var(--color-canvas-warm);
+  border: 1.5px solid var(--color-hairline);
   transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+  color: var(--color-ink);
 }
 
 .input-field:focus {
-  border-color: #0a0a0a;
-  background: #ffffff;
-  box-shadow: 0 0 0 3px rgba(0,0,0,0.06);
+  border-color: var(--color-ink);
+  background: var(--color-canvas);
+  box-shadow: 0 0 0 3px rgba(136, 136, 136, 0.1);
   outline: none;
 }
 
@@ -145,9 +146,9 @@ body {
   left: 1.1rem;
   font-size: 0.7rem;
   letter-spacing: 0.04em;
-  background: white;
+  background: var(--color-canvas);
   padding: 0 0.35rem;
-  color: #0a0a0a;
+  color: var(--color-ink);
   font-weight: 600;
 }
 
