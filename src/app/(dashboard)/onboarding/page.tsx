@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { CalendarCrest } from '@/components/ui/calendar-crest'
+import { getChallengeLimit } from '@/lib/limits'
 import { Logo } from '@/components/Logo'
 
 function generateSlug(text: string) {
@@ -42,6 +43,7 @@ export default function OnboardingWizard() {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
   const [promoCode, setPromoCode] = useState('')
   const [hasPlan, setHasPlan] = useState(false)
+  const [challengeLimit, setChallengeLimit] = useState(1)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -52,14 +54,16 @@ export default function OnboardingWizard() {
       if (!user) { router.push('/login'); return }
       setCurrentUserId(user.id)
 
-      const { data: planData } = await supabase
+      const { data: plansData } = await supabase
         .from('user_plans')
-        .select('id')
+        .select('id, plan_id, event_id')
         .eq('user_id', user.id)
-        .limit(1)
-        .maybeSingle()
         
-      setHasPlan(!!planData)
+      setHasPlan(!!plansData && plansData.length > 0)
+
+      const legacyPlan = plansData?.find(p => p.event_id === null && p.plan_id && p.plan_id !== 'none')
+      const planLimit = legacyPlan ? getChallengeLimit(legacyPlan.plan_id) : 1
+      setChallengeLimit(planLimit)
 
       // Check if forcing a new event
       const params = new URLSearchParams(window.location.search)
@@ -145,9 +149,14 @@ export default function OnboardingWizard() {
 
   // Toggle challenge selection
   const toggleChallenge = (title: string) => {
-    setSelectedChallenges(prev => 
-      prev.includes(title) ? prev.filter(t => t !== title) : [...prev, title]
-    )
+    setSelectedChallenges(prev => {
+      if (prev.includes(title)) return prev.filter(t => t !== title)
+      if (prev.length >= challengeLimit) {
+        alert(`Seu plano permite selecionar apenas ${challengeLimit} desafio${challengeLimit === 1 ? '' : 's'} no onboarding. Após criar o evento, você poderá assinar um plano no painel para adicionar mais!`)
+        return prev
+      }
+      return [...prev, title]
+    })
   }
 
   // SAVE EVENT TO DB (Before Step 7)
@@ -387,7 +396,10 @@ export default function OnboardingWizard() {
           <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
             <p className="text-[11px] font-semibold tracking-widest text-stone uppercase mb-2 transition-colors">Etapa 4 de 7</p>
             <h2 className="text-3xl font-bold text-ink mb-2 transition-colors" style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}>Desafios de Fotos</h2>
-            <p className="text-sm text-slate mb-6 transition-colors">Sugira desafios para seus convidados. Eles receberão missões diferentes para engajar mais!</p>
+            <p className="text-sm text-slate mb-2 transition-colors">Sugira desafios para seus convidados. Eles receberão missões diferentes para engajar mais!</p>
+            <p className="text-[13px] font-semibold text-ink/80 mb-6 bg-ink/5 px-4 py-2 rounded-lg inline-block border border-ink/10">
+              Você pode selecionar {challengeLimit} desafio{challengeLimit === 1 ? '' : 's'} inicial{challengeLimit === 1 ? '' : 'is'} para o seu evento.
+            </p>
             
             <div className="bg-canvas-warm rounded-3xl p-5 shadow-sm border border-hairline flex flex-col gap-3 max-h-[400px] overflow-y-auto transition-colors duration-200">
               {defaultChallenges.length === 0 && <p className="text-sm text-stone text-center py-4">Carregando sugestões...</p>}
