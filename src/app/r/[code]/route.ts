@@ -13,28 +13,22 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   // Find affiliate by code
   const { data: affiliate } = await supabase
     .from('affiliates')
-    .select('id, status')
-    .eq('affiliate_code', code)
+    .select('id, status, affiliate_code')
+    .ilike('affiliate_code', code.trim())
     .maybeSingle()
-
-  console.log('[DEBUG /r/[code]] Code from URL param:', code)
-  console.log('[DEBUG /r/[code]] Affiliate query result:', affiliate)
 
   const response = NextResponse.redirect(new URL('/', request.url))
 
   // Only track if the affiliate exists and is approved
   if (affiliate && affiliate.status === 'approved') {
-    console.log('[DEBUG /r/[code]] Affiliate found and approved. Setting cookie.')
     // Set cookie for 30 days
     response.cookies.set({
       name: 'affiliate_code',
-      value: code,
+      value: affiliate.affiliate_code,
       maxAge: 60 * 60 * 24 * 30, // 30 days
       path: '/',
       sameSite: 'lax',
     })
-  } else {
-    console.log('[DEBUG /r/[code]] Affiliate not found or not approved. NOT setting cookie.')
   }
 
   return response
