@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { MercadoPagoConfig, Payment } from 'mercadopago'
 import crypto from 'crypto'
+import { normalizePaymentMethod, calculateAffiliateCommission } from '@/lib/webhook-utils'
 
 export async function POST(request: Request) {
   console.log(`[WEBHOOK RECEBIDO] Chamada recebida na rota /api/webhooks/mercadopago - URL: ${request.url}`)
@@ -93,9 +94,7 @@ export async function POST(request: Request) {
 
       if (paymentInfo.status === 'approved') {
         const externalReference = paymentInfo.external_reference
-        const paymentMethodId = paymentInfo.payment_method_id || 'desconhecido'
-        const paymentTypeId = paymentInfo.payment_type_id || 'desconhecido'
-        const paymentMethodNormalized = paymentMethodId === 'pix' ? 'pix' : paymentTypeId
+        const paymentMethodNormalized = normalizePaymentMethod(paymentInfo.payment_method_id, paymentInfo.payment_type_id)
 
         console.log(`✅ [WEBHOOK SUCESSO] Pagamento aprovado via: ${paymentMethodNormalized.toUpperCase()} (ID: ${paymentId})`)
         
@@ -201,15 +200,22 @@ export async function POST(request: Request) {
 
             if (!affiliate) {
               console.warn(`[COMISSÃO] Aviso: Afiliado com código ${affiliateCode} não encontrado. Nenhuma comissão gerada.`)
-            } else if (affiliate.status !== 'approved') {
-              console.warn(`[COMISSÃO] Aviso: Afiliado ${affiliateCode} não está aprovado (status: ${affiliate.status}). Nenhuma comissão gerada.`)
-            } else if (affiliate.user_id === userId) {
-              console.warn(`[COMISSÃO] Aviso: Tentativa de self-referral bloqueada para afiliado ${affiliateCode} (user_id: ${userId}). Nenhuma comissão gerada.`)
             } else {
-              const commissionAmount = paidAmount * Number(affiliate.commission_rate)
-              
-              await supabaseAdmin
-                .from('affiliate_commissions')
+              const commissionResult = calculateAffiliateCommission(
+                paidAmount,
+                affiliate.commission_rate,
+                affiliate.user_id,
+                userId, // buyerUserId (the one making the payment)
+                affiliate.status
+              )
+
+              if (!commissionResult.isValid) {
+                console.warn(`[COMISSÃO] Aviso: ${commissionResult.reason} para afiliado ${affiliateCode}. Nenhuma comissão gerada.`)
+              } else {
+                const commissionAmount = commissionResult.amount
+                
+                await supabaseAdmin
+                  .from('affiliate_commissions')
                 .insert({
                   affiliate_id: affiliate.id,
                   payment_intent_id: intentId,
