@@ -132,7 +132,7 @@ export function UserDropdown({ email, name, plan = 'Free' }: UserDropdownProps) 
 
       <DropdownMenuContent 
         className={cn(
-          "font-sans shadow-xl overflow-y-auto sm:overflow-visible p-0 flex flex-col",
+          "font-sans shadow-xl overflow-y-auto sm:overflow-visible p-0 flex flex-col z-[100]",
           "w-screen max-w-[100vw] h-[calc(100dvh-64px)] rounded-none border-0 mt-2",
           "sm:w-[310px] sm:max-w-[310px] sm:h-auto sm:rounded-2xl sm:border sm:border-hairline sm:mr-4 sm:mt-0",
           "bg-canvas dark:bg-[#151515] sm:dark:bg-canvas-warm"
@@ -174,8 +174,8 @@ export function UserDropdown({ email, name, plan = 'Free' }: UserDropdownProps) 
               {/* Desktop Submenus */}
               <div className="hidden sm:block">
                 <DropdownMenuSub>
-                  <DropdownMenuSubTrigger className="cursor-pointer p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 transition-colors">
-                    <span className="flex items-center gap-2 font-medium text-[14px] text-ink dark:text-gray-200">
+                  <DropdownMenuSubTrigger className="cursor-pointer p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 transition-colors text-ink dark:text-gray-200">
+                    <span className="flex items-center gap-2 font-medium text-[14px]">
                       <Icon icon="solar:moon-sleep-line-duotone" className="size-[18px] text-gray-500 dark:text-gray-400" />
                       {t('userMenu.theme')}
                     </span>
@@ -183,14 +183,14 @@ export function UserDropdown({ email, name, plan = 'Free' }: UserDropdownProps) 
                   <DropdownMenuPortal>
                     <DropdownMenuSubContent className="bg-canvas dark:bg-[#1a1a1a] border border-hairline shadow-lg rounded-xl p-1 min-w-[140px] z-50">
                       <DropdownMenuRadioGroup value={theme || 'system'} onValueChange={setTheme}>
-                        <DropdownMenuRadioItem value="system" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-2">
-                          <span className="text-ink dark:text-gray-200 font-medium text-[13px]">{t('themes.system')}</span>
+                        <DropdownMenuRadioItem value="system" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-2 text-ink dark:text-gray-200">
+                          <span className="font-medium text-[13px]">{t('themes.system')}</span>
                         </DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="light" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-2">
-                          <span className="text-ink dark:text-gray-200 font-medium text-[13px]">{t('themes.light')}</span>
+                        <DropdownMenuRadioItem value="light" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-2 text-ink dark:text-gray-200">
+                          <span className="font-medium text-[13px]">{t('themes.light')}</span>
                         </DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="dark" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-2">
-                          <span className="text-ink dark:text-gray-200 font-medium text-[13px]">{t('themes.dark')}</span>
+                        <DropdownMenuRadioItem value="dark" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-2 text-ink dark:text-gray-200">
+                          <span className="font-medium text-[13px]">{t('themes.dark')}</span>
                         </DropdownMenuRadioItem>
                       </DropdownMenuRadioGroup>
                     </DropdownMenuSubContent>
@@ -198,8 +198,8 @@ export function UserDropdown({ email, name, plan = 'Free' }: UserDropdownProps) 
                 </DropdownMenuSub>
 
                 <DropdownMenuSub>
-                  <DropdownMenuSubTrigger className="cursor-pointer p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 transition-colors mt-0.5">
-                    <span className="flex items-center gap-2 font-medium text-[14px] text-ink dark:text-gray-200">
+                  <DropdownMenuSubTrigger className="cursor-pointer p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 transition-colors mt-0.5 text-ink dark:text-gray-200">
+                    <span className="flex items-center gap-2 font-medium text-[14px]">
                       <Icon icon="solar:globe-line-duotone" className="size-[18px] text-gray-500 dark:text-gray-400" />
                       {t('userMenu.language')}
                     </span>
@@ -207,14 +207,14 @@ export function UserDropdown({ email, name, plan = 'Free' }: UserDropdownProps) 
                   <DropdownMenuPortal>
                     <DropdownMenuSubContent className="bg-canvas dark:bg-[#1a1a1a] border border-hairline shadow-lg rounded-xl p-1 min-w-[140px] z-50">
                       <DropdownMenuRadioGroup value={locale} onValueChange={(val) => setLocale(val as any)}>
-                        <DropdownMenuRadioItem value="pt" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-2">
-                          <span className="text-ink dark:text-gray-200 font-medium text-[13px]">{t('languages.pt')}</span>
+                        <DropdownMenuRadioItem value="pt" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-2 text-ink dark:text-gray-200">
+                          <span className="font-medium text-[13px]">{t('languages.pt')}</span>
                         </DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="en" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-2">
-                          <span className="text-ink dark:text-gray-200 font-medium text-[13px]">{t('languages.en')}</span>
+                        <DropdownMenuRadioItem value="en" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-2 text-ink dark:text-gray-200">
+                          <span className="font-medium text-[13px]">{t('languages.en')}</span>
                         </DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="es" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-2">
-                          <span className="text-ink dark:text-gray-200 font-medium text-[13px]">{t('languages.es')}</span>
+                        <DropdownMenuRadioItem value="es" className="cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 focus:bg-black/5 dark:focus:bg-white/10 rounded-md py-2 text-ink dark:text-gray-200">
+                          <span className="font-medium text-[13px]">{t('languages.es')}</span>
                         </DropdownMenuRadioItem>
                       </DropdownMenuRadioGroup>
                     </DropdownMenuSubContent>
