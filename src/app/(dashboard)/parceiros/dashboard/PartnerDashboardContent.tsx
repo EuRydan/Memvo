@@ -6,7 +6,7 @@ import { useTranslation } from '@/contexts/I18nContext'
 export function PartnerDashboardContent({ affiliateCode }: { affiliateCode: string }) {
   const [copied, setCopied] = useState(false)
   const { t } = useTranslation()
-  const link = `https://memvor.app/pricing?cupom=${affiliateCode}`
+  const link = `https://memvor.app/r/${affiliateCode}`
 
   const handleCopy = () => {
     navigator.clipboard.writeText(link)
