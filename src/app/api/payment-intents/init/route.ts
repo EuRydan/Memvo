@@ -5,7 +5,7 @@ import { createClient as createSupabaseAdmin } from '@supabase/supabase-js'
 
 const PLAN_PRICES = {
   freemium: 0,
-  essential: 1.00, // TODO: revert to 79.00
+  essential: 79.00,
   classic: 149.00,
   premium: 249.00
 }
@@ -50,13 +50,12 @@ export async function POST(request: Request) {
     if (currentPlan && currentPlan.plan_id) {
       const currentPrice = PLAN_PRICES[currentPlan.plan_id as keyof typeof PLAN_PRICES] || 0
       
-      // Temporarily bypass the upgrade check for testing
-      // if (price <= currentPrice) {
-      //   return NextResponse.json({ error: 'Você já possui este plano ou um superior' }, { status: 400 })
-      // }
+      if (price <= currentPrice) {
+        return NextResponse.json({ error: 'Você já possui este plano ou um superior' }, { status: 400 })
+      }
       
       // Cobra apenas a diferença
-      // price = price - currentPrice // BYPASSED PARA TESTE
+      price = price - currentPrice
     }
 
     // Voucher validation (Affiliate logic)
