@@ -93,9 +93,11 @@ export async function POST(request: Request) {
 
       if (paymentInfo.status === 'approved') {
         const externalReference = paymentInfo.external_reference
-        const paymentMethod = paymentInfo.payment_method_id || 'desconhecido'
+        const paymentMethodId = paymentInfo.payment_method_id || 'desconhecido'
+        const paymentTypeId = paymentInfo.payment_type_id || 'desconhecido'
+        const paymentMethodNormalized = paymentMethodId === 'pix' ? 'pix' : paymentTypeId
 
-        console.log(`✅ [WEBHOOK SUCESSO] Pagamento aprovado via: ${paymentMethod.toUpperCase()} (ID: ${paymentId})`)
+        console.log(`✅ [WEBHOOK SUCESSO] Pagamento aprovado via: ${paymentMethodNormalized.toUpperCase()} (ID: ${paymentId})`)
         
         if (!externalReference) {
           console.warn(`Pagamento recebido sem externalReference: ${paymentId}`)
@@ -144,7 +146,12 @@ export async function POST(request: Request) {
           // 1. Atualizar Intent
           await supabaseAdmin
             .from('payment_intents')
-            .update({ status: 'approved', processed_at: new Date().toISOString(), mp_payment_id: paymentId.toString() })
+            .update({ 
+              status: 'approved', 
+              processed_at: new Date().toISOString(), 
+              mp_payment_id: paymentId.toString(),
+              payment_method: paymentMethodNormalized
+            })
             .eq('id', intentId)
 
           // 2. Inserir novo registro de plano vinculado ao evento (histórico por evento)
