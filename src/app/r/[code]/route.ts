@@ -6,6 +6,7 @@ export const revalidate = 0
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ code: string }> }) {
   const code = (await params).code
+  console.log('[DEBUG /r/[code]] código recebido:', code)
 
   if (!code) {
     return NextResponse.redirect(new URL('/', request.url))
@@ -20,6 +21,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     .ilike('affiliate_code', code.trim())
     .maybeSingle()
 
+  console.log('[DEBUG /r/[code]] resultado da query:', JSON.stringify(affiliate))
+
   const response = NextResponse.redirect(new URL('/', request.url))
 
   // Disable caching on the edge
@@ -29,6 +32,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
   // Only track if the affiliate exists and is approved
   if (affiliate && affiliate.status === 'approved') {
+    console.log('[DEBUG /r/[code]] cookie sendo setado para:', affiliate.affiliate_code)
     // Set cookie for 30 days
     response.cookies.set({
       name: 'affiliate_code',
@@ -38,6 +42,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       sameSite: 'lax',
     })
   }
+
+  console.log('[DEBUG /r/[code]] retornando resposta, cookie presente:', !!response.cookies.get('affiliate_code'))
 
   return response
 }
