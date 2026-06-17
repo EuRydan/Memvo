@@ -18,7 +18,7 @@ export async function GET(request: Request) {
     .maybeSingle()
 
   if (error || !affiliate || affiliate.status !== 'approved') {
-    return NextResponse.json({ error: 'Cupom inválido ou inativo.' }, { status: 404 })
+    return NextResponse.json({ valid: false, error: 'Cupom inválido ou inativo.' }, { status: 200 })
   }
 
   return NextResponse.json({ 

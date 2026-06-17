@@ -161,11 +161,11 @@ function PricingContent() {
       try {
         const res = await fetch(`/api/coupons?code=${voucherUrlParam}`)
         const data = await res.json()
-        if (res.ok && data.valid) {
+        if (data.valid) {
           setActiveCoupon({ code: data.code, partnerName: data.partnerName })
           setCouponError(null)
         } else {
-          setCouponError('Cupom inválido ou expirado.')
+          setCouponError(data.error || 'Cupom inválido ou expirado.')
         }
       } catch (e) {
         setCouponError('Erro ao validar cupom.')
