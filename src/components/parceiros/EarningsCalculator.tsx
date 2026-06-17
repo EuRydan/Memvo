@@ -2,15 +2,16 @@
 
 import { useState } from "react"
 import { Calculator } from "lucide-react"
+import { PLAN_PRICES } from "@/lib/prices"
 
 export function EarningsCalculator() {
   const [eventsPerMonth, setEventsPerMonth] = useState(5)
   const [selectedPlan, setSelectedPlan] = useState<'essential' | 'classic' | 'premium'>('classic')
 
   const plans = {
-    essential: { name: 'Essencial', price: 79.00 },
-    classic: { name: 'Clássico', price: 149.00 },
-    premium: { name: 'Premium', price: 249.00 }
+    essential: { name: 'Essencial', price: PLAN_PRICES.essential },
+    classic: { name: 'Clássico', price: PLAN_PRICES.classic },
+    premium: { name: 'Premium', price: PLAN_PRICES.premium }
   }
 
   const baseTicket = plans[selectedPlan].price

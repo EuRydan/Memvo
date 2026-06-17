@@ -3,12 +3,7 @@ import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createSupabaseAdmin } from '@supabase/supabase-js'
 
-const PLAN_PRICES = {
-  freemium: 0,
-  essential: 1.00, // TODO: revert to 79.00
-  classic: 149.00,
-  premium: 249.00
-}
+import { PLAN_PRICES } from '@/lib/prices'
 
 const PLAN_NAMES = {
   freemium: 'Plano Free',

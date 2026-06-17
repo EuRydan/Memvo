@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { PLAN_PRICES } from '@/lib/prices'
 import { useState, useEffect, Suspense } from 'react'
 import CheckoutForm from './CheckoutForm'
 import { WordmarkFooter } from '@/components/WordmarkFooter'
@@ -32,7 +33,7 @@ const PLANS = [
     id: 'essential',
     name: 'Essencial',
     desc: 'Perfeito para pequenas reuniões',
-    price: 'R$1', // TODO: revert to R$79
+    price: `R$${PLAN_PRICES.essential}`,
     popular: false,
     features: [
       { text: 'Até 50 convidados', included: true },
@@ -50,7 +51,7 @@ const PLANS = [
     id: 'classic',
     name: 'Clássico',
     desc: 'O essencial para a festa',
-    price: 'R$149',
+    price: `R$${PLAN_PRICES.classic}`,
     popular: true,
     features: [
       { text: 'Até 200 convidados', included: true },
@@ -68,7 +69,7 @@ const PLANS = [
     id: 'premium',
     name: 'Premium',
     desc: 'Para grandes celebrações',
-    price: 'R$249',
+    price: `R$${PLAN_PRICES.premium}`,
     popular: false,
     features: [
       { text: 'Convidados ilimitados', included: true },
@@ -178,7 +179,7 @@ function PricingContent() {
 
   const getDisplayPrice = (plan: typeof PLANS[0]) => {
     if (!currentPlanId) return plan.price
-    const planPrices = { freemium: 0, essential: 1, classic: 149, premium: 249 } as Record<string, number>
+    const planPrices = PLAN_PRICES as Record<string, number>
     const currentPrice = planPrices[currentPlanId] || 0
     const targetPrice = planPrices[plan.id] || 0
     if (targetPrice <= currentPrice) return plan.price
@@ -307,7 +308,7 @@ function PricingContent() {
         {!selectedPlan ? (
           <div className="flex flex-nowrap overflow-x-auto items-stretch justify-start xl:justify-center gap-6 lg:gap-8 mb-14 pt-16 pb-16 snap-x snap-mandatory px-6 sm:px-12" style={{ scrollbarWidth: 'none' }}>
             {PLANS.filter(plan => !( (activeCoupon || isValidatingCoupon) && plan.id === 'freemium')).map(plan => {
-              const planPrices = { freemium: 0, essential: 1, classic: 149, premium: 249 } as Record<string, number>
+              const planPrices = PLAN_PRICES as Record<string, number>
               const isUpgrade = currentPlanId && planPrices[plan.id] > (planPrices[currentPlanId] || 0)
               const displayPrice = getDisplayPrice(plan)
 
@@ -381,7 +382,7 @@ function PricingContent() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-14 items-start animate-fade-in">
             {(() => {
-              const planPrices = { freemium: 0, essential: 1, classic: 149, premium: 249 } as Record<string, number>
+              const planPrices = PLAN_PRICES as Record<string, number>
               const isUpgrade = currentPlanId && planPrices[selectedPlan.id] > (planPrices[currentPlanId] || 0)
               const displayPrice = getDisplayPrice(selectedPlan)
 
