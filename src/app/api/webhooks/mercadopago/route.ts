@@ -237,7 +237,8 @@ export async function POST(request: Request) {
                 })
             }
           }
-        }
+        } // closes if (affiliateCode)
+        } // closes if (!existingPlan)
 
         return NextResponse.json({ success: true, message: 'Processed successfully' })
       }
