@@ -142,8 +142,6 @@ export default function OnboardingWizard() {
     fetchChallenges()
   }, [eventType])
 
-  const slugPreview = name ? generateSlug(name) : 'nome-do-evento'
-
   const handleNext = () => setStep(s => s + 1)
   const handleBack = () => setStep(s => Math.max(1, s - 1))
 
@@ -291,7 +289,7 @@ export default function OnboardingWizard() {
         <Logo className="h-5 w-auto text-ink transition-colors" />
         <div className="flex gap-1.5">
           {[1,2,3,4,5,6,7].map(i => (
-            <div key={i} className={`h-1.5 rounded-full transition-all duration-300 ${i === step ? 'w-6 bg-ink' : i < step ? 'w-2 bg-ink/30' : 'w-2 bg-ink/10'}`} />
+            <div key={i} className={`h-2 rounded-full transition-all duration-300 ${i === step ? 'w-7 bg-ink' : i < step ? 'w-2.5 bg-ink/40' : 'w-2.5 bg-ink/10'}`} />
           ))}
         </div>
       </header>

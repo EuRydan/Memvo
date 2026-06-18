@@ -1,11 +1,9 @@
 'use client'
 
-import { Logo } from '@/components/Logo'
-
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { isEventActive, countActiveEvents, PLAN_LIMITS, PlanTier, isEventLocked, UserPlanRecord } from '@/lib/limits'
+import { isEventActive, isEventLocked, UserPlanRecord } from '@/lib/limits'
 import { Event } from '@/types'
 import QRCodeGenerator from '@/components/QRCodeGenerator'
 import { useTranslation } from '@/contexts/I18nContext'
@@ -54,7 +52,7 @@ export default function DashboardPage() {
       if (plansData && plansData.length > 0) {
         setUserPlans(plansData as UserPlanRecord[])
         // planId for display: most recent plan_id
-        const lastPlan = [...plansData].sort((a, b) => 0).pop()
+        const lastPlan = [...plansData].pop()
         setPlanId(lastPlan?.plan_id || 'none')
       }
       
@@ -354,37 +352,41 @@ export default function DashboardPage() {
                       </div>
                     ) : (
                       <>
-                        {/* Action 1 */}
-                        <div 
+                        {/* Action 1 — QR */}
+                        <div
                           onClick={() => setShareModalEvent(event)}
                           className="flex flex-col items-center justify-center py-6 border-r border-b xl:border-b-0 border-hairline hover:bg-ink/5 cursor-pointer transition-colors group min-w-0"
                         >
-                           <span className="text-sm font-semibold text-ink mb-1 uppercase tracking-wide group-hover:scale-105 transition-transform truncate px-2 w-full text-center">QR</span>
-                           <span className="text-[11px] text-stone truncate px-2 w-full text-center">Compartilhar</span>
+                           <svg className="mb-2 text-ink group-hover:scale-110 transition-transform" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3m0 4h4m-4 0v-4m-3 4h-1m4-7h3"/></svg>
+                           <span className="text-[11px] font-semibold text-ink uppercase tracking-wide truncate px-2 w-full text-center">QR</span>
+                           <span className="text-[10px] text-stone truncate px-2 w-full text-center">Compartilhar</span>
                         </div>
-                        {/* Action 2 */}
-                        <div 
+                        {/* Action 2 — Álbum */}
+                        <div
                           onClick={() => router.push(`/dashboard/${event.id}`)}
                           className="flex flex-col items-center justify-center py-6 border-b xl:border-b-0 xl:border-r border-hairline hover:bg-ink/5 cursor-pointer transition-colors group min-w-0"
                         >
-                           <span className="text-sm font-semibold text-ink mb-1 uppercase tracking-wide group-hover:scale-105 transition-transform truncate px-2 w-full text-center">ÁLBUM</span>
-                           <span className="text-[11px] text-stone truncate px-2 w-full text-center">Visualizar</span>
+                           <svg className="mb-2 text-ink group-hover:scale-110 transition-transform" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                           <span className="text-[11px] font-semibold text-ink uppercase tracking-wide truncate px-2 w-full text-center">ÁLBUM</span>
+                           <span className="text-[10px] text-stone truncate px-2 w-full text-center">Visualizar</span>
                         </div>
-                        {/* Action 3 */}
-                        <div 
+                        {/* Action 3 — Missões */}
+                        <div
                           onClick={() => router.push(`/dashboard/${event.id}/challenges`)}
-                          className="flex flex-col items-center justify-center py-6 border-r xl:border-r border-hairline hover:bg-ink/5 cursor-pointer transition-colors group min-w-0"
+                          className="flex flex-col items-center justify-center py-6 border-r border-hairline hover:bg-ink/5 cursor-pointer transition-colors group min-w-0"
                         >
-                           <span className="text-sm font-semibold text-ink mb-1 uppercase tracking-wide group-hover:scale-105 transition-transform truncate px-2 w-full text-center">MISSÕES</span>
-                           <span className="text-[11px] text-stone truncate px-2 w-full text-center">Desafios</span>
+                           <svg className="mb-2 text-ink group-hover:scale-110 transition-transform" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                           <span className="text-[11px] font-semibold text-ink uppercase tracking-wide truncate px-2 w-full text-center">MISSÕES</span>
+                           <span className="text-[10px] text-stone truncate px-2 w-full text-center">Desafios</span>
                         </div>
-                        {/* Action 4 */}
-                        <div 
+                        {/* Action 4 — Resumo */}
+                        <div
                           onClick={() => router.push(`/dashboard/${event.id}/stats`)}
                           className="flex flex-col items-center justify-center py-6 hover:bg-ink/5 cursor-pointer transition-colors group min-w-0"
                         >
-                           <span className="text-sm font-semibold text-ink mb-1 uppercase tracking-wide group-hover:scale-105 transition-transform truncate px-2 w-full text-center">RESUMO</span>
-                           <span className="text-[11px] text-stone truncate px-2 w-full text-center">Resumo</span>
+                           <svg className="mb-2 text-ink group-hover:scale-110 transition-transform" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                           <span className="text-[11px] font-semibold text-ink uppercase tracking-wide truncate px-2 w-full text-center">RESUMO</span>
+                           <span className="text-[10px] text-stone truncate px-2 w-full text-center">Estatísticas</span>
                         </div>
                       </>
                     )}
@@ -421,16 +423,19 @@ export default function DashboardPage() {
             <button
               onClick={() => {
                 setShowUpgradeModal(false);
-                router.push('/dashboard');
+                router.push('/pricing');
               }}
               className="w-full bg-ink text-canvas font-semibold py-3.5 rounded-full hover:opacity-85 active:scale-95 transition-all duration-200"
               style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.16)' }}
             >
+              {t('mainDashboard.viewPlans')}
+            </button>
+            <button
+              onClick={() => setShowUpgradeModal(false)}
+              className="w-full text-sm text-stone hover:text-ink transition-colors py-2"
+            >
               {t('mainDashboard.goToPanel')}
             </button>
-            <p className="text-xs text-stone text-center mt-4 transition-colors">
-              {t('mainDashboard.cancelAnytime')}
-            </p>
           </div>
         </div>
       )}

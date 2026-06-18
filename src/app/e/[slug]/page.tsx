@@ -256,7 +256,7 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
       >
         <p className="text-5xl mb-4">💔</p>
         <h1
-          style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+          style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}
           className="text-xl font-bold text-ink mb-2"
         >
           Evento não encontrado
@@ -275,7 +275,7 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
       >
         <p className="text-5xl mb-4">🚧</p>
         <h1
-          style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+          style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}
           className="text-xl font-bold text-ink mb-2"
         >
           Evento não ativado
@@ -294,7 +294,7 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
       >
         <p className="text-5xl mb-4">💳</p>
         <h1
-          style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+          style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}
           className="text-xl font-bold text-ink mb-2"
         >
           Aguardando Pagamento
@@ -336,7 +336,7 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
           Álbum compartilhado
         </p>
         <h1
-          style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+          style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}
           className="relative text-[2.2rem] font-bold tracking-[-0.02em] text-white leading-tight mb-2"
         >
           {event.name}
@@ -414,7 +414,7 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
         {challenges.length > 0 && (
           <div className="flex flex-col gap-3">
             <h2
-              style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+              style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}
               className="text-[1.1rem] font-bold text-ink px-1 flex items-center gap-2"
             >
               🎯 Desafios Fotográficos
@@ -440,10 +440,10 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
                   <div className="flex items-center gap-4 px-5 py-4">
                     {/* Index circle */}
                     <div
-                      className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold transition-all"
+                      className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold transition-all"
                       style={done
                         ? { background: event.theme_color || '#4ac550', color: '#fff' }
-                        : { background: '#f3f3f3', color: '#939393', border: '1.5px solid #e0e0e0' }
+                        : { background: '#f3f3f3', color: '#676f7b', border: '1.5px solid #e0e0e0' }
                       }
                     >
                       {done ? (
@@ -521,7 +521,7 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
 
                   {/* Photos grid */}
                   {photos.length > 0 && (
-                    <div className="grid grid-cols-3 gap-1.5 px-5 pb-5">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 px-5 pb-5">
                       {photos.map(media => {
                         const isMine = myUploads.includes(media.id)
                         const isTapped = tappedMediaId === media.id
@@ -577,7 +577,7 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
         {planType === 'premium' && (
           <div className="flex flex-col gap-3 mt-4">
             <h2
-              style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+              style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}
               className="text-[1.1rem] font-bold text-ink px-1 flex items-center gap-2"
             >
               📸 Álbum Livre

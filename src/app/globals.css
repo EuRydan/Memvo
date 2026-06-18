@@ -157,7 +157,7 @@ body {
   top: 1rem;
   left: 1.25rem;
   font-size: 0.875rem;
-  color: #939393;
+  color: var(--color-slate);
   font-weight: 500;
   pointer-events: none;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
