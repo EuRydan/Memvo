@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Logo } from "./Logo";
+import { SparklesText } from "./ui/sparkles-text";
 
 export function LoadingScreen() {
   const [isLoading, setIsLoading] = useState(true);
@@ -30,7 +31,12 @@ export function LoadingScreen() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
           >
-            <Logo className="h-10 w-auto" theme="light" />
+            <SparklesText
+              className="text-base font-normal"
+              colors={{ first: "#9E7AFF", second: "#FE8BBB" }}
+            >
+              <Logo className="h-10 w-auto" theme="light" />
+            </SparklesText>
           </motion.div>
 
           <motion.p
