@@ -2,13 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { SparklesText } from "./ui/sparkles-text";
+import { Logo } from "./Logo";
 
 export function LoadingScreen() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Hide the loading screen after a short delay
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 2200);
@@ -24,15 +23,24 @@ export function LoadingScreen() {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-[#fafafa]"
+          className="fixed inset-0 z-[100] flex flex-col items-center justify-center gap-4 bg-[#fafafa]"
         >
-          <SparklesText
-            className="text-[4rem] md:text-[6rem]"
-            style={{ fontFamily: 'var(--font-raleway), Georgia, serif', fontWeight: 700, letterSpacing: "-0.05em" }}
-            colors={{ first: "#9E7AFF", second: "#FE8BBB" }}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
           >
-            Memvor
-          </SparklesText>
+            <Logo className="h-10 w-auto" theme="light" />
+          </motion.div>
+
+          <motion.p
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
+            className="text-[13px] text-[#939393] tracking-wide"
+          >
+            Fotos reais de quem viveu o momento.
+          </motion.p>
         </motion.div>
       )}
     </AnimatePresence>

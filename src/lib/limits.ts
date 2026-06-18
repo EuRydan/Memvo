@@ -32,13 +32,6 @@ export function countActiveEvents(events: Pick<Event, 'date' | 'active'>[]): num
 }
 
 /**
- * Checks if a user with a specific plan can create a new event.
- */
-export function canCreateEvent(planId: string, events: Pick<Event, 'date' | 'active'>[]): boolean {
-  return true
-}
-
-/**
  * Returns the maximum number of photos a guest can upload per challenge
  */
 export function getPhotoLimit(planId: string): number {

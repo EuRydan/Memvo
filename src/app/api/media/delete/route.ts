@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { createClient as createServerClient } from '@/lib/supabase/server'
+import { cookies } from 'next/headers'
 
 export async function POST(req: Request) {
   try {
@@ -14,18 +16,53 @@ export async function POST(req: Request) {
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
 
-    // First, get the storage path so we can delete the file from the bucket too
+    // Fetch the media row to check ownership before deleting
     const { data: media } = await supabaseAdmin
       .from('media')
-      .select('storage_path')
+      .select('storage_path, event_id, guest_id')
       .eq('id', mediaId)
       .single()
 
-    if (media && media.storage_path) {
+    if (!media) {
+      return NextResponse.json({ error: 'Media not found' }, { status: 404 })
+    }
+
+    // Determine if the requester is authorized:
+    // Case 1 — authenticated user who owns the event (dashboard)
+    // Case 2 — guest who uploaded this specific media (event page)
+    let authorized = false
+
+    const supabaseServer = await createServerClient()
+    const { data: { user } } = await supabaseServer.auth.getUser()
+
+    if (user) {
+      const { data: event } = await supabaseAdmin
+        .from('events')
+        .select('owner_id')
+        .eq('id', media.event_id)
+        .single()
+
+      if (event?.owner_id === user.id) {
+        authorized = true
+      }
+    }
+
+    if (!authorized) {
+      const cookieStore = await cookies()
+      const guestId = cookieStore.get('memvor_guest_id')?.value
+      if (guestId && guestId === media.guest_id) {
+        authorized = true
+      }
+    }
+
+    if (!authorized) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    if (media.storage_path) {
       await supabaseAdmin.storage.from('media').remove([media.storage_path])
     }
 
-    // Then delete from database
     const { error } = await supabaseAdmin
       .from('media')
       .delete()
