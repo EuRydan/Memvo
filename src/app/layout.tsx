@@ -27,6 +27,7 @@ import { RealtimeToast } from "@/components/RealtimeToast";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { I18nProvider } from "@/contexts/I18nContext";
 import { CookieConsentWrapper } from "@/components/CookieConsentWrapper";
+import { BugReportButton } from "@/components/BugReportButton";
 
 export default function RootLayout({
   children,
@@ -48,6 +49,7 @@ export default function RootLayout({
             {children}
             <RealtimeToast />
             <CookieConsentWrapper />
+            <BugReportButton />
           </ThemeProvider>
         </I18nProvider>
       </body>
