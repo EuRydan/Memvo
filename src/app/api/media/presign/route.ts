@@ -68,6 +68,35 @@ export async function POST(request: Request) {
       || userPlans.find(p => p.event_id === null)?.plan_id
       || 'none'
 
+    // Brasil game: vídeo só permitido no desafio "Capture a reação de um gol", 1 por convidado
+    if (isVideo && !is_cover) {
+      if (planId === 'brasil_game') {
+        if (!challenge_id) {
+          return NextResponse.json({ error: 'Vídeos só podem ser enviados em desafios específicos.' }, { status: 403 })
+        }
+        const { data: challengeData } = await supabaseAdmin
+          .from('challenges')
+          .select('title')
+          .eq('id', challenge_id)
+          .single()
+        if (!challengeData || challengeData.title !== 'Capture a reação de um gol') {
+          return NextResponse.json({ error: 'Vídeo permitido apenas no desafio "Capture a reação de um gol".' }, { status: 403 })
+        }
+        const { count: videoCount } = await supabaseAdmin
+          .from('media')
+          .select('*', { count: 'exact', head: true })
+          .eq('event_id', event_id)
+          .eq('guest_id', guestId)
+          .eq('challenge_id', challenge_id)
+          .eq('type', 'video')
+        if (typeof videoCount === 'number' && videoCount >= 1) {
+          return NextResponse.json({ error: 'Limite de 1 vídeo por convidado neste desafio.' }, { status: 403 })
+        }
+      } else if (!['classic', 'premium'].includes(planId)) {
+        return NextResponse.json({ error: 'Upload de vídeos não disponível neste plano.' }, { status: 403 })
+      }
+    }
+
     // 3. Checar bloqueio de pagamento (se não for dono)
     // Se for o dono (ex: fazendo upload de capa), não bloqueamos o pre-sign da capa (pode alterar no rascunho)
     const { data: { user } } = await supabaseServer.auth.getUser()

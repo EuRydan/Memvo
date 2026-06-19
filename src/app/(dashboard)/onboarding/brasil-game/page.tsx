@@ -130,6 +130,7 @@ export default function BrasilGameOnboarding() {
                 'Até 50 convidados via QR Code',
                 '4 desafios fotográficos pré-definidos',
                 '3 fotos por convidado em cada desafio',
+                '1 vídeo de reação por convidado 🎬',
                 'Álbum em tempo real · 100% grátis',
               ].map(f => (
                 <li key={f} className="flex items-center gap-2 text-xs text-[#676f7b]">

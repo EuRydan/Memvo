@@ -62,8 +62,9 @@ export function getChallengeLimit(planId: string): number {
  * Returns the maximum duration of a video in seconds
  */
 export function getVideoDurationLimit(planId: string): number {
-  const plan = planId as PlanTier | 'freemium' | 'none'
+  const plan = planId as PlanTier | 'freemium' | 'brasil_game' | 'none'
   if (plan === 'essential' || plan === 'freemium' || plan === 'none') return 0
+  if (plan === 'brasil_game') return 60
   if (plan === 'classic') return 60
   if (plan === 'premium') return 180
   return 0

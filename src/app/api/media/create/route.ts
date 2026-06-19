@@ -63,6 +63,33 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Evento bloqueado aguardando pagamento.' }, { status: 403 })
     }
 
+    // 4a. Brasil game: vídeo só no desafio "Capture a reação de um gol", 1 por convidado
+    if (type === 'video' && planId === 'brasil_game') {
+      if (!challenge_id) {
+        return NextResponse.json({ error: 'Vídeos só podem ser enviados em desafios específicos.' }, { status: 403 })
+      }
+      const { data: challengeData } = await supabase
+        .from('challenges')
+        .select('title')
+        .eq('id', challenge_id)
+        .single()
+      if (!challengeData || challengeData.title !== 'Capture a reação de um gol') {
+        return NextResponse.json({ error: 'Vídeo permitido apenas no desafio "Capture a reação de um gol".' }, { status: 403 })
+      }
+      const { count: videoCount } = await supabase
+        .from('media')
+        .select('*', { count: 'exact', head: true })
+        .eq('event_id', event_id)
+        .eq('guest_id', guestId)
+        .eq('challenge_id', challenge_id)
+        .eq('type', 'video')
+      if (typeof videoCount === 'number' && videoCount >= 1) {
+        return NextResponse.json({ error: 'Limite de 1 vídeo por convidado neste desafio.' }, { status: 403 })
+      }
+    } else if (type === 'video' && !['classic', 'premium'].includes(planId)) {
+      return NextResponse.json({ error: 'Upload de vídeos não disponível neste plano.' }, { status: 403 })
+    }
+
     // 4. Checar limite absoluto de fotos por usuário
     const limit = getPhotoLimit(planId)
     
