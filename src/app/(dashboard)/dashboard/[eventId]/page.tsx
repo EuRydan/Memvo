@@ -265,37 +265,21 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
           {/* 4-col icon grid */}
           <div className="px-4 pb-4 flex flex-col gap-2">
             <div className="grid grid-cols-4 gap-2">
-              <button
-                onClick={() => router.push(`/dashboard/${eventId}/stats`)}
-                className="flex flex-col items-center gap-1.5 py-3 bg-white rounded-2xl border border-gray-100 shadow-sm active:scale-95 transition-transform"
-              >
-                <div className="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center text-base">📊</div>
-                <span className="text-[10px] font-semibold text-gray-600">Stats</span>
-              </button>
-
-              <button
-                onClick={() => router.push(`/dashboard/${eventId}/team`)}
-                className="flex flex-col items-center gap-1.5 py-3 bg-white rounded-2xl border border-gray-100 shadow-sm active:scale-95 transition-transform"
-              >
-                <div className="w-9 h-9 bg-violet-50 rounded-xl flex items-center justify-center text-base">👥</div>
-                <span className="text-[10px] font-semibold text-gray-600">Equipe</span>
-              </button>
-
-              <button
-                onClick={() => router.push(`/dashboard/${eventId}/appearance`)}
-                className="flex flex-col items-center gap-1.5 py-3 bg-white rounded-2xl border border-gray-100 shadow-sm active:scale-95 transition-transform"
-              >
-                <div className="w-9 h-9 bg-pink-50 rounded-xl flex items-center justify-center text-base">🎨</div>
-                <span className="text-[10px] font-semibold text-gray-600">Visual</span>
-              </button>
-
-              <button
-                onClick={() => router.push(`/dashboard/${eventId}/challenges`)}
-                className="flex flex-col items-center gap-1.5 py-3 bg-white rounded-2xl border border-gray-100 shadow-sm active:scale-95 transition-transform"
-              >
-                <div className="w-9 h-9 bg-amber-50 rounded-xl flex items-center justify-center text-base">⚡</div>
-                <span className="text-[10px] font-semibold text-gray-600">Desafios</span>
-              </button>
+              {[
+                { label: 'Stats',    emoji: '📊', path: `/dashboard/${eventId}/stats` },
+                { label: 'Equipe',   emoji: '👥', path: `/dashboard/${eventId}/team` },
+                { label: 'Visual',   emoji: '🎨', path: `/dashboard/${eventId}/appearance` },
+                { label: 'Desafios', emoji: '⚡', path: `/dashboard/${eventId}/challenges` },
+              ].map(({ label, emoji, path }) => (
+                <button
+                  key={label}
+                  onClick={() => router.push(path)}
+                  className="flex flex-col items-center gap-1.5 py-3 rounded-2xl active:scale-95 active:bg-black/5 transition-all"
+                >
+                  <span className="text-[26px] leading-none">{emoji}</span>
+                  <span className="text-[10px] font-semibold text-[#676f7b]">{label}</span>
+                </button>
+              ))}
             </div>
 
             {/* Secondary row */}
@@ -303,11 +287,11 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
               <button
                 onClick={handleDownloadZip}
                 disabled={isDownloadingZip || medias.length === 0}
-                className="flex items-center gap-2 px-3 py-2.5 bg-white rounded-xl border border-gray-100 shadow-sm disabled:opacity-40 active:scale-95 transition-transform"
+                className="flex items-center gap-2 px-3 py-2.5 bg-[#f5f5f5] rounded-xl disabled:opacity-40 active:scale-95 transition-transform"
               >
-                <Download size={13} className={`text-gray-400 shrink-0 ${isDownloadingZip ? 'animate-bounce' : ''}`} />
-                <span className="text-[11px] font-semibold text-gray-700 truncate">
-                  {isDownloadingZip ? `Baixando ${downloadProgress}%` : 'Baixar ZIP'}
+                <Download size={13} className={`text-[#676f7b] shrink-0 ${isDownloadingZip ? 'animate-bounce' : ''}`} />
+                <span className="text-[11px] font-semibold text-[#0a0a0a] truncate">
+                  {isDownloadingZip ? `${downloadProgress}%` : 'Baixar ZIP'}
                 </span>
               </button>
 
@@ -315,13 +299,13 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
                 onClick={() => { if (isTelaoEnabled(planType)) { window.open(`/e/${event?.slug}/telao`, '_blank') } }}
                 disabled={!isTelaoEnabled(planType)}
                 title={!isTelaoEnabled(planType) ? 'Disponível no plano Premium' : 'Abrir Telão'}
-                className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border shadow-sm active:scale-95 transition-transform ${
-                  !isTelaoEnabled(planType) ? 'bg-orange-50 border-orange-100 opacity-80' : 'bg-white border-gray-100'
+                className={`flex items-center gap-2 px-3 py-2.5 rounded-xl active:scale-95 transition-transform ${
+                  !isTelaoEnabled(planType) ? 'bg-orange-50 opacity-80' : 'bg-[#0a0a0a]'
                 }`}
               >
-                <Camera size={13} className={`shrink-0 ${!isTelaoEnabled(planType) ? 'text-orange-400' : 'text-gray-400'}`} />
-                <span className={`text-[11px] font-semibold truncate ${!isTelaoEnabled(planType) ? 'text-orange-600' : 'text-gray-700'}`}>
-                  {isTelaoEnabled(planType) ? 'Telão' : 'Telão 🔒'}
+                <Camera size={13} className={`shrink-0 ${!isTelaoEnabled(planType) ? 'text-orange-400' : 'text-white'}`} />
+                <span className={`text-[11px] font-semibold truncate ${!isTelaoEnabled(planType) ? 'text-orange-600' : 'text-white'}`}>
+                  {isTelaoEnabled(planType) ? 'Telão' : 'Telão ✦'}
                 </span>
               </button>
             </div>
