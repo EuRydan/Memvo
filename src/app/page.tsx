@@ -56,8 +56,8 @@ export default function LandingPage() {
       <section className="relative w-full py-20">
         <div className="text-center mb-12 px-6 max-w-lg mx-auto">
           <p className="text-[11px] font-semibold tracking-[0.2em] text-[#939393] uppercase mb-3">Como funciona</p>
-          <h2 style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}
-            className="text-[1.9rem] font-bold tracking-[-0.02em] text-[#0a0a0a] leading-tight">
+          <h2
+            className="text-[1.9rem] font-bold tracking-[-0.02em] text-[#0a0a0a] leading-tight font-serif">
             Simples para você,<br />mágico para seus convidados
           </h2>
         </div>

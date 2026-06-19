@@ -24,7 +24,7 @@ export default function PrivacyPolicy() {
       </header>
 
       <main className="flex-1 max-w-3xl mx-auto px-6 py-16 relative z-10 w-full">
-        <h1 className="text-4xl font-bold mb-8 text-gray-900" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
+        <h1 className="text-4xl font-bold mb-8 text-gray-900 font-serif">
           Política de Privacidade
         </h1>
         

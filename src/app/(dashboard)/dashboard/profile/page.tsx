@@ -58,13 +58,13 @@ export default function ProfilePage() {
   return (
     <div className="max-w-3xl mx-auto px-6 pt-10 pb-20">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-ink" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
+        <h1 className="text-3xl font-bold text-ink font-serif">
           Meu Perfil
         </h1>
         <p className="text-sm text-gray-500 mt-1">Gerencie suas informações pessoais.</p>
       </div>
 
-      <div className="bg-white rounded-[24px] border border-gray-100 shadow-sm p-6 md:p-8">
+      <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 md:p-8">
         
         <div className="flex items-center gap-4 mb-8">
           <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-[#f4c5a8] to-[#d4bde8] flex items-center justify-center text-ink text-xl font-bold shadow-sm">

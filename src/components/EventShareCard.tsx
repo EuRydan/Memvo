@@ -55,12 +55,11 @@ export function EventShareCard({
       className="w-full"
     >
       <div
-        className="rounded-[20px] overflow-hidden"
+        className="rounded-card-lg overflow-hidden shadow-[0_2px_24px_rgba(0,0,0,0.07),0_0_0_1px_rgba(0,0,0,0.05)]"
         style={{
           background: 'rgba(255,255,255,0.92)',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
-          boxShadow: '0 2px 24px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.05)',
         }}
       >
         {/* Gradient accent band */}
@@ -77,8 +76,7 @@ export function EventShareCard({
               Compartilhe o álbum
             </p>
             <h2
-              className="text-[1.3rem] font-bold tracking-[-0.02em] text-[#030303] leading-tight"
-              style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+              className="text-[1.3rem] font-bold tracking-[-0.02em] text-[#030303] leading-tight font-serif"
             >
               {eventName}
             </h2>

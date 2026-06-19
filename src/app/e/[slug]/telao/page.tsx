@@ -208,7 +208,7 @@ export default function TelaoPage({ params }: { params: Promise<{ slug: string }
       {/* Floating Info Overlay */}
       {currentMedia && (
         <div className="absolute bottom-0 left-0 w-full p-8 md:p-12 bg-gradient-to-t from-black/80 via-black/30 to-transparent pointer-events-none">
-          <h1 className="text-white/90 text-2xl md:text-3xl font-bold drop-shadow-md mb-2" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
+          <h1 className="text-white/90 text-2xl md:text-3xl font-bold drop-shadow-md mb-2 font-serif">
             {event?.name}
           </h1>
           {currentChallenge && (

@@ -160,7 +160,7 @@ export default function InvitePage({ params }: { params: Promise<{ invite_token:
 
         {event && (
           <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-6 text-center">
-            <h2 className="font-bold text-gray-900 text-lg font-serif" style={{ fontFamily: 'Georgia, serif' }}>{event.name}</h2>
+            <h2 className="font-bold text-gray-900 text-lg font-serif">{event.name}</h2>
             {event.date && <p className="text-xs text-gray-500 mt-1">{new Date(event.date).toLocaleDateString('pt-BR')}</p>}
           </div>
         )}

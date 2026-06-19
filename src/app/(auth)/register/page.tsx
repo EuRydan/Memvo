@@ -164,17 +164,14 @@ function RegisterContent() {
 
         {/* Glass Card */}
         <div
-          className="rounded-[2rem] p-8 border border-white/60"
+          className="rounded-4xl p-8 border border-white/60 shadow-auth backdrop-blur-[20px]"
           style={{
             background: 'rgba(255,255,255,0.92)',
-            backdropFilter: 'blur(20px)',
-            boxShadow: '0 8px 40px rgba(0,0,0,0.06), 0 1px 0 rgba(255,255,255,0.8) inset',
           }}
         >
           <div className="text-center mb-7">
             <h2
-              style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
-              className="text-[1.7rem] font-bold tracking-[-0.02em] text-ink leading-tight"
+              className="text-[1.7rem] font-bold tracking-[-0.02em] text-ink leading-tight font-serif"
             >
               Criar conta
             </h2>
@@ -309,8 +306,7 @@ function RegisterContent() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-ink text-white py-4 rounded-full text-sm font-semibold tracking-wide hover:opacity-85 active:scale-[0.98] transition-all duration-200 disabled:opacity-50 mt-1 cursor-pointer"
-              style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.18)' }}
+              className="w-full bg-ink text-white py-4 rounded-full text-sm font-semibold tracking-wide hover:opacity-85 active:scale-[0.98] transition-all duration-200 disabled:opacity-50 mt-1 cursor-pointer shadow-strong"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">

@@ -20,7 +20,7 @@ export function MeshCTA() {
   }, [])
 
   return (
-    <section className="relative px-6 py-20 overflow-hidden mx-5 mb-10 rounded-[28px] min-h-[400px] flex items-center justify-center">
+    <section className="relative px-6 py-20 overflow-hidden mx-5 mb-10 rounded-[28px] min-h-[400px] flex items-center justify-center" >
       <div className="absolute inset-0 w-full h-full bg-[#f4c5a8]">
         {mounted && (
           <>
@@ -31,16 +31,15 @@ export function MeshCTA() {
 
       <div className="relative z-10 text-center max-w-sm mx-auto">
         <p className="text-[11px] font-semibold tracking-[0.2em] text-white/90 uppercase mb-4 drop-shadow-sm">Comece agora</p>
-        <h2 style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}
-          className="text-[2.2rem] font-bold tracking-[-0.02em] text-white leading-tight mb-4 drop-shadow-sm">
+        <h2
+          className="text-[2.2rem] font-bold tracking-[-0.02em] text-white leading-tight mb-4 drop-shadow-sm font-serif">
           Preserve cada memória preciosa
         </h2>
         <p className="text-[15px] text-white/95 mb-8 leading-relaxed font-medium drop-shadow-sm">
           Crie seu álbum em menos de 2 minutos. Pagamento único, sem assinatura.
         </p>
         <Link href="/pricing"
-          className="inline-block bg-white text-[#0a0a0a] text-[15px] font-bold px-9 py-4 rounded-full hover:bg-[#fafafa] transition-all active:scale-95"
-          style={{ boxShadow: '0 8px 30px rgba(0,0,0,0.12)' }}>
+          className="inline-block bg-white text-[#0a0a0a] text-[15px] font-bold px-9 py-4 rounded-full hover:bg-[#fafafa] transition-all active:scale-95 shadow-[0_8px_30px_rgba(0,0,0,0.12)]">
           Ver planos e preços
         </Link>
       </div>

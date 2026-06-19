@@ -137,8 +137,7 @@ export default function AppearancePage({ params }: { params: Promise<{ eventId: 
             </button>
           </div>
           <h1
-            style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
-            className="text-[1.85rem] font-bold tracking-[-0.02em] text-ink leading-tight"
+            className="text-[1.85rem] font-bold tracking-[-0.02em] text-ink leading-tight font-serif"
           >
             Personalize sua Página
           </h1>

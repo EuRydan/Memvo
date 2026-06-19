@@ -167,7 +167,7 @@ export default function EventStatsPage({ params }: { params: Promise<{ eventId: 
         {/* KPI Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
           
-          <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col items-center text-center">
+          <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-card flex flex-col items-center text-center">
             <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-4">
               <ImageIcon size={22} />
             </div>
@@ -175,7 +175,7 @@ export default function EventStatsPage({ params }: { params: Promise<{ eventId: 
             <p className="text-sm font-medium text-slate mt-1">Fotos e Vídeos</p>
           </div>
 
-          <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col items-center text-center">
+          <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-card flex flex-col items-center text-center">
             <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mb-4">
               <Users size={22} />
             </div>
@@ -183,7 +183,7 @@ export default function EventStatsPage({ params }: { params: Promise<{ eventId: 
             <p className="text-sm font-medium text-slate mt-1">Convidados Únicos</p>
           </div>
 
-          <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col items-center text-center">
+          <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-card flex flex-col items-center text-center">
             <div className="w-12 h-12 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center mb-4">
               <Trophy size={22} />
             </div>

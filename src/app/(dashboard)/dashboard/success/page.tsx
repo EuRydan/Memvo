@@ -101,7 +101,7 @@ function SuccessContent() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-[#fafafa]">
         <Logo className="h-10 w-auto text-ink mb-6" />
-        <h2 style={{ fontFamily: 'Georgia, "Times New Roman", serif' }} className="text-2xl font-bold text-ink mb-3">
+        <h2 className="text-2xl font-bold text-ink mb-3 font-serif">
           Sessão Inválida
         </h2>
         <p className="text-sm text-slate mb-8 leading-relaxed">
@@ -134,7 +134,7 @@ function SuccessContent() {
         ) : status === 'loading' ? (
           <>
             <div className="w-16 h-16 border-4 border-[#0a0a0a]/20 border-t-[#0a0a0a] rounded-full animate-spin mb-6"></div>
-            <h2 style={{ fontFamily: 'Georgia, "Times New Roman", serif' }} className="text-2xl font-bold text-ink mb-3">
+            <h2 className="text-2xl font-bold text-ink mb-3 font-serif">
               Confirmando pagamento...
             </h2>
             <p className="text-sm text-slate mb-8 leading-relaxed max-w-sm">
@@ -148,7 +148,7 @@ function SuccessContent() {
                 <polyline points="20 6 9 17 4 12"/>
               </svg>
             </div>
-            <h2 style={{ fontFamily: 'Georgia, "Times New Roman", serif' }} className="text-2xl font-bold text-ink mb-3">
+            <h2 className="text-2xl font-bold text-ink mb-3 font-serif">
               Pagamento Confirmado!
             </h2>
             <p className="text-sm text-slate mb-8 leading-relaxed max-w-sm">
@@ -160,8 +160,7 @@ function SuccessContent() {
         <div className="mt-8 text-center">
           <Link
             href="/dashboard"
-            className="inline-block bg-[#0a0a0a] text-white font-semibold py-4 px-12 rounded-full hover:opacity-85 active:scale-95 transition-all duration-200"
-            style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.16)' }}
+            className="inline-block bg-[#0a0a0a] text-white font-semibold py-4 px-12 rounded-full hover:opacity-85 active:scale-95 transition-all duration-200 shadow-elevated"
           >
             Ir para o painel
           </Link>

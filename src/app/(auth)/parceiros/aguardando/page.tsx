@@ -25,11 +25,9 @@ export default function AguardandoAprovacao() {
         </div>
 
         <div
-          className="rounded-[2rem] p-10 border border-white/60"
+          className="rounded-4xl p-10 border border-white/60 shadow-auth backdrop-blur-[20px]"
           style={{
             background: 'rgba(255,255,255,0.92)',
-            backdropFilter: 'blur(20px)',
-            boxShadow: '0 8px 40px rgba(0,0,0,0.06), 0 1px 0 rgba(255,255,255,0.8) inset',
           }}
         >
           <div className="w-16 h-16 rounded-full bg-[#f4c5a8]/20 flex items-center justify-center mx-auto mb-6">
@@ -39,8 +37,8 @@ export default function AguardandoAprovacao() {
             </svg>
           </div>
 
-          <h2 style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
-            className="text-[1.7rem] font-bold tracking-[-0.02em] text-ink leading-tight mb-3">
+          <h2
+            className="text-[1.7rem] font-bold tracking-[-0.02em] text-ink leading-tight mb-3 font-serif">
             Em análise
           </h2>
           

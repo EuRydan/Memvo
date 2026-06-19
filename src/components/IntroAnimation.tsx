@@ -280,8 +280,7 @@ export function IntroAnimation() {
                             <div className="w-5 h-px bg-[#939393]" />
                         </div>
 
-                        <h1 className="max-w-[340px] sm:max-w-xl"
-                            style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}>
+                        <h1 className="max-w-[340px] sm:max-w-xl font-serif">
                             <span className="block text-[2.4rem] sm:text-[4rem] font-bold leading-[1.05] tracking-[-0.03em] text-[#0a0a0a]">
                                 Cada momento,
                             </span>
@@ -313,7 +312,7 @@ export function IntroAnimation() {
                     style={{ opacity: containerSize.width < 768 ? 0 : contentOpacity, y: contentY }}
                     className="absolute top-[18%] z-10 hidden md:flex flex-col items-center justify-center text-center pointer-events-none px-4"
                 >
-                    <h2 style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }} className="text-3xl md:text-5xl font-bold tracking-tight text-[#0a0a0a] mb-4">
+                    <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-[#0a0a0a] mb-4 font-serif">
                         Simples para você,<br/>mágico para seus convidados
                     </h2>
                     <p className="text-sm md:text-base text-[#676f7b] max-w-lg leading-relaxed mb-6">
@@ -323,8 +322,7 @@ export function IntroAnimation() {
                     <div className="pointer-events-auto">
                         <Link
                             href="/pricing"
-                            className="inline-flex items-center gap-3 bg-[#0a0a0a] text-white px-8 py-4 rounded-full font-semibold hover:opacity-85 transition-all active:scale-95 group z-20 relative"
-                            style={{ boxShadow: '0 6px 24px rgba(0,0,0,0.22)' }}
+                            className="inline-flex items-center gap-3 bg-[#0a0a0a] text-white px-8 py-4 rounded-full font-semibold hover:opacity-85 transition-all active:scale-95 group z-20 relative shadow-[0_6px_24px_rgba(0,0,0,0.22)]"
                         >
                             <span>Ver planos e preços</span>
                             <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">

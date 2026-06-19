@@ -21,8 +21,19 @@
   --color-footer: #030303;
 
   --font-sans: var(--font-signika), sans-serif;
-  --font-serif: var(--font-raleway), sans-serif;
+  --font-serif: var(--font-raleway), Georgia, serif;
   --font-mono: var(--font-hind), sans-serif;
+
+  --radius-card: 18px;
+  --radius-card-lg: 20px;
+
+  --shadow-card: 0 4px 20px rgba(0,0,0,0.05);
+  --shadow-float: 0 8px 40px rgba(0,0,0,0.08);
+  --shadow-elevated: 0 4px 16px rgba(0,0,0,0.16);
+  --shadow-auth: 0 8px 40px rgba(0,0,0,0.06), 0 1px 0 rgba(255,255,255,0.8) inset;
+  --shadow-subtle: 0 4px 24px rgba(0,0,0,0.06);
+  --shadow-strong: 0 4px 12px rgba(0,0,0,0.18);
+  --shadow-popup: 0 2px 12px rgba(0,0,0,0.2);
 
   --animate-marquee: marquee var(--duration) linear infinite;
   

@@ -291,8 +291,7 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
           </div>
           </div>
           <h1
-            style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
-            className="text-[1.85rem] font-bold tracking-[-0.02em] text-ink leading-tight"
+            className="text-[1.85rem] font-bold tracking-[-0.02em] text-ink leading-tight font-serif"
           >
             Desafios Fotográficos
           </h1>
@@ -313,10 +312,9 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
         {/* Challenges list card */}
         {challenges.length > 0 && (
           <div
-            className="rounded-[18px] overflow-hidden mb-4"
+            className="rounded-card overflow-hidden mb-4 shadow-subtle"
             style={{
               background: 'rgba(255,255,255,0.95)',
-              boxShadow: '0 4px 24px rgba(0,0,0,0.06)',
             }}
           >
             {/* gradient accent */}
@@ -353,8 +351,8 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
         {/* Empty state */}
         {challenges.length === 0 && (
           <div
-            className="rounded-[18px] p-8 text-center mb-4"
-            style={{ background: 'rgba(255,255,255,0.95)', boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}
+            className="rounded-card p-8 text-center mb-4 shadow-subtle"
+            style={{ background: 'rgba(255,255,255,0.95)' }}
           >
             <p className="text-2xl mb-2">🎯</p>
             <p className="text-sm font-semibold text-ink mb-1">Nenhum desafio ainda</p>
@@ -387,10 +385,9 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
         {/* Add challenge input */}
         <div className="mb-4">
           <div
-            className={`rounded-[18px] px-4 sm:px-5 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center gap-3 ${challenges.length >= challengeLimit ? 'opacity-50 pointer-events-none' : ''}`}
+            className={`rounded-card px-4 sm:px-5 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center gap-3 shadow-card ${challenges.length >= challengeLimit ? 'opacity-50 pointer-events-none' : ''}`}
             style={{
               background: 'rgba(255,255,255,0.95)',
-              boxShadow: '0 4px 24px rgba(0,0,0,0.05)',
             }}
           >
             <input

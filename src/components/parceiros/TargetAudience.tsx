@@ -32,8 +32,8 @@ export function TargetAudience() {
       <div className="max-w-6xl mx-auto px-6 relative z-10">
         <div className="text-center mb-16 max-w-2xl mx-auto">
           <p className="text-[11px] font-semibold tracking-[0.2em] text-[#939393] uppercase mb-3">Público-alvo</p>
-          <h2 style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}
-            className="text-[2rem] font-bold tracking-[-0.02em] text-[#0a0a0a] leading-tight">
+          <h2
+            className="text-[2rem] font-bold tracking-[-0.02em] text-[#0a0a0a] leading-tight font-serif">
             Para quem é a parceria?
           </h2>
           <p className="mt-4 text-[#676f7b] text-base">

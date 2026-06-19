@@ -249,14 +249,12 @@ function PricingContent() {
         </div>
         {user ? (
           <Link href="/dashboard"
-            className="bg-[#0a0a0a] text-white text-xs font-semibold px-4 py-2 rounded-full hover:opacity-85 transition-all"
-            style={{ boxShadow: '0 4px 12px rgba(0,0,0,0.18)' }}>
+            className="bg-[#0a0a0a] text-white text-xs font-semibold px-4 py-2 rounded-full hover:opacity-85 transition-all shadow-strong">
             Ir para o Painel
           </Link>
         ) : (
           <Link href="/register"
-            className="bg-[#0a0a0a] text-white text-xs font-semibold px-4 py-2 rounded-full hover:opacity-85 transition-all"
-            style={{ boxShadow: '0 4px 12px rgba(0,0,0,0.18)' }}>
+            className="bg-[#0a0a0a] text-white text-xs font-semibold px-4 py-2 rounded-full hover:opacity-85 transition-all shadow-strong">
             Começar
           </Link>
         )}
@@ -266,8 +264,8 @@ function PricingContent() {
 
         <div className="text-center mb-10">
           <p className="text-[11px] font-semibold tracking-[0.2em] text-[#939393] uppercase mb-3">Planos</p>
-          <h1 style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}
-            className="text-[2rem] font-bold tracking-[-0.02em] text-[#0a0a0a] leading-tight mb-2">
+          <h1
+            className="text-[2rem] font-bold tracking-[-0.02em] text-[#0a0a0a] leading-tight mb-2 font-serif">
             Escolha seu plano
           </h1>
           <p className="text-sm text-[#676f7b] mb-4">Pagamento único. Sem assinatura.</p>
@@ -446,10 +444,10 @@ function PricingContent() {
             </div>
 
             {/* Right: Payment Gateway */}
-            <div className="rounded-[22px] overflow-hidden bg-white p-5 sm:p-7 md:p-8 flex flex-col w-full max-w-[320px] mx-auto md:max-w-none shadow-sm md:shadow-2xl"
+            <div className="rounded-3xl overflow-hidden bg-white p-5 sm:p-7 md:p-8 flex flex-col w-full max-w-[320px] mx-auto md:max-w-none shadow-sm md:shadow-2xl"
               style={{ border: '1px solid rgba(0,0,0,0.04)', minHeight: '400px' }}>
               <div className="flex items-center justify-between mb-1 hidden md:flex">
-                <h3 className="text-[1.3rem] font-bold text-[#0a0a0a]" style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}>
+                <h3 className="text-[1.3rem] font-bold text-[#0a0a0a] font-serif">
                   Pagamento Seguro
                 </h3>
               </div>
@@ -467,7 +465,7 @@ function PricingContent() {
 
               {intentId && (
                 <div className="mt-4 md:mt-6">
-                  <h2 className="text-xl font-bold text-ink mb-6 text-center" style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}>
+                  <h2 className="text-xl font-bold text-ink mb-6 text-center font-serif">
                     Finalizar Pagamento
                   </h2>
                   <div className="w-full">
@@ -526,15 +524,15 @@ function PricingContent() {
 
         {/* ── FAQ ── */}
         <section className="mb-14">
-          <h2 style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}
-            className="text-[1.3rem] font-bold text-[#0a0a0a] text-center mb-5">
+          <h2
+            className="text-[1.3rem] font-bold text-[#0a0a0a] text-center mb-5 font-serif">
             Perguntas frequentes
           </h2>
           <div className="flex flex-col gap-3">
             {FAQS.map((faq, i) => (
               <div key={i}
-                className="rounded-[16px] overflow-hidden"
-                style={{ background: 'rgba(255,255,255,0.95)', boxShadow: '0 4px 20px rgba(0,0,0,0.04)' }}>
+                className="rounded-2xl overflow-hidden shadow-card"
+                style={{ background: 'rgba(255,255,255,0.95)' }}>
                 <button
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
                   className="w-full flex items-center justify-between px-5 py-4 text-left cursor-pointer"
@@ -564,7 +562,7 @@ function PricingContent() {
         </section>
 
         {/* ── Final CTA ── */}
-        <div className="rounded-[24px] overflow-hidden relative"
+        <div className="rounded-3xl overflow-hidden relative"
           style={{ background: 'linear-gradient(160deg, #f4c5a8 0%, #c8b8e0 55%, #b8d0f0 100%)' }}>
           <div className="absolute top-[-30px] right-[-30px] w-[200px] h-[200px] rounded-full pointer-events-none"
             style={{
@@ -573,16 +571,15 @@ function PricingContent() {
             }} />
           <div className="relative p-8 text-center">
             <p className="text-[11px] font-semibold tracking-[0.2em] text-white/70 uppercase mb-3">Começar agora</p>
-            <h2 style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}
-              className="text-[1.7rem] font-bold text-white leading-tight mb-3 tracking-[-0.02em]">
+            <h2
+              className="text-[1.7rem] font-bold text-white leading-tight mb-3 tracking-[-0.02em] font-serif">
               Pronto para criar sua celebração?
             </h2>
             <p className="text-sm text-white/80 mb-7 leading-relaxed">
               Pagamento único. Álbum para sempre. Sem surpresas.
             </p>
             <Link href="/register"
-              className="inline-block bg-white text-[#0a0a0a] text-sm font-bold px-8 py-4 rounded-full hover:bg-[#fafafa] transition-all active:scale-95"
-              style={{ boxShadow: '0 6px 24px rgba(0,0,0,0.15)' }}>
+              className="inline-block bg-white text-[#0a0a0a] text-sm font-bold px-8 py-4 rounded-full hover:bg-[#fafafa] transition-all active:scale-95 shadow-popup">
               Criar minha conta
             </Link>
           </div>

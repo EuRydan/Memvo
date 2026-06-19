@@ -299,10 +299,10 @@ export default function OnboardingWizard() {
         
         {step === 1 && (
           <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <h1 className="text-3xl font-bold text-ink transition-colors mb-2" style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}>Bem-vindo!</h1>
+            <h1 className="text-3xl font-bold text-ink transition-colors mb-2 font-serif">Bem-vindo!</h1>
             <p className="text-slate transition-colors mb-8">Vamos configurar seu espaço de memórias.</p>
             
-            <button onClick={handleNext} className="w-full bg-canvas-warm border border-hairline rounded-[24px] p-6 text-left hover:shadow-lg transition-all group flex items-center justify-between duration-200">
+            <button onClick={handleNext} className="w-full bg-canvas-warm border border-hairline rounded-3xl p-6 text-left hover:shadow-lg transition-all group flex items-center justify-between duration-200">
               <div>
                 <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/40 rounded-full flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
                   📸
@@ -320,14 +320,14 @@ export default function OnboardingWizard() {
         {step === 2 && (
           <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
             <p className="text-[11px] font-semibold tracking-widest text-stone uppercase mb-2 transition-colors">Etapa 2 de 7</p>
-            <h2 className="text-3xl font-bold text-ink mb-6 transition-colors" style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}>Qual é o tipo de evento?</h2>
+            <h2 className="text-3xl font-bold text-ink mb-6 transition-colors font-serif">Qual é o tipo de evento?</h2>
             
             <div className="grid grid-cols-2 gap-3">
               {['Casamento', 'Aniversário', 'Viagem', 'Celebração', 'Formatura', 'Outros'].map(type => (
                 <button
                   key={type}
                   onClick={() => { setEventType(type); handleNext(); }}
-                  className={`p-5 rounded-[20px] text-center border-2 transition-all hover:scale-105 active:scale-95 duration-200 ${eventType === type ? 'border-ink bg-ink text-canvas shadow-md' : 'border-hairline bg-canvas-warm text-ink hover:border-ink/20'}`}
+                  className={`p-5 rounded-card-lg text-center border-2 transition-all hover:scale-105 active:scale-95 duration-200 ${eventType === type ? 'border-ink bg-ink text-canvas shadow-md' : 'border-hairline bg-canvas-warm text-ink hover:border-ink/20'}`}
                 >
                   <span className="block text-2xl mb-2">
                     {type === 'Casamento' ? '💍' : type === 'Aniversário' ? '🎂' : type === 'Viagem' ? '✈️' : type === 'Celebração' ? '🎉' : type === 'Formatura' ? '🎓' : '✨'}
@@ -342,7 +342,7 @@ export default function OnboardingWizard() {
         {step === 3 && (
           <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
             <p className="text-[11px] font-semibold tracking-widest text-stone uppercase mb-2 transition-colors">Etapa 3 de 7</p>
-            <h2 className="text-3xl font-bold text-ink mb-6 transition-colors" style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}>Personalize seu álbum</h2>
+            <h2 className="text-3xl font-bold text-ink mb-6 transition-colors font-serif">Personalize seu álbum</h2>
             
             <div className="flex flex-col gap-6">
               <div className="floating-group">
@@ -359,7 +359,7 @@ export default function OnboardingWizard() {
               </div>
 
               {/* Cover Upload */}
-              <div className="rounded-[18px] overflow-hidden bg-canvas-warm/90 backdrop-blur shadow-[0_4px_24px_rgba(0,0,0,0.06)] border border-hairline transition-colors duration-200">
+              <div className="rounded-card overflow-hidden bg-canvas-warm/90 backdrop-blur shadow-subtle border border-hairline transition-colors duration-200">
                 <div className="p-5 flex flex-col gap-3">
                   <input 
                     type="file" accept="image/*" className="hidden" ref={fileInputRef}
@@ -393,7 +393,7 @@ export default function OnboardingWizard() {
         {step === 4 && (
           <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
             <p className="text-[11px] font-semibold tracking-widest text-stone uppercase mb-2 transition-colors">Etapa 4 de 7</p>
-            <h2 className="text-3xl font-bold text-ink mb-2 transition-colors" style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}>Desafios de Fotos</h2>
+            <h2 className="text-3xl font-bold text-ink mb-2 transition-colors font-serif">Desafios de Fotos</h2>
             <p className="text-sm text-slate mb-2 transition-colors">Sugira desafios para seus convidados. Eles receberão missões diferentes para engajar mais!</p>
             <p className="text-[13px] font-semibold text-ink/80 mb-6 bg-ink/5 px-4 py-2 rounded-lg inline-block border border-ink/10">
               Você pode selecionar {challengeLimit} desafio{challengeLimit === 1 ? '' : 's'} inicial{challengeLimit === 1 ? '' : 'is'} para o seu evento.
@@ -425,7 +425,7 @@ export default function OnboardingWizard() {
         {step === 5 && (
           <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
             <p className="text-[11px] font-semibold tracking-widest text-stone uppercase mb-2 transition-colors">Etapa 5 de 7</p>
-            <h2 className="text-3xl font-bold text-ink mb-6 transition-colors" style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}>Detalhes do Evento</h2>
+            <h2 className="text-3xl font-bold text-ink mb-6 transition-colors font-serif">Detalhes do Evento</h2>
             
             <div className="flex flex-col gap-5">
               <div className="flex flex-col items-center mb-2">
@@ -464,24 +464,20 @@ export default function OnboardingWizard() {
         {step === 6 && (
           <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
              <p className="text-[11px] font-semibold tracking-widest text-stone uppercase mb-2 transition-colors">Etapa 6 de 7</p>
-             <h2 className="text-3xl font-bold text-ink mb-2 transition-colors" style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}>Alertas e Mensagens</h2>
-             
-             <div className="relative mt-8 bg-canvas-warm rounded-3xl p-6 shadow-sm border border-hairline opacity-60 overflow-hidden transition-colors duration-200">
-               {/* Lock Badge */}
-               <div className="absolute top-4 right-4 bg-yellow-400 dark:bg-yellow-500/20 text-yellow-900 dark:text-yellow-500 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full flex items-center gap-1 shadow-sm transition-colors duration-200">
-                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-                 Em breve (Beta)
+             <h2 className="text-3xl font-bold text-ink mb-2 transition-colors font-serif">Alertas e Mensagens</h2>
+             <p className="text-sm text-slate mb-6 transition-colors">Prévia de um recurso que chegará em breve. Nenhuma ação necessária aqui.</p>
+
+             <div className="relative bg-canvas-warm rounded-3xl p-6 shadow-sm border border-hairline overflow-hidden transition-colors duration-200">
+               <div className="absolute top-4 right-4 bg-ink/5 text-slate text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full flex items-center gap-1 transition-colors duration-200">
+                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                 Em breve
                </div>
 
                <div className="w-12 h-12 bg-green-100 dark:bg-green-500/20 rounded-full flex items-center justify-center text-green-600 dark:text-green-400 mb-4 transition-colors duration-200">
                  <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
                </div>
                <h3 className="text-lg font-bold text-ink mb-2 transition-colors">Comunicação via WhatsApp</h3>
-               <p className="text-sm text-slate mb-4 transition-colors">Comunique-se com todos os convidados que leram o QR Code e adicionaram o WhatsApp. Dispare mensagens personalizadas quando quiser.</p>
-               
-               <div className="h-24 bg-ink/5 rounded-xl border border-hairline flex items-center justify-center transition-colors duration-200">
-                 <span className="text-xs font-semibold text-stone uppercase tracking-wider transition-colors">Recurso bloqueado</span>
-               </div>
+               <p className="text-sm text-slate transition-colors">Comunique-se com todos os convidados que leram o QR Code e adicionaram o WhatsApp. Dispare mensagens personalizadas quando quiser.</p>
              </div>
           </div>
         )}
@@ -489,11 +485,11 @@ export default function OnboardingWizard() {
         {step === 7 && (
           <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-ink mb-2 transition-colors" style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}>Tudo pronto para sua celebração</h2>
+              <h2 className="text-3xl font-bold text-ink mb-2 transition-colors font-serif">Tudo pronto para sua celebração</h2>
               <p className="text-sm text-slate transition-colors">Revise os detalhes abaixo antes de prosseguir.</p>
             </div>
 
-            <div className="bg-canvas-warm rounded-[24px] p-6 shadow-sm border border-hairline mb-6 flex flex-col gap-4 text-sm transition-colors duration-200">
+            <div className="bg-canvas-warm rounded-3xl p-6 shadow-sm border border-hairline mb-6 flex flex-col gap-4 text-sm transition-colors duration-200">
                <div className="flex justify-between items-center border-b border-hairline pb-3 transition-colors duration-200">
                  <span className="text-slate transition-colors">Nome do Evento</span>
                  <span className={`font-semibold transition-colors ${name ? 'text-ink' : 'text-slate opacity-60'}`}>{name || 'Não informado'}</span>

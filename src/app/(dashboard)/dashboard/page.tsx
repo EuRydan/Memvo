@@ -213,8 +213,7 @@ export default function DashboardPage() {
           <div>
             <p className="text-[11px] font-semibold tracking-[0.16em] text-stone uppercase mb-1">{t('mainDashboard.panel')}</p>
             <h2
-              style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}
-              className="text-[1.9rem] font-bold tracking-[-0.02em] text-ink leading-tight transition-colors duration-200"
+              className="text-[1.9rem] font-bold tracking-[-0.02em] text-ink leading-tight transition-colors duration-200 font-serif"
             >
               {t('mainDashboard.yourCelebrations')}
             </h2>
@@ -228,8 +227,7 @@ export default function DashboardPage() {
 
             <button
               onClick={() => router.push('/onboarding?new=true')}
-              className="bg-ink text-canvas text-sm font-semibold px-5 py-2.5 rounded-full hover:opacity-85 active:scale-95 transition-all duration-200 cursor-pointer flex-shrink-0 relative overflow-hidden group border border-hairline"
-              style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.16)' }}
+              className="bg-ink text-canvas text-sm font-semibold px-5 py-2.5 rounded-full hover:opacity-85 active:scale-95 transition-all duration-200 cursor-pointer flex-shrink-0 relative overflow-hidden group border border-hairline shadow-elevated"
             >
               <span className="relative z-10 flex items-center gap-2">
                 {t('mainDashboard.newEvent')}
@@ -241,11 +239,7 @@ export default function DashboardPage() {
         {/* Empty state */}
             {events.length === 0 && (
               <div
-                className="rounded-2xl p-10 text-center bg-canvas-warm/80 border border-hairline transition-colors duration-200"
-                style={{
-                  backdropFilter: 'blur(10px)',
-                  boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
-                }}
+                className="rounded-2xl p-10 text-center bg-canvas-warm/80 border border-hairline transition-colors duration-200 shadow-card backdrop-blur-[10px]"
               >
                 <p className="text-3xl mb-3">🎉</p>
                 <p className="text-sm font-semibold text-ink mb-1 transition-colors duration-200">{t('mainDashboard.noEvents')}</p>
@@ -264,11 +258,11 @@ export default function DashboardPage() {
               {events.map(event => (
                 <div
                   key={event.id}
-                  className="flex flex-col xl:flex-row items-stretch w-full bg-canvas-warm rounded-[24px] overflow-hidden border border-hairline shadow-sm hover:shadow-md transition-shadow duration-300"
+                  className="flex flex-col xl:flex-row items-stretch w-full bg-canvas-warm rounded-3xl overflow-hidden border border-hairline shadow-sm hover:shadow-md transition-shadow duration-300"
                 >
                   {/* Left: Image Box */}
                   <div className="relative w-full xl:w-[260px] h-[220px] xl:h-auto shrink-0 p-3">
-                    <div className="w-full h-full rounded-[16px] overflow-hidden bg-ink/5 flex flex-col items-center justify-center relative">
+                    <div className="w-full h-full rounded-2xl overflow-hidden bg-ink/5 flex flex-col items-center justify-center relative">
                       {event.cover_url ? (
                          <img src={event.cover_url} alt={event.name} className="w-full h-full object-cover transition-transform hover:scale-105 duration-500" />
                       ) : (
@@ -398,7 +392,7 @@ export default function DashboardPage() {
       {showUpgradeModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-5">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowUpgradeModal(false)} />
-          <div className="relative bg-canvas-warm border border-hairline rounded-[2rem] p-8 max-w-sm w-full shadow-[0_20px_60px_rgba(0,0,0,0.15)] animate-in fade-in zoom-in-95 transition-colors duration-200">
+          <div className="relative bg-canvas-warm border border-hairline rounded-4xl p-8 max-w-sm w-full shadow-[0_20px_60px_rgba(0,0,0,0.15)] animate-in fade-in zoom-in-95 transition-colors duration-200">
             <button 
               onClick={() => setShowUpgradeModal(false)}
               className="absolute top-4 right-4 text-stone hover:text-ink transition-colors p-2"
@@ -412,7 +406,7 @@ export default function DashboardPage() {
               <div className="w-16 h-16 bg-ink/5 rounded-full flex items-center justify-center mx-auto mb-5 text-4xl">
                 ✨
               </div>
-              <h3 className="text-2xl font-bold text-ink mb-2 transition-colors" style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}>
+              <h3 className="text-2xl font-bold text-ink mb-2 transition-colors font-serif">
                 {t('mainDashboard.premiumAccess')}
               </h3>
               <p className="text-sm text-slate leading-relaxed px-2 transition-colors">
@@ -425,8 +419,7 @@ export default function DashboardPage() {
                 setShowUpgradeModal(false);
                 router.push('/pricing');
               }}
-              className="w-full bg-ink text-canvas font-semibold py-3.5 rounded-full hover:opacity-85 active:scale-95 transition-all duration-200"
-              style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.16)' }}
+              className="w-full bg-ink text-canvas font-semibold py-3.5 rounded-full hover:opacity-85 active:scale-95 transition-all duration-200 shadow-elevated"
             >
               {t('mainDashboard.viewPlans')}
             </button>
@@ -444,7 +437,7 @@ export default function DashboardPage() {
       {shareModalEvent && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-5">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShareModalEvent(null)} />
-          <div className="relative bg-canvas-warm border border-hairline rounded-[2rem] p-8 max-w-sm w-full shadow-[0_20px_60px_rgba(0,0,0,0.15)] animate-in fade-in zoom-in-95 flex flex-col items-center transition-colors duration-200">
+          <div className="relative bg-canvas-warm border border-hairline rounded-4xl p-8 max-w-sm w-full shadow-[0_20px_60px_rgba(0,0,0,0.15)] animate-in fade-in zoom-in-95 flex flex-col items-center transition-colors duration-200">
             <button 
               onClick={() => setShareModalEvent(null)}
               className="absolute top-4 right-4 text-stone hover:text-ink transition-colors p-2"
@@ -454,12 +447,12 @@ export default function DashboardPage() {
               </svg>
             </button>
 
-            <h3 className="text-xl font-bold text-ink mb-6 text-center transition-colors" style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}>
+            <h3 className="text-xl font-bold text-ink mb-6 text-center transition-colors font-serif">
               {t('mainDashboard.shareEvent')}
             </h3>
             
-            <div className="w-48 h-48 rounded-[24px] overflow-hidden mb-6 p-2 bg-gradient-to-br from-[#f4c5a8] to-[#d4bde8] shadow-sm">
-              <div className="w-full h-full rounded-[18px] overflow-hidden bg-white">
+            <div className="w-48 h-48 rounded-3xl overflow-hidden mb-6 p-2 bg-gradient-to-br from-[#f4c5a8] to-[#d4bde8] shadow-sm">
+              <div className="w-full h-full rounded-card overflow-hidden bg-white">
                 <QRCodeGenerator slug={shareModalEvent.slug} eventName={shareModalEvent.name} eventDate={shareModalEvent.date} size={250} variant="cover" />
               </div>
             </div>

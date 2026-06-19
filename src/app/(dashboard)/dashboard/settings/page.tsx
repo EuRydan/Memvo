@@ -75,13 +75,13 @@ export default function SettingsPage() {
   return (
     <div className="max-w-3xl mx-auto px-6 pt-10 pb-20">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-ink" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
+        <h1 className="text-3xl font-bold text-ink font-serif">
           Configurações e Assinatura
         </h1>
         <p className="text-sm text-gray-500 mt-1">Gerencie seu plano e os limites da sua conta.</p>
       </div>
 
-      <div className="bg-white rounded-[24px] border border-gray-100 shadow-sm p-6 md:p-8">
+      <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 md:p-8">
         
         <div className="flex items-center gap-3 mb-6 border-b border-gray-100 pb-4">
           <CreditCard className="text-gray-400" size={24} />

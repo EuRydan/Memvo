@@ -33,8 +33,8 @@ export function BenefitsSection() {
       <div className="max-w-6xl mx-auto px-6">
         <div className="text-center mb-16 max-w-2xl mx-auto">
           <p className="text-[11px] font-semibold tracking-[0.2em] text-[#939393] uppercase mb-3">Vantagens</p>
-          <h2 style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}
-            className="text-[2rem] font-bold tracking-[-0.02em] text-[#0a0a0a] leading-tight">
+          <h2
+            className="text-[2rem] font-bold tracking-[-0.02em] text-[#0a0a0a] leading-tight font-serif">
             Por que ser um parceiro Memvor?
           </h2>
           <p className="mt-4 text-[#676f7b] text-base">

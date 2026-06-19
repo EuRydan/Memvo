@@ -159,9 +159,9 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
             Para Profissionais de Eventos
           </p>
           
-          <h1 
-            style={{ fontFamily: 'var(--font-raleway), Georgia, serif', color: '#0a0a0a' }} 
-            className="text-[2.5rem] md:text-[3.5rem] font-bold text-center tracking-[-0.02em] leading-tight max-w-3xl"
+          <h1
+            style={{ color: '#0a0a0a' }}
+            className="text-[2.5rem] md:text-[3.5rem] font-bold text-center tracking-[-0.02em] leading-tight max-w-3xl font-serif"
           >
             Indique o Memvor e ganhe por cada celebração
           </h1>

@@ -251,13 +251,12 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
   if (notFound) return (
     <div className="min-h-screen flex items-center justify-center bg-[#fafafa] px-5">
       <div
-        className="text-center rounded-[20px] p-10 max-w-sm w-full"
-        style={{ background: '#fff', boxShadow: '0 8px 40px rgba(0,0,0,0.08)' }}
+        className="text-center rounded-card-lg p-10 max-w-sm w-full shadow-float"
+        style={{ background: '#fff' }}
       >
         <p className="text-5xl mb-4">💔</p>
         <h1
-          style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}
-          className="text-xl font-bold text-ink mb-2"
+          className="text-xl font-bold text-ink mb-2 font-serif"
         >
           Evento não encontrado
         </h1>
@@ -270,13 +269,12 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
   if (isLocked) return (
     <div className="min-h-screen flex items-center justify-center bg-[#fafafa] px-5">
       <div
-        className="text-center rounded-[20px] p-10 max-w-sm w-full"
-        style={{ background: '#fff', boxShadow: '0 8px 40px rgba(0,0,0,0.08)' }}
+        className="text-center rounded-card-lg p-10 max-w-sm w-full shadow-float"
+        style={{ background: '#fff' }}
       >
         <p className="text-5xl mb-4">🚧</p>
         <h1
-          style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}
-          className="text-xl font-bold text-ink mb-2"
+          className="text-xl font-bold text-ink mb-2 font-serif"
         >
           Evento não ativado
         </h1>
@@ -289,13 +287,12 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
   if (event && !event.active) return (
     <div className="min-h-screen flex items-center justify-center bg-[#fafafa] px-5">
       <div
-        className="text-center rounded-[20px] p-10 max-w-sm w-full"
-        style={{ background: '#fff', boxShadow: '0 8px 40px rgba(0,0,0,0.08)' }}
+        className="text-center rounded-card-lg p-10 max-w-sm w-full shadow-float"
+        style={{ background: '#fff' }}
       >
         <p className="text-5xl mb-4">💳</p>
         <h1
-          style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}
-          className="text-xl font-bold text-ink mb-2"
+          className="text-xl font-bold text-ink mb-2 font-serif"
         >
           Aguardando Pagamento
         </h1>
@@ -336,8 +333,7 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
           Álbum compartilhado
         </p>
         <h1
-          style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}
-          className="relative text-[2.2rem] font-bold tracking-[-0.02em] text-white leading-tight mb-2"
+          className="relative text-[2.2rem] font-bold tracking-[-0.02em] text-white leading-tight mb-2 font-serif"
         >
           {event.name}
         </h1>
@@ -358,7 +354,7 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
 
         {/* ── Archived Banner ── */}
         {!isEventActive(event) && (
-          <div className="rounded-[16px] px-5 py-4 bg-orange-50 border border-orange-100 flex flex-col items-center text-center gap-2" style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
+          <div className="rounded-2xl px-5 py-4 bg-orange-50 border border-orange-100 flex flex-col items-center text-center gap-2 shadow-card">
             <span className="text-2xl">📦</span>
             <p className="text-sm font-semibold text-orange-800">Este evento foi arquivado</p>
             <p className="text-xs text-orange-700">Ainda é possível reviver os momentos abaixo, mas o envio de novas fotos está desativado.</p>
@@ -368,8 +364,8 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
         {/* ── Progress bar ── */}
         {challenges.length > 0 && (
           <div
-            className="rounded-[16px] px-5 py-4"
-            style={{ background: '#fff', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}
+            className="rounded-2xl px-5 py-4 shadow-card"
+            style={{ background: '#fff' }}
           >
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-semibold text-ink">
@@ -394,8 +390,8 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
         {/* ── Name input ── */}
         {isEventActive(event) && (
           <div
-            className="rounded-[18px] px-5 py-4 flex items-center gap-3"
-            style={{ background: '#fff', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}
+            className="rounded-card px-5 py-4 flex items-center gap-3 shadow-card"
+            style={{ background: '#fff' }}
           >
             <svg width="16" height="16" fill="none" stroke="#939393" strokeWidth="2" viewBox="0 0 24 24">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
@@ -414,8 +410,7 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
         {challenges.length > 0 && (
           <div className="flex flex-col gap-3">
             <h2
-              style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}
-              className="text-[1.1rem] font-bold text-ink px-1 flex items-center gap-2"
+              className="text-[1.1rem] font-bold text-ink px-1 flex items-center gap-2 font-serif"
             >
               🎯 Desafios Fotográficos
             </h2>
@@ -428,7 +423,7 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
               return (
                   <div
                   key={challenge.id}
-                  className="rounded-[18px] overflow-hidden"
+                  className="rounded-card overflow-hidden"
                   style={{
                     background: '#fff',
                     boxShadow: done
@@ -577,17 +572,15 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
         {planType === 'premium' && (
           <div className="flex flex-col gap-3 mt-4">
             <h2
-              style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}
-              className="text-[1.1rem] font-bold text-ink px-1 flex items-center gap-2"
+              className="text-[1.1rem] font-bold text-ink px-1 flex items-center gap-2 font-serif"
             >
               📸 Álbum Livre
             </h2>
 
             <div
-              className="rounded-[18px] overflow-hidden"
+              className="rounded-card overflow-hidden shadow-card"
               style={{
                 background: '#fff',
-                boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
                 border: '1.5px solid transparent',
               }}
             >

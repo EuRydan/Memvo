@@ -37,8 +37,8 @@ export function EarningsCalculator() {
                 <span className="text-[11px] font-semibold tracking-[0.2em] uppercase">Simule seus ganhos</span>
               </div>
               
-              <h2 style={{ fontFamily: 'var(--font-raleway), Georgia, serif' }}
-                className="text-[2rem] md:text-[2.5rem] font-bold tracking-[-0.02em] leading-tight mb-4">
+              <h2
+                className="text-[2rem] md:text-[2.5rem] font-bold tracking-[-0.02em] leading-tight mb-4 font-serif">
                 Quanto você pode faturar?
               </h2>
               
