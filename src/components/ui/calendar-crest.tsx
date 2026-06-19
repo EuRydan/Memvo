@@ -220,7 +220,7 @@ export function CalendarCrest({
       <div>
         {/* Month name */}
         <div
-          className="text-gray-900"
+          className="text-gray-900 dark:text-white"
           style={{
             fontSize: 13,
             fontWeight: 590,
@@ -332,9 +332,9 @@ export function CalendarCrest({
             /* Text color classes */
             const textCls =
               isStart || isEnd
-                ? "text-white"
+                ? "text-white dark:text-[#0a0a0a]"
                 : inRange
-                  ? "text-gray-900"
+                  ? "text-gray-900 dark:text-white"
                   : isToday
                     ? "text-ink"
                     : "text-stone";
@@ -342,8 +342,8 @@ export function CalendarCrest({
             /* Background classes */
             const bgCls = inRange
               ? isStart || isEnd
-                ? "bg-ink"
-                : "bg-gray-100"
+                ? "bg-[#0a0a0a] dark:bg-white"
+                : "bg-gray-100 dark:bg-white/15"
               : "";
 
             return (
@@ -366,7 +366,7 @@ export function CalendarCrest({
                   "border-none transition-colors duration-100",
                   bgCls,
                   !inRange &&
-                    "rounded-[10px] hover:bg-gray-50",
+                    "rounded-[10px] hover:bg-gray-50 dark:hover:bg-white/10",
                 )}
                 style={{
                   width: CELL,
@@ -418,7 +418,7 @@ export function CalendarCrest({
   })();
 
   return (
-    <div className="w-fit overflow-hidden rounded-[20px] border border-gray-100 bg-white shadow-sm">
+    <div className="w-fit overflow-hidden rounded-[20px] border border-gray-100 dark:border-white/10 bg-white dark:bg-[#1c1c1e] shadow-sm">
       {/* Header */}
       <div
         style={{
@@ -505,7 +505,7 @@ export function CalendarCrest({
           >
             <div
               className={cn(
-                "border-t border-gray-100",
+                "border-t border-gray-100 dark:border-white/10",
                 isConfirmed
                   ? "text-slate"
                   : "text-stone",
