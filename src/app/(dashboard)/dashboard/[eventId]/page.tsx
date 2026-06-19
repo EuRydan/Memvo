@@ -228,96 +228,142 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
 
       {/* Header */}
       <div className="border-b border-gray-200/50 relative z-10 bg-white/40 backdrop-blur-xl">
-        {/* Title row */}
-        <div className="px-4 md:px-6 pt-4 pb-2.5 flex items-center gap-3">
-          <button
-            onClick={() => router.push('/dashboard')}
-            className="text-gray-500 hover:text-gray-900 transition text-lg shrink-0"
-          >
-            ←
-          </button>
-          <div className="flex-1 min-w-0">
-            <h1 className="text-base md:text-lg font-semibold text-gray-900 truncate">{event?.name}</h1>
-            <p className="text-xs text-gray-500">
-              {event && new Date(event.date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
-            </p>
+
+        {/* ── MOBILE (hidden md+) ─────────────────────────── */}
+        <div className="md:hidden">
+          {/* Title */}
+          <div className="px-4 pt-4 pb-3 flex items-center gap-3">
+            <button
+              onClick={() => router.push('/dashboard')}
+              className="shrink-0 w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-900 transition -ml-1"
+            >
+              <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/>
+              </svg>
+            </button>
+            <div className="flex-1 min-w-0">
+              <h1 className="text-[15px] font-bold text-gray-900 truncate leading-tight">{event?.name}</h1>
+              <p className="text-[11px] text-gray-400 mt-0.5">
+                {event && new Date(event.date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })}
+                {' · '}{medias.length} foto{medias.length !== 1 ? 's' : ''}
+              </p>
+            </div>
           </div>
-          <span className="shrink-0 text-xs text-gray-600 font-medium border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm">
-            {medias.length} foto{medias.length !== 1 ? 's' : ''}
-          </span>
-        </div>
 
-        {/* Actions — single scrollable row on mobile, wraps on desktop */}
-        <div className="overflow-x-auto scrollbar-hide">
-          <div className="flex items-center gap-2 px-4 md:px-6 pb-3 w-max md:w-auto md:flex-wrap">
-            <button
-              onClick={() => router.push(`/dashboard/${eventId}/stats`)}
-              className="shrink-0 text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-1.5 cursor-pointer"
-            >
-              📊 Estatísticas
-            </button>
-
-            <button
-              onClick={() => router.push(`/dashboard/${eventId}/team`)}
-              className="shrink-0 text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm cursor-pointer"
-            >
-              👥 Equipe
-            </button>
-
-            <button
-              onClick={() => router.push(`/dashboard/${eventId}/appearance`)}
-              className="shrink-0 text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm cursor-pointer"
-            >
-              🎨 Aparência
-            </button>
-
-            <button
-              onClick={() => router.push(`/dashboard/${eventId}/challenges`)}
-              className="shrink-0 text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm cursor-pointer"
-            >
-              Desafios
-            </button>
-
+          {/* Share CTA — primary action */}
+          <div className="px-4 pb-3">
             <button
               onClick={() => setIsShareModalOpen(true)}
-              className="shrink-0 flex items-center gap-1.5 text-xs text-gray-900 font-semibold hover:bg-gray-100 transition border border-gray-200 bg-white px-3 py-1.5 rounded-lg shadow-sm"
+              className="w-full flex items-center gap-3 bg-gray-900 text-white px-4 py-3 rounded-2xl font-semibold text-sm active:scale-[0.98] transition-transform"
             >
-              <Share size={14} />
-              Compartilhar
+              <Share size={15} className="shrink-0" />
+              <span className="flex-1 text-left text-[13px]">Compartilhar com convidados</span>
+              <span className="text-white/40 text-lg leading-none">›</span>
             </button>
+          </div>
 
-            <button
-              onClick={handleDownloadZip}
-              disabled={isDownloadingZip || medias.length === 0}
-              className={`shrink-0 flex items-center gap-1.5 text-xs font-semibold transition px-3 py-1.5 rounded-lg shadow-sm ${
-                isDownloadingZip
-                  ? 'bg-blue-50 text-blue-600 border border-blue-200 cursor-not-allowed'
-                  : 'bg-white text-gray-900 border border-gray-200 hover:bg-gray-50 cursor-pointer'
-              }`}
-            >
+          {/* 4-col icon grid */}
+          <div className="px-4 pb-4 flex flex-col gap-2">
+            <div className="grid grid-cols-4 gap-2">
+              <button
+                onClick={() => router.push(`/dashboard/${eventId}/stats`)}
+                className="flex flex-col items-center gap-1.5 py-3 bg-white rounded-2xl border border-gray-100 shadow-sm active:scale-95 transition-transform"
+              >
+                <div className="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center text-base">📊</div>
+                <span className="text-[10px] font-semibold text-gray-600">Stats</span>
+              </button>
+
+              <button
+                onClick={() => router.push(`/dashboard/${eventId}/team`)}
+                className="flex flex-col items-center gap-1.5 py-3 bg-white rounded-2xl border border-gray-100 shadow-sm active:scale-95 transition-transform"
+              >
+                <div className="w-9 h-9 bg-violet-50 rounded-xl flex items-center justify-center text-base">👥</div>
+                <span className="text-[10px] font-semibold text-gray-600">Equipe</span>
+              </button>
+
+              <button
+                onClick={() => router.push(`/dashboard/${eventId}/appearance`)}
+                className="flex flex-col items-center gap-1.5 py-3 bg-white rounded-2xl border border-gray-100 shadow-sm active:scale-95 transition-transform"
+              >
+                <div className="w-9 h-9 bg-pink-50 rounded-xl flex items-center justify-center text-base">🎨</div>
+                <span className="text-[10px] font-semibold text-gray-600">Visual</span>
+              </button>
+
+              <button
+                onClick={() => router.push(`/dashboard/${eventId}/challenges`)}
+                className="flex flex-col items-center gap-1.5 py-3 bg-white rounded-2xl border border-gray-100 shadow-sm active:scale-95 transition-transform"
+              >
+                <div className="w-9 h-9 bg-amber-50 rounded-xl flex items-center justify-center text-base">⚡</div>
+                <span className="text-[10px] font-semibold text-gray-600">Desafios</span>
+              </button>
+            </div>
+
+            {/* Secondary row */}
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                onClick={handleDownloadZip}
+                disabled={isDownloadingZip || medias.length === 0}
+                className="flex items-center gap-2 px-3 py-2.5 bg-white rounded-xl border border-gray-100 shadow-sm disabled:opacity-40 active:scale-95 transition-transform"
+              >
+                <Download size={13} className={`text-gray-400 shrink-0 ${isDownloadingZip ? 'animate-bounce' : ''}`} />
+                <span className="text-[11px] font-semibold text-gray-700 truncate">
+                  {isDownloadingZip ? `Baixando ${downloadProgress}%` : 'Baixar ZIP'}
+                </span>
+              </button>
+
+              <button
+                onClick={() => { if (isTelaoEnabled(planType)) { window.open(`/e/${event?.slug}/telao`, '_blank') } }}
+                disabled={!isTelaoEnabled(planType)}
+                title={!isTelaoEnabled(planType) ? 'Disponível no plano Premium' : 'Abrir Telão'}
+                className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border shadow-sm active:scale-95 transition-transform ${
+                  !isTelaoEnabled(planType) ? 'bg-orange-50 border-orange-100 opacity-80' : 'bg-white border-gray-100'
+                }`}
+              >
+                <Camera size={13} className={`shrink-0 ${!isTelaoEnabled(planType) ? 'text-orange-400' : 'text-gray-400'}`} />
+                <span className={`text-[11px] font-semibold truncate ${!isTelaoEnabled(planType) ? 'text-orange-600' : 'text-gray-700'}`}>
+                  {isTelaoEnabled(planType) ? 'Telão' : 'Telão 🔒'}
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* ── DESKTOP (hidden on mobile) ──────────────────── */}
+        <div className="hidden md:block">
+          <div className="px-6 pt-5 pb-2.5 flex items-center gap-3">
+            <button onClick={() => router.push('/dashboard')} className="text-gray-500 hover:text-gray-900 transition text-lg shrink-0">←</button>
+            <div className="flex-1 min-w-0">
+              <h1 className="text-lg font-semibold text-gray-900 truncate">{event?.name}</h1>
+              <p className="text-xs text-gray-500">
+                {event && new Date(event.date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
+              </p>
+            </div>
+            <span className="shrink-0 text-xs text-gray-600 font-medium border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm">
+              {medias.length} foto{medias.length !== 1 ? 's' : ''}
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-2 px-6 pb-4">
+            <button onClick={() => router.push(`/dashboard/${eventId}/stats`)} className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-1.5 cursor-pointer">📊 Estatísticas</button>
+            <button onClick={() => router.push(`/dashboard/${eventId}/team`)} className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm cursor-pointer">👥 Equipe</button>
+            <button onClick={() => router.push(`/dashboard/${eventId}/appearance`)} className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm cursor-pointer">🎨 Aparência</button>
+            <button onClick={() => router.push(`/dashboard/${eventId}/challenges`)} className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm cursor-pointer">Desafios</button>
+            <button onClick={() => setIsShareModalOpen(true)} className="flex items-center gap-1.5 text-xs text-gray-900 font-semibold hover:bg-gray-100 transition border border-gray-200 bg-white px-3 py-1.5 rounded-lg shadow-sm"><Share size={14} /> Compartilhar</button>
+            <button onClick={handleDownloadZip} disabled={isDownloadingZip || medias.length === 0}
+              className={`flex items-center gap-1.5 text-xs font-semibold transition px-3 py-1.5 rounded-lg shadow-sm ${isDownloadingZip ? 'bg-blue-50 text-blue-600 border border-blue-200 cursor-not-allowed' : 'bg-white text-gray-900 border border-gray-200 hover:bg-gray-50 cursor-pointer'}`}>
               <Download size={14} className={isDownloadingZip ? 'animate-bounce' : ''} />
               {isDownloadingZip ? `Baixando... ${downloadProgress}%` : 'Baixar ZIP'}
             </button>
-
             <button
-              onClick={() => {
-                if (isTelaoEnabled(planType)) {
-                  window.open(`/e/${event?.slug}/telao`, '_blank')
-                }
-              }}
+              onClick={() => { if (isTelaoEnabled(planType)) { window.open(`/e/${event?.slug}/telao`, '_blank') } }}
               disabled={!isTelaoEnabled(planType)}
-              className={`shrink-0 flex items-center gap-1.5 text-xs font-semibold transition px-3 py-1.5 rounded-lg shadow-sm ${
-                !isTelaoEnabled(planType)
-                  ? 'bg-orange-50 text-orange-600 border border-orange-200 cursor-not-allowed opacity-80'
-                  : 'bg-[#0a0a0a] text-white border border-[#0a0a0a] hover:bg-black cursor-pointer'
-              }`}
-              title={!isTelaoEnabled(planType) ? "Disponível no plano Premium" : "Abrir Telão"}
-            >
+              className={`flex items-center gap-1.5 text-xs font-semibold transition px-3 py-1.5 rounded-lg shadow-sm ${!isTelaoEnabled(planType) ? 'bg-orange-50 text-orange-600 border border-orange-200 cursor-not-allowed opacity-80' : 'bg-[#0a0a0a] text-white border border-[#0a0a0a] hover:bg-black cursor-pointer'}`}
+              title={!isTelaoEnabled(planType) ? 'Disponível no plano Premium' : 'Abrir Telão'}>
               <Camera size={14} />
               {isTelaoEnabled(planType) ? 'Abrir Telão' : 'Telão (Premium)'}
             </button>
           </div>
         </div>
+
       </div>
 
       {/* Tabs (TabbedHeroSection style) */}
