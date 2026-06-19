@@ -62,7 +62,10 @@ export default function OnboardingWizard() {
       const legacyPlan = plansData?.find(p => p.event_id === null && p.plan_id && p.plan_id !== 'none')
       setHasPlan(!!legacyPlan)
 
-      const planLimit = legacyPlan ? getChallengeLimit(legacyPlan.plan_id) : 1
+      // For users without a plan yet (first onboarding), use the classic limit (7)
+      // so they can select a meaningful number of challenges before choosing a plan.
+      // The actual limit is enforced in the dashboard after payment.
+      const planLimit = legacyPlan ? getChallengeLimit(legacyPlan.plan_id) : getChallengeLimit('classic')
       setChallengeLimit(planLimit)
 
       // Check if forcing a new event
@@ -149,10 +152,7 @@ export default function OnboardingWizard() {
   const toggleChallenge = (title: string) => {
     setSelectedChallenges(prev => {
       if (prev.includes(title)) return prev.filter(t => t !== title)
-      if (prev.length >= challengeLimit) {
-        alert(`Seu plano permite selecionar apenas ${challengeLimit} desafio${challengeLimit === 1 ? '' : 's'} no onboarding. Após criar o evento, você poderá assinar um plano no painel para adicionar mais!`)
-        return prev
-      }
+      if (prev.length >= challengeLimit) return prev
       return [...prev, title]
     })
   }
@@ -396,7 +396,9 @@ export default function OnboardingWizard() {
             <h2 className="text-3xl font-bold text-ink mb-2 transition-colors font-serif">Desafios de Fotos</h2>
             <p className="text-sm text-slate mb-2 transition-colors">Sugira desafios para seus convidados. Eles receberão missões diferentes para engajar mais!</p>
             <p className="text-[13px] font-semibold text-ink/80 mb-6 bg-ink/5 px-4 py-2 rounded-lg inline-block border border-ink/10">
-              Você pode selecionar {challengeLimit} desafio{challengeLimit === 1 ? '' : 's'} inicial{challengeLimit === 1 ? '' : 'is'} para o seu evento.
+              {hasPlan
+                ? `Seu plano permite até ${challengeLimit === Infinity ? 'ilimitados' : challengeLimit} desafio${challengeLimit === 1 ? '' : 's'}.`
+                : 'Selecione até 7 desafios. O limite final dependerá do plano escolhido.'}
             </p>
             
             <div className="bg-canvas-warm rounded-3xl p-5 shadow-sm border border-hairline flex flex-col gap-3 max-h-[400px] overflow-y-auto transition-colors duration-200">
