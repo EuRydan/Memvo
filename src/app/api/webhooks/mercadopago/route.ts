@@ -122,7 +122,7 @@ export async function POST(request: Request) {
         }
 
         // Validar valor da transação — usar tolerância de R$0,01 para evitar divergências de float
-        const paidAmount = paymentInfo.transaction_amount
+        const paidAmount = paymentInfo.transaction_amount ?? 0
         if (Math.abs(paidAmount - Number(intent.amount)) > 0.01) {
           console.error(`Valor pago (${paidAmount}) diverge do intent (${intent.amount}) para intent ${intentId}`)
           return NextResponse.json({ error: 'Amount mismatch' }, { status: 400 })
