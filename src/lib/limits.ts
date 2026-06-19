@@ -2,6 +2,8 @@ import { Event } from '@/types'
 
 export type PlanTier = 'essential' | 'classic' | 'premium'
 
+export const PROMO_PLANS = ['brasil_game'] as const
+
 export const PLAN_LIMITS: Record<PlanTier, number> = {
   essential: Infinity,
   classic: Infinity,
@@ -35,8 +37,9 @@ export function countActiveEvents(events: Pick<Event, 'date' | 'active'>[]): num
  * Returns the maximum number of photos a guest can upload per challenge
  */
 export function getPhotoLimit(planId: string): number {
-  const plan = planId as PlanTier | 'freemium' | 'none'
+  const plan = planId as PlanTier | 'freemium' | 'brasil_game' | 'none'
   if (plan === 'freemium') return 1
+  if (plan === 'brasil_game') return 3
   if (plan === 'essential') return 3
   if (plan === 'classic' || plan === 'premium') return Infinity
   return 0 // none
@@ -46,8 +49,9 @@ export function getPhotoLimit(planId: string): number {
  * Returns the maximum number of challenges an event can have
  */
 export function getChallengeLimit(planId: string): number {
-  const plan = planId as PlanTier | 'freemium' | 'none'
+  const plan = planId as PlanTier | 'freemium' | 'brasil_game' | 'none'
   if (plan === 'freemium') return 1
+  if (plan === 'brasil_game') return 4
   if (plan === 'essential') return 4
   if (plan === 'classic') return 7
   if (plan === 'premium') return Infinity
@@ -95,6 +99,7 @@ export type UserPlanRecord = {
 const PLAN_TIER: Record<string, number> = {
   none: 0,
   freemium: 1,
+  brasil_game: 1.5,
   essential: 2,
   classic: 3,
   premium: 4,
