@@ -123,7 +123,6 @@ const FAQS = [
 ]
 
 function PricingContent() {
-  const [preferenceId, setPreferenceId] = useState<string | null>(null)
   const [intentId, setIntentId] = useState<string | null>(null)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [selectedPlan, setSelectedPlan] = useState<typeof PLANS[0] | null>(null)
@@ -139,7 +138,6 @@ function PricingContent() {
   const [isValidatingCoupon, setIsValidatingCoupon] = useState(!!voucherUrlParam)
 
   const [userEvents, setUserEvents] = useState<{id: string, name: string}[]>([])
-  const [promoLoading, setPromoLoading] = useState(false)
 
   useEffect(() => {
     const checkUser = async () => {
@@ -217,24 +215,9 @@ function PricingContent() {
       return
     }
 
-    // Plano promocional: ativa direto, sem fluxo de pagamento
+    // Plano promocional: redireciona para onboarding especial
     if (plan.id === 'brasil_game') {
-      setPromoLoading(true)
-      try {
-        const res = await fetch('/api/plans/promo', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ planId: plan.id, eventId }),
-        })
-        const data = await res.json()
-        if (data.success) {
-          router.push('/dashboard/success?promo=brasil')
-        } else {
-          alert(data.error || 'Erro ao ativar plano.')
-        }
-      } finally {
-        setPromoLoading(false)
-      }
+      router.push('/onboarding/brasil-game')
       return
     }
 
@@ -391,12 +374,11 @@ function PricingContent() {
                       </ul>
                       <button
                         onClick={() => handleSelectPlan(plan)}
-                        disabled={promoLoading}
                         type="button"
-                        className="text-sm w-full py-3.5 rounded-xl font-bold mt-auto transition-all active:scale-[0.98] text-white disabled:opacity-60"
+                        className="text-sm w-full py-3.5 rounded-xl font-bold mt-auto transition-all active:scale-[0.98] text-white"
                         style={{ background: 'linear-gradient(90deg, #009C3B 0%, #007a2e 100%)' }}
                       >
-                        {promoLoading ? 'Ativando...' : '🇧🇷 Ativar para o Jogo'}
+                        🇧🇷 Ativar para o Jogo
                       </button>
                     </div>
                   </div>
