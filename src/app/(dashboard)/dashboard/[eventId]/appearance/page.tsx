@@ -114,25 +114,18 @@ export default function AppearancePage({ params }: { params: Promise<{ eventId: 
       <div className="max-w-2xl">
         {/* Header Tabs */}
         <div className="mb-6">
-          <p className="text-[11px] font-semibold tracking-[0.16em] text-stone uppercase mb-2">Configuração</p>
-          <div className="flex flex-wrap items-center gap-2 mb-3">
-            <div className="text-xs text-gray-900 font-medium border border-gray-200 bg-white px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-1.5">
-              🎨 Aparência
-            </div>
+          <div className="flex items-center gap-1.5 mb-3">
+            <button onClick={() => router.push(`/dashboard/${eventId}`)} className="text-[#939393] hover:text-[#0a0a0a] transition-colors text-sm font-medium cursor-pointer">← Visão Geral</button>
             {isOwner && (
-              <button
-                onClick={() => router.push(`/dashboard/${eventId}/team`)}
-                className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm cursor-pointer"
-              >
-                👥 Equipe
-              </button>
+              <>
+                <span className="text-[#d4d4d4] text-xs select-none">·</span>
+                <button onClick={() => router.push(`/dashboard/${eventId}/team`)} className="text-xs font-medium text-[#939393] hover:text-[#0a0a0a] transition-colors px-1 py-1 cursor-pointer">Equipe</button>
+              </>
             )}
-            <button
-              onClick={() => router.push(`/dashboard/${eventId}/challenges`)}
-              className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm cursor-pointer"
-            >
-              Desafios
-            </button>
+            <span className="text-[#d4d4d4] text-xs select-none">·</span>
+            <span className="text-xs font-semibold text-[#0a0a0a] px-1">Aparência</span>
+            <span className="text-[#d4d4d4] text-xs select-none">·</span>
+            <button onClick={() => router.push(`/dashboard/${eventId}/challenges`)} className="text-xs font-medium text-[#939393] hover:text-[#0a0a0a] transition-colors px-1 py-1 cursor-pointer">Desafios</button>
           </div>
           <h1
             className="text-[1.85rem] font-bold tracking-[-0.02em] text-ink leading-tight font-serif"

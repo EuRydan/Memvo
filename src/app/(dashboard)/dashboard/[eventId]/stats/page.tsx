@@ -118,48 +118,24 @@ export default function EventStatsPage({ params }: { params: Promise<{ eventId: 
     <div className="min-h-screen bg-[#fafafa] text-gray-900 pb-20">
       
       {/* Header */}
-      <div className="px-5 py-6 border-b border-gray-200/50 flex flex-col gap-2 bg-white/40 backdrop-blur-xl">
-        <div className="flex flex-wrap gap-2">
+      <div className="px-5 pt-5 pb-4 border-b border-gray-200/50 bg-white/40 backdrop-blur-xl">
+        <div className="flex items-center gap-1.5 mb-3">
+          <button onClick={() => router.push(`/dashboard/${eventId}`)} className="text-[#939393] hover:text-[#0a0a0a] transition-colors text-sm font-medium cursor-pointer">← Visão Geral</button>
           {isOwner && (
-            <button
-              onClick={() => router.push(`/dashboard/${eventId}/team`)}
-              className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm cursor-pointer"
-            >
-              👥 Equipe
-            </button>
+            <>
+              <span className="text-[#d4d4d4] text-xs select-none">·</span>
+              <button onClick={() => router.push(`/dashboard/${eventId}/team`)} className="text-xs font-medium text-[#939393] hover:text-[#0a0a0a] transition-colors px-1 py-1 cursor-pointer">Equipe</button>
+              <span className="text-[#d4d4d4] text-xs select-none">·</span>
+              <button onClick={() => router.push(`/dashboard/${eventId}/appearance`)} className="text-xs font-medium text-[#939393] hover:text-[#0a0a0a] transition-colors px-1 py-1 cursor-pointer">Aparência</button>
+            </>
           )}
-          {isOwner && (
-            <button
-              onClick={() => router.push(`/dashboard/${eventId}/appearance`)}
-              className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm cursor-pointer"
-            >
-              🎨 Aparência
-            </button>
-          )}
-          <button
-            onClick={() => router.push(`/dashboard/${eventId}/challenges`)}
-            className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm cursor-pointer"
-          >
-            Desafios
-          </button>
+          <span className="text-[#d4d4d4] text-xs select-none">·</span>
+          <button onClick={() => router.push(`/dashboard/${eventId}/challenges`)} className="text-xs font-medium text-[#939393] hover:text-[#0a0a0a] transition-colors px-1 py-1 cursor-pointer">Desafios</button>
         </div>
-        {isOwner && (
-          <button
-            onClick={() => router.push(`/dashboard/${eventId}`)}
-            className="flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors w-fit text-sm font-medium mb-2 cursor-pointer"
-          >
-            <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            Voltar para Visão Geral
-          </button>
-        )}
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Resumo & Estatísticas</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            {event?.name} • {event && new Date(event.date).toLocaleDateString('pt-BR')}
-          </p>
-        </div>
+        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Resumo & Estatísticas</h1>
+        <p className="text-sm text-gray-500 mt-1">
+          {event?.name} · {event && new Date(event.date).toLocaleDateString('pt-BR')}
+        </p>
       </div>
 
       <div className="max-w-5xl mx-auto px-5 mt-8">

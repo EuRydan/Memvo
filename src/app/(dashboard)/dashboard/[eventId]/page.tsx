@@ -330,36 +330,44 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
 
         {/* ── DESKTOP (hidden on mobile) ──────────────────── */}
         <div className="hidden md:block">
-          <div className="px-6 pt-5 pb-2.5 flex items-center gap-3">
-            <button onClick={() => router.push('/dashboard')} className="text-gray-500 hover:text-gray-900 transition text-lg shrink-0">←</button>
+          <div className="px-6 pt-5 pb-2 flex items-center gap-3">
+            <button onClick={() => router.push('/dashboard')} className="text-[#939393] hover:text-[#0a0a0a] transition shrink-0 text-lg">←</button>
             <div className="flex-1 min-w-0">
-              <h1 className="text-lg font-semibold text-gray-900 truncate">{event?.name}</h1>
-              <p className="text-xs text-gray-500">
+              <h1 className="text-[15px] font-semibold text-[#0a0a0a] truncate">{event?.name}</h1>
+              <p className="text-xs text-[#939393]">
                 {event && new Date(event.date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
+                {' · '}{medias.length} foto{medias.length !== 1 ? 's' : ''}
               </p>
             </div>
-            <span className="shrink-0 text-xs text-gray-600 font-medium border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm">
-              {medias.length} foto{medias.length !== 1 ? 's' : ''}
-            </span>
           </div>
-          <div className="flex flex-wrap gap-2 px-6 pb-4">
-            <button onClick={() => router.push(`/dashboard/${eventId}/stats`)} className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-1.5 cursor-pointer">📊 Estatísticas</button>
-            <button onClick={() => router.push(`/dashboard/${eventId}/team`)} className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm cursor-pointer">👥 Equipe</button>
-            <button onClick={() => router.push(`/dashboard/${eventId}/appearance`)} className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm cursor-pointer">🎨 Aparência</button>
-            <button onClick={() => router.push(`/dashboard/${eventId}/challenges`)} className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm cursor-pointer">Desafios</button>
-            <button onClick={() => setIsShareModalOpen(true)} className="flex items-center gap-1.5 text-xs text-gray-900 font-semibold hover:bg-gray-100 transition border border-gray-200 bg-white px-3 py-1.5 rounded-lg shadow-sm"><Share size={14} /> Compartilhar</button>
+          <div className="flex items-center px-5 pb-3.5">
+            <button onClick={() => router.push(`/dashboard/${eventId}/stats`)} className="text-xs font-medium text-[#939393] hover:text-[#0a0a0a] transition-colors px-2 py-1 cursor-pointer">Estatísticas</button>
+            <span className="text-[#d4d4d4] text-xs select-none">·</span>
+            <button onClick={() => router.push(`/dashboard/${eventId}/team`)} className="text-xs font-medium text-[#939393] hover:text-[#0a0a0a] transition-colors px-2 py-1 cursor-pointer">Equipe</button>
+            <span className="text-[#d4d4d4] text-xs select-none">·</span>
+            <button onClick={() => router.push(`/dashboard/${eventId}/appearance`)} className="text-xs font-medium text-[#939393] hover:text-[#0a0a0a] transition-colors px-2 py-1 cursor-pointer">Aparência</button>
+            <span className="text-[#d4d4d4] text-xs select-none">·</span>
+            <button onClick={() => router.push(`/dashboard/${eventId}/challenges`)} className="text-xs font-medium text-[#939393] hover:text-[#0a0a0a] transition-colors px-2 py-1 cursor-pointer">Desafios</button>
+            <div className="w-px h-3.5 bg-[#e8e8e8] mx-3" />
+            <button onClick={() => setIsShareModalOpen(true)} className="flex items-center gap-1.5 text-xs font-semibold bg-[#0a0a0a] text-white px-3.5 py-1.5 rounded-full hover:opacity-85 transition-opacity cursor-pointer">
+              <Share size={13} /> Compartilhar
+            </button>
             <button onClick={handleDownloadZip} disabled={isDownloadingZip || medias.length === 0}
-              className={`flex items-center gap-1.5 text-xs font-semibold transition px-3 py-1.5 rounded-lg shadow-sm ${isDownloadingZip ? 'bg-blue-50 text-blue-600 border border-blue-200 cursor-not-allowed' : 'bg-white text-gray-900 border border-gray-200 hover:bg-gray-50 cursor-pointer'}`}>
-              <Download size={14} className={isDownloadingZip ? 'animate-bounce' : ''} />
-              {isDownloadingZip ? `Baixando... ${downloadProgress}%` : 'Baixar ZIP'}
+              className={`flex items-center gap-1.5 text-xs font-semibold ml-2 px-3.5 py-1.5 rounded-full border border-[#e8e8e8] transition-colors ${isDownloadingZip ? 'text-[#939393] cursor-not-allowed' : 'text-[#0a0a0a] hover:bg-[#f5f5f5] cursor-pointer'}`}>
+              <Download size={13} className={isDownloadingZip ? 'animate-bounce' : ''} />
+              {isDownloadingZip ? `${downloadProgress}%` : 'Baixar ZIP'}
             </button>
             <button
               onClick={() => { if (isTelaoEnabled(planType)) { window.open(`/e/${event?.slug}/telao`, '_blank') } }}
               disabled={!isTelaoEnabled(planType)}
-              className={`flex items-center gap-1.5 text-xs font-semibold transition px-3 py-1.5 rounded-lg shadow-sm ${!isTelaoEnabled(planType) ? 'bg-orange-50 text-orange-600 border border-orange-200 cursor-not-allowed opacity-80' : 'bg-[#0a0a0a] text-white border border-[#0a0a0a] hover:bg-black cursor-pointer'}`}
-              title={!isTelaoEnabled(planType) ? 'Disponível no plano Premium' : 'Abrir Telão'}>
-              <Camera size={14} />
-              {isTelaoEnabled(planType) ? 'Abrir Telão' : 'Telão (Premium)'}
+              title={!isTelaoEnabled(planType) ? 'Disponível no plano Premium' : 'Abrir Telão'}
+              className={`flex items-center gap-1.5 text-xs font-semibold ml-2 px-3.5 py-1.5 rounded-full transition-all ${
+                !isTelaoEnabled(planType)
+                  ? 'text-orange-500 bg-orange-50 cursor-not-allowed'
+                  : 'bg-[#0a0a0a] text-white hover:opacity-85 cursor-pointer'
+              }`}>
+              <Camera size={13} />
+              {isTelaoEnabled(planType) ? 'Telão' : 'Telão ✦'}
             </button>
           </div>
         </div>
