@@ -227,97 +227,101 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
       </div>
 
       {/* Header */}
-      <div className="px-4 md:px-6 py-5 border-b border-gray-200/50 flex flex-wrap md:flex-nowrap items-center justify-between gap-4 relative z-10 bg-white/40 backdrop-blur-xl">
-        <div className="flex items-center gap-4">
+      <div className="border-b border-gray-200/50 relative z-10 bg-white/40 backdrop-blur-xl">
+        {/* Title row */}
+        <div className="px-4 md:px-6 pt-4 pb-2.5 flex items-center gap-3">
           <button
             onClick={() => router.push('/dashboard')}
-            className="text-gray-500 hover:text-gray-900 transition text-lg"
+            className="text-gray-500 hover:text-gray-900 transition text-lg shrink-0"
           >
             ←
           </button>
-          <div>
-            <h1 className="text-lg font-semibold text-gray-900">{event?.name}</h1>
+          <div className="flex-1 min-w-0">
+            <h1 className="text-base md:text-lg font-semibold text-gray-900 truncate">{event?.name}</h1>
             <p className="text-xs text-gray-500">
               {event && new Date(event.date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
             </p>
           </div>
-        </div>
-        <div className="w-full md:w-auto flex flex-wrap gap-2 md:ml-auto">
-          <button
-            onClick={() => router.push(`/dashboard/${eventId}/stats`)}
-            className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-1.5 cursor-pointer"
-          >
-            📊 Estatísticas
-          </button>
-
-          <button
-            onClick={() => router.push(`/dashboard/${eventId}/team`)}
-            className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm cursor-pointer"
-          >
-            👥 Equipe
-          </button>
-
-          <button
-            onClick={() => router.push(`/dashboard/${eventId}/appearance`)}
-            className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm cursor-pointer"
-          >
-            🎨 Aparência
-          </button>
-
-          <button
-            onClick={() => router.push(`/dashboard/${eventId}/challenges`)}
-            className="text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm cursor-pointer"
-          >
-            Desafios
-          </button>
-
-          <button
-            onClick={() => setIsShareModalOpen(true)}
-            className="flex items-center gap-1.5 text-xs text-gray-900 font-semibold hover:bg-gray-100 transition border border-gray-200 bg-white px-3 py-1.5 rounded-lg shadow-sm"
-          >
-            <Share size={14} />
-            Compartilhar
-          </button>
-          
-          <button
-            onClick={handleDownloadZip}
-            disabled={isDownloadingZip || medias.length === 0}
-            className={`flex items-center gap-1.5 text-xs font-semibold transition px-3 py-1.5 rounded-lg shadow-sm ${
-              isDownloadingZip 
-                ? 'bg-blue-50 text-blue-600 border border-blue-200 cursor-not-allowed'
-                : 'bg-white text-gray-900 border border-gray-200 hover:bg-gray-50 cursor-pointer'
-            }`}
-          >
-            <Download size={14} className={isDownloadingZip ? 'animate-bounce' : ''} />
-            {isDownloadingZip ? `Baixando... ${downloadProgress}%` : 'Baixar ZIP'}
-          </button>
-
-          <button
-            onClick={() => {
-              if (isTelaoEnabled(planType)) {
-                window.open(`/e/${event?.slug}/telao`, '_blank')
-              }
-            }}
-            disabled={!isTelaoEnabled(planType)}
-            className={`flex items-center gap-1.5 text-xs font-semibold transition px-3 py-1.5 rounded-lg shadow-sm ${
-              !isTelaoEnabled(planType)
-                ? 'bg-orange-50 text-orange-600 border border-orange-200 cursor-not-allowed opacity-80'
-                : 'bg-[#0a0a0a] text-white border border-[#0a0a0a] hover:bg-black cursor-pointer'
-            }`}
-            title={!isTelaoEnabled(planType) ? "Disponível no plano Premium" : "Abrir Telão"}
-          >
-            <Camera size={14} />
-            {isTelaoEnabled(planType) ? 'Abrir Telão' : 'Telão (Premium)'}
-          </button>
-
-          <span className="text-xs text-gray-600 font-medium border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm">
-            {medias.length} fotos
+          <span className="shrink-0 text-xs text-gray-600 font-medium border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm">
+            {medias.length} foto{medias.length !== 1 ? 's' : ''}
           </span>
+        </div>
+
+        {/* Actions — single scrollable row on mobile, wraps on desktop */}
+        <div className="overflow-x-auto scrollbar-hide">
+          <div className="flex items-center gap-2 px-4 md:px-6 pb-3 w-max md:w-auto md:flex-wrap">
+            <button
+              onClick={() => router.push(`/dashboard/${eventId}/stats`)}
+              className="shrink-0 text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-1.5 cursor-pointer"
+            >
+              📊 Estatísticas
+            </button>
+
+            <button
+              onClick={() => router.push(`/dashboard/${eventId}/team`)}
+              className="shrink-0 text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm cursor-pointer"
+            >
+              👥 Equipe
+            </button>
+
+            <button
+              onClick={() => router.push(`/dashboard/${eventId}/appearance`)}
+              className="shrink-0 text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm cursor-pointer"
+            >
+              🎨 Aparência
+            </button>
+
+            <button
+              onClick={() => router.push(`/dashboard/${eventId}/challenges`)}
+              className="shrink-0 text-xs text-gray-600 font-medium hover:text-gray-900 transition border border-gray-200 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm cursor-pointer"
+            >
+              Desafios
+            </button>
+
+            <button
+              onClick={() => setIsShareModalOpen(true)}
+              className="shrink-0 flex items-center gap-1.5 text-xs text-gray-900 font-semibold hover:bg-gray-100 transition border border-gray-200 bg-white px-3 py-1.5 rounded-lg shadow-sm"
+            >
+              <Share size={14} />
+              Compartilhar
+            </button>
+
+            <button
+              onClick={handleDownloadZip}
+              disabled={isDownloadingZip || medias.length === 0}
+              className={`shrink-0 flex items-center gap-1.5 text-xs font-semibold transition px-3 py-1.5 rounded-lg shadow-sm ${
+                isDownloadingZip
+                  ? 'bg-blue-50 text-blue-600 border border-blue-200 cursor-not-allowed'
+                  : 'bg-white text-gray-900 border border-gray-200 hover:bg-gray-50 cursor-pointer'
+              }`}
+            >
+              <Download size={14} className={isDownloadingZip ? 'animate-bounce' : ''} />
+              {isDownloadingZip ? `Baixando... ${downloadProgress}%` : 'Baixar ZIP'}
+            </button>
+
+            <button
+              onClick={() => {
+                if (isTelaoEnabled(planType)) {
+                  window.open(`/e/${event?.slug}/telao`, '_blank')
+                }
+              }}
+              disabled={!isTelaoEnabled(planType)}
+              className={`shrink-0 flex items-center gap-1.5 text-xs font-semibold transition px-3 py-1.5 rounded-lg shadow-sm ${
+                !isTelaoEnabled(planType)
+                  ? 'bg-orange-50 text-orange-600 border border-orange-200 cursor-not-allowed opacity-80'
+                  : 'bg-[#0a0a0a] text-white border border-[#0a0a0a] hover:bg-black cursor-pointer'
+              }`}
+              title={!isTelaoEnabled(planType) ? "Disponível no plano Premium" : "Abrir Telão"}
+            >
+              <Camera size={14} />
+              {isTelaoEnabled(planType) ? 'Abrir Telão' : 'Telão (Premium)'}
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Tabs (TabbedHeroSection style) */}
-      <div className="w-full flex justify-center py-6 relative z-10">
+      <div className="w-full flex justify-center py-4 md:py-6 relative z-10">
         <div className="flex items-center p-1.5 bg-white/60 backdrop-blur-xl border border-gray-200/50 rounded-full max-w-full overflow-x-auto scrollbar-hide shadow-sm">
           {tabs.map((tab, index) => {
             const count = medias.filter(m => m.challenge_id === tab.id).length
