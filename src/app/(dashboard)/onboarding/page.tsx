@@ -402,7 +402,7 @@ export default function OnboardingWizard() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
                 </svg>
                 <p className="text-[13px] text-amber-800 dark:text-amber-400 leading-snug">
-                  <strong>Atenção:</strong> o número de desafios ativos depende do plano escolhido, não da quantidade selecionada aqui. Se você selecionar mais do que o plano permite, será necessário remover o excedente ou fazer upgrade no painel.
+                  <strong>Atenção:</strong> cada evento precisa de um plano próprio. O número de desafios ativos neste evento dependerá do plano que você escolher ao final — se selecionar mais do que o plano permite, será necessário remover o excedente ou fazer upgrade no painel.
                 </p>
               </div>
             )}
