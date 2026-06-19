@@ -508,27 +508,58 @@ export default function OnboardingWizard() {
               <p className="text-sm text-slate transition-colors">Revise os detalhes abaixo antes de prosseguir.</p>
             </div>
 
-            <div className="bg-canvas-warm rounded-3xl p-6 shadow-sm border border-hairline mb-6 flex flex-col gap-4 text-sm transition-colors duration-200">
-               <div className="flex justify-between items-center border-b border-hairline pb-3 transition-colors duration-200">
-                 <span className="text-slate transition-colors">Nome do Evento</span>
-                 <span className={`font-semibold transition-colors ${name ? 'text-ink' : 'text-slate opacity-60'}`}>{name || 'Não informado'}</span>
-               </div>
-               <div className="flex justify-between items-center border-b border-hairline pb-3 transition-colors duration-200">
-                 <span className="text-slate transition-colors">Data</span>
-                 <span className={`font-semibold transition-colors ${date ? 'text-ink' : 'text-slate opacity-60'}`}>
-                   {date ? new Date(date + 'T12:00:00').toLocaleDateString('pt-BR') : 'Não informado'}
-                 </span>
-               </div>
-               <div className="flex justify-between items-center border-b border-hairline pb-3 transition-colors duration-200">
-                 <span className="text-slate transition-colors">Tipo</span>
-                 <span className={`font-semibold transition-colors ${eventType ? 'text-ink' : 'text-slate opacity-60'}`}>{eventType || 'Não informado'}</span>
-               </div>
-               <div className="flex justify-between items-center">
-                 <span className="text-slate transition-colors">Desafios</span>
-                 <span className={`font-semibold transition-colors ${selectedChallenges.length > 0 ? 'text-ink' : 'text-slate opacity-60'}`}>
-                   {selectedChallenges.length > 0 ? `${selectedChallenges.length} selecionados` : 'Não informado'}
-                 </span>
-               </div>
+            <div className="bg-canvas-warm rounded-3xl overflow-hidden shadow-sm border border-hairline mb-6 text-sm transition-colors duration-200">
+              {/* Cover preview */}
+              {coverPreviewUrl && (
+                <div className="w-full h-36 overflow-hidden">
+                  <img src={coverPreviewUrl} alt="Capa" className="w-full h-full object-cover" />
+                </div>
+              )}
+
+              <div className="flex flex-col gap-0 divide-y divide-hairline p-0">
+                {[
+                  { label: 'Nome do Evento', value: name },
+                  { label: 'Tipo', value: eventType },
+                  {
+                    label: 'Data',
+                    value: date
+                      ? endDate
+                        ? `${new Date(date + 'T12:00:00').toLocaleDateString('pt-BR')} → ${new Date(endDate + 'T12:00:00').toLocaleDateString('pt-BR')}`
+                        : new Date(date + 'T12:00:00').toLocaleDateString('pt-BR')
+                      : null,
+                  },
+                  { label: 'Horário', value: time || null },
+                  { label: 'Local', value: location || null },
+                  { label: 'Info adicional', value: additionalInfo || null },
+                ].map(({ label, value }) => (
+                  <div key={label} className="flex justify-between items-start gap-4 px-6 py-3 transition-colors duration-200">
+                    <span className="text-slate flex-shrink-0 transition-colors">{label}</span>
+                    <span className={`font-semibold text-right transition-colors ${value ? 'text-ink' : 'text-slate opacity-40'}`}>
+                      {value || '—'}
+                    </span>
+                  </div>
+                ))}
+
+                {/* Challenges list */}
+                <div className="px-6 py-3 transition-colors duration-200">
+                  <div className="flex justify-between items-start gap-4 mb-2">
+                    <span className="text-slate transition-colors">Desafios</span>
+                    <span className={`font-semibold transition-colors ${selectedChallenges.length > 0 ? 'text-ink' : 'text-slate opacity-40'}`}>
+                      {selectedChallenges.length > 0 ? `${selectedChallenges.length} selecionados` : '—'}
+                    </span>
+                  </div>
+                  {selectedChallenges.length > 0 && (
+                    <ul className="flex flex-col gap-1 mt-1">
+                      {selectedChallenges.map((c, i) => (
+                        <li key={i} className="text-xs text-slate flex items-start gap-2">
+                          <span className="text-ink/30 flex-shrink-0 mt-0.5">•</span>
+                          <span>{c}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </div>
             </div>
 
             <div className="floating-group mb-6">
@@ -559,7 +590,7 @@ export default function OnboardingWizard() {
               else if (step === 2 && eventType) handleNext()
               else if (step === 3 && name) handleNext()
               else if (step === 4) handleNext()
-              else if (step === 5 && date) saveEventToDB() // Save before step 6/7
+              else if (step === 5 && date && time && location) saveEventToDB()
               else if (step === 6) handleNext()
               else if (step === 7) {
                 setSavingEvent(true)
@@ -579,7 +610,7 @@ export default function OnboardingWizard() {
                 })
               }
             }}
-            disabled={savingEvent || (step === 2 && !eventType) || (step === 3 && !name) || (step === 5 && !date)}
+            disabled={savingEvent || (step === 2 && !eventType) || (step === 3 && !name) || (step === 5 && (!date || !time || !location))}
             className="flex-1 bg-ink text-canvas py-4 rounded-full text-sm font-semibold hover:opacity-90 active:scale-95 transition-all shadow-lg flex justify-center items-center gap-2 disabled:opacity-50"
           >
             {savingEvent ? 'Salvando evento...' : step === 5 ? 'Avançar' : step === 7 ? (hasPlan ? 'Ir para o Painel' : 'Ver Planos e Assinar') : 'Continuar'}
