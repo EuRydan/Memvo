@@ -52,7 +52,7 @@ async function updateSession(request: NextRequest) {
   const isOnboardingRoute = pathname.startsWith('/onboarding')
   const isAffiliateDashboard = pathname.startsWith('/parceiros/dashboard')
   
-  const isHostProtectedRoute = isDashboardRoute || isPricingRoute || isOnboardingRoute
+  const isHostProtectedRoute = isDashboardRoute || isOnboardingRoute
   const isAnyRelevantRoute = isHostProtectedRoute || isAffiliateDashboard || isAuthRoute
 
   // Se não estiver tentando acessar nenhuma rota protegida, apenas retorna a resposta
