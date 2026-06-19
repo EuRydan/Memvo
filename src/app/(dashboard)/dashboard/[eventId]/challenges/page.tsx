@@ -298,8 +298,34 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
           <p className="text-sm text-slate mt-1.5">Personalize a experiência dos seus convidados</p>
         </div>
 
+        {/* Over-limit banner — shown when challenges saved in onboarding exceed current plan */}
+        {challenges.length > challengeLimit && challengeLimit > 0 && challengeLimit !== Infinity && (
+          <div className="mb-5 bg-orange-50 border border-orange-200 rounded-2xl p-4">
+            <div className="flex items-start gap-3">
+              <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg width="16" height="16" fill="none" stroke="#ea580c" strokeWidth="2.5" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                </svg>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold text-orange-900 mb-1">Desafios acima do limite do plano</p>
+                <p className="text-xs text-orange-800 leading-relaxed mb-3">
+                  Você tem <strong>{challenges.length} desafios</strong> selecionados, mas seu plano atual permite apenas <strong>{challengeLimit}</strong>.
+                  Remova {challenges.length - challengeLimit} desafio{challenges.length - challengeLimit > 1 ? 's' : ''} da lista abaixo ou faça upgrade para um plano que suporte mais.
+                </p>
+                <button
+                  onClick={() => router.push(`/pricing?eventId=${eventId}`)}
+                  className="bg-orange-600 text-white text-xs font-bold px-4 py-2 rounded-full hover:bg-orange-700 transition-colors active:scale-95"
+                >
+                  Fazer Upgrade
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Completion badge */}
-        {isComplete && (
+        {isComplete && challenges.length <= challengeLimit && (
           <div
             className="flex items-center gap-2 px-4 py-2.5 rounded-full mb-5 w-fit"
             style={{ background: 'rgba(74,197,80,0.1)', border: '1px solid rgba(74,197,80,0.25)' }}

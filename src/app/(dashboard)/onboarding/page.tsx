@@ -394,11 +394,23 @@ export default function OnboardingWizard() {
           <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
             <p className="text-[11px] font-semibold tracking-widest text-stone uppercase mb-2 transition-colors">Etapa 4 de 7</p>
             <h2 className="text-3xl font-bold text-ink mb-2 transition-colors font-serif">Desafios de Fotos</h2>
-            <p className="text-sm text-slate mb-2 transition-colors">Sugira desafios para seus convidados. Eles receberão missões diferentes para engajar mais!</p>
-            <p className="text-[13px] font-semibold text-ink/80 mb-6 bg-ink/5 px-4 py-2 rounded-lg inline-block border border-ink/10">
+            <p className="text-sm text-slate mb-4 transition-colors">Sugira desafios para seus convidados. Eles receberão missões diferentes para engajar mais!</p>
+
+            {!hasPlan && (
+              <div className="flex items-start gap-3 mb-4 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-2xl px-4 py-3 transition-colors">
+                <svg width="16" height="16" className="text-amber-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                </svg>
+                <p className="text-[13px] text-amber-800 dark:text-amber-400 leading-snug">
+                  <strong>Atenção:</strong> o número de desafios ativos depende do plano escolhido, não da quantidade selecionada aqui. Se você selecionar mais do que o plano permite, será necessário remover o excedente ou fazer upgrade no painel.
+                </p>
+              </div>
+            )}
+
+            <p className="text-[13px] font-semibold text-ink/80 mb-6 bg-ink/5 px-4 py-2 rounded-lg inline-block border border-ink/10 transition-colors">
               {hasPlan
                 ? `Seu plano permite até ${challengeLimit === Infinity ? 'ilimitados' : challengeLimit} desafio${challengeLimit === 1 ? '' : 's'}.`
-                : 'Selecione até 7 desafios. O limite final dependerá do plano escolhido.'}
+                : `Selecione até ${challengeLimit} desafios.`}
             </p>
             
             <div className="bg-canvas-warm rounded-3xl p-5 shadow-sm border border-hairline flex flex-col gap-3 max-h-[400px] overflow-y-auto transition-colors duration-200">
