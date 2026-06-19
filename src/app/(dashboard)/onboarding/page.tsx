@@ -245,17 +245,22 @@ export default function OnboardingWizard() {
         await supabase.from('challenges').insert(challengesPayload)
       }
 
+      // If the user already has a legacy plan (VIP invite), activate the event immediately
+      // so they don't get stuck with a draft that isEventLocked() would block
+      if (hasPlan && newEventId) {
+        await supabase
+          .from('events')
+          .update({ active: true, status: 'published' })
+          .eq('id', newEventId)
+      }
+
       // Delete draft from backend (clear it)
       await fetch('/api/onboarding/draft', {
          method: 'POST',
          headers: { 'Content-Type': 'application/json' },
-         body: JSON.stringify({ state: {} }) // empty state
+         body: JSON.stringify({ state: {} })
       }).catch(err => console.error(err))
 
-      // Move to step 6 (now redirects to pricing immediately as per plan for step 6 completion, but we will keep step 6 and then step 7 redirects)
-      // Actually, step 6 is the summary, but the plan says "Ao concluir etapa 6 (resumo): Salvar evento com status = 'draft', active = false; Redirecionar para /pricing?eventId=xxx"
-      // Looking at the existing code, saveEventToDB is called at step 5 before moving to step 6. Let's move the redirect to step 7 logic or just change the button.
-      // We will let it go to step 6, then step 7, and in step 7 we redirect. Or actually, if the plan says redirect after step 6, let's keep the existing flow where step 7 does the redirect, but pass the eventId.
       setStep(6)
     } catch (err: any) {
       setError(err.message || 'Ocorreu um erro ao salvar o evento.')
@@ -568,7 +573,7 @@ export default function OnboardingWizard() {
                   } else {
                     const query = new URLSearchParams()
                     if (savedEventId) query.append('eventId', savedEventId)
-                    if (promoCode) query.append('voucher', promoCode)
+                    if (promoCode) query.append('cupom', promoCode)
                     router.push(`/pricing?${query.toString()}`)
                   }
                 })

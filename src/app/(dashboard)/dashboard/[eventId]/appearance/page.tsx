@@ -3,7 +3,7 @@
 import { use, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { isEventLocked, UserPlanRecord, isAppearanceEnabled, hasEventAccess } from '@/lib/limits'
+import { isEventLocked, UserPlanRecord, isAppearanceEnabled, hasEventAccess, resolveEventPlanId } from '@/lib/limits'
 import { ButtonColorful } from '@/components/ui/button-colorful'
 
 const THEME_COLORS = [
@@ -52,9 +52,7 @@ export default function AppearancePage({ params }: { params: Promise<{ eventId: 
         .eq('user_id', user.id)
 
       const userPlans: UserPlanRecord[] = (plansData || []) as UserPlanRecord[]
-      const eventPlanId = userPlans.find(p => p.event_id === eventId)?.plan_id
-        || userPlans.find(p => p.event_id === null)?.plan_id
-        || 'none'
+      const eventPlanId = resolveEventPlanId(userPlans, eventId)
 
       const access = await hasEventAccess(supabase, user.id, eventId)
       if (!access.accessLevel) {

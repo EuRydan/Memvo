@@ -11,7 +11,7 @@ export default function CheckoutForm({ intentId, userId, returnUrl }: { intentId
   const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
   const [brickStatus, setBrickStatus] = useState<string>('carregando')
-  const [amount, setAmount] = useState<number>(0)
+  const [amount, setAmount] = useState<number>(-1)
 
   const [couponInput, setCouponInput] = useState('')
   const [applyingCoupon, setApplyingCoupon] = useState(false)
@@ -68,6 +68,55 @@ export default function CheckoutForm({ intentId, userId, returnUrl }: { intentId
   }, [intentId])
 
 
+
+  async function activateFreePlan() {
+    setIsLoading(true)
+    setMessage(null)
+    try {
+      const res = await fetch('/api/payment-intents/activate-free', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ intentId })
+      })
+      const data = await res.json()
+      if (data.success) {
+        window.location.href = returnUrl.includes('?')
+          ? `${returnUrl}&session_id=${intentId}`
+          : `${returnUrl}?session_id=${intentId}`
+      } else {
+        setMessage(data.error || 'Erro ao ativar plano gratuito.')
+      }
+    } catch (e) {
+      setMessage('Erro ao ativar plano gratuito.')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  // Free plan: skip MP checkout entirely
+  if (amount === 0) {
+    return (
+      <div className="flex flex-col w-full h-full items-center justify-center gap-6 py-8">
+        <div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center">
+          <svg width="28" height="28" fill="none" stroke="#16a34a" strokeWidth="2.5" viewBox="0 0 24 24">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <div className="text-center">
+          <p className="text-base font-bold text-ink mb-1">Plano Gratuito</p>
+          <p className="text-sm text-slate">Nenhum pagamento necessário. Clique para ativar.</p>
+        </div>
+        <button
+          onClick={activateFreePlan}
+          disabled={isLoading}
+          className="bg-ink text-canvas font-semibold px-8 py-4 rounded-full hover:opacity-90 active:scale-95 transition-all disabled:opacity-50 shadow-lg"
+        >
+          {isLoading ? 'Ativando...' : 'Ativar Plano Grátis'}
+        </button>
+        {message && <p className="text-xs text-red-500 text-center">{message}</p>}
+      </div>
+    )
+  }
 
   return (
     <div className="flex flex-col w-full h-full">

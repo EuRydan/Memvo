@@ -4,7 +4,7 @@ import { use, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Challenge } from '@/types'
-import { isEventLocked, UserPlanRecord, getChallengeLimit, hasEventAccess } from '@/lib/limits'
+import { isEventLocked, UserPlanRecord, getChallengeLimit, hasEventAccess, resolveEventPlanId } from '@/lib/limits'
 import { SelectNative } from '@/components/ui/select-native'
 import { ButtonColorful } from '@/components/ui/button-colorful'
 
@@ -127,10 +127,7 @@ export default function ChallengesPage({ params }: { params: Promise<{ eventId: 
 
       const userPlans: UserPlanRecord[] = (plansData || []) as UserPlanRecord[]
 
-      // Plano específico do evento (ou o global/legacy se existir)
-      const eventPlanId = userPlans.find(p => p.event_id === eventId)?.plan_id
-        || userPlans.find(p => p.event_id === null)?.plan_id
-        || 'none'
+      const eventPlanId = resolveEventPlanId(userPlans, eventId)
 
       const access = await hasEventAccess(supabase, user.id, eventId)
       if (!access.accessLevel) {

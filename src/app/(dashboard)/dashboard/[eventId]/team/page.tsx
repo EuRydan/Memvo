@@ -3,7 +3,7 @@
 import { use, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { getCollaboratorLimit, isEventLocked, UserPlanRecord, hasEventAccess } from '@/lib/limits'
+import { getCollaboratorLimit, isEventLocked, UserPlanRecord, hasEventAccess, resolveEventPlanId } from '@/lib/limits'
 import { ButtonColorful } from '@/components/ui/button-colorful'
 import { Trash2, Copy, Check, Users } from 'lucide-react'
 
@@ -53,9 +53,7 @@ export default function EventTeamPage({ params }: { params: Promise<{ eventId: s
 
       const userPlans: UserPlanRecord[] = (plansData || []) as UserPlanRecord[]
       
-      const eventPlanId = userPlans.find(p => p.event_id === eventId)?.plan_id
-        || userPlans.find(p => p.event_id === null)?.plan_id
-        || 'none'
+      const eventPlanId = resolveEventPlanId(userPlans, eventId)
 
       setLimitInfo(getCollaboratorLimit(eventPlanId))
 

@@ -62,8 +62,12 @@ function SuccessContent() {
         if (result.success && result.status === 'approved') {
           setStatus('success')
           clearInterval(verifyInterval)
-          setTimeout(() => {
-            router.push('/dashboard')
+          setTimeout(async () => {
+            if (result.eventId) {
+              router.push(`/dashboard/${result.eventId}`)
+            } else {
+              router.push('/dashboard')
+            }
           }, 2000)
         }
       } catch (err) {
@@ -82,8 +86,9 @@ function SuccessContent() {
           if (payload.new.status === 'approved') {
             setStatus('success')
             clearInterval(verifyInterval)
+            const eventId = payload.new.event_id
             setTimeout(() => {
-              router.push('/dashboard')
+              router.push(eventId ? `/dashboard/${eventId}` : '/dashboard')
             }, 2000)
           }
         }

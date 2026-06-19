@@ -3,7 +3,7 @@
 import { use, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { isEventLocked, UserPlanRecord, isTelaoEnabled } from '@/lib/limits'
+import { isEventLocked, UserPlanRecord, isTelaoEnabled, resolveEventPlanId } from '@/lib/limits'
 import { Media, Challenge } from '@/types'
 import { AnimatePresence, motion } from 'framer-motion'
 
@@ -36,9 +36,7 @@ export default function TelaoPage({ params }: { params: Promise<{ slug: string }
         .eq('user_id', data.owner_id)
 
       const ownerPlans: UserPlanRecord[] = (ownerPlansData || []) as UserPlanRecord[]
-      const planId = ownerPlans.find(p => p.event_id === data.id)?.plan_id
-        || ownerPlans[ownerPlans.length - 1]?.plan_id
-        || 'none'
+      const planId = resolveEventPlanId(ownerPlans, data.id)
 
       const enabled = isTelaoEnabled(planId)
       setTelaoEnabled(enabled)

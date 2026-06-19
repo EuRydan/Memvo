@@ -2,7 +2,7 @@
 
 import { use, useEffect, useRef, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { isEventActive, isEventLocked, UserPlanRecord, MAX_PHOTO_SIZE, MAX_VIDEO_SIZE, getVideoDurationLimit } from '@/lib/limits'
+import { isEventActive, isEventLocked, UserPlanRecord, MAX_PHOTO_SIZE, MAX_VIDEO_SIZE, getVideoDurationLimit, resolveEventPlanId } from '@/lib/limits'
 import { Media, Challenge } from '@/types'
 import StoryCamera from '@/components/StoryCamera'
 import MediaViewer from '@/components/MediaViewer'
@@ -41,10 +41,7 @@ export default function EventPage({ params }: { params: Promise<{ slug: string }
 
       const ownerPlans: UserPlanRecord[] = (ownerPlansData || []) as UserPlanRecord[]
 
-      // Plano vinculado a este evento específico (para controle de limite de upload)
-      const plan = ownerPlans.find(p => p.event_id === data.id)?.plan_id
-        || ownerPlans[ownerPlans.length - 1]?.plan_id
-        || 'none'
+      const plan = resolveEventPlanId(ownerPlans, data.id)
       setPlanType(plan)
 
       if (isEventLocked(data.id, ownerPlans, data)) {

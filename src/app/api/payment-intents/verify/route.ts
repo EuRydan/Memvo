@@ -28,7 +28,7 @@ export async function POST(request: Request) {
     }
 
     if (intent?.status === 'approved') {
-      return NextResponse.json({ success: true, status: 'approved' })
+      return NextResponse.json({ success: true, status: 'approved', eventId: intent.event_id })
     }
 
     // Se estiver pendente, vamos checar no Mercado Pago
@@ -79,8 +79,8 @@ export async function POST(request: Request) {
     const mpPaymentId = approvedPayment.id
     const paidAmount = approvedPayment.transaction_amount
 
-    // Validar valor
-    if (paidAmount !== Number(intent.amount)) {
+    // Validar valor — usar tolerância de R$0,01 para evitar divergências de float
+    if (Math.abs(paidAmount - Number(intent.amount)) > 0.01) {
       return NextResponse.json({ error: 'Amount mismatch' }, { status: 400 })
     }
 
@@ -167,7 +167,7 @@ export async function POST(request: Request) {
       }
     }
 
-    return NextResponse.json({ success: true, status: 'approved' })
+    return NextResponse.json({ success: true, status: 'approved', eventId: intent?.event_id || eventId })
 
   } catch (error: any) {
     console.error('Erro na verificação manual do pagamento:', error.message)

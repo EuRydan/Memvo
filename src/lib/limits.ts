@@ -92,6 +92,32 @@ export type UserPlanRecord = {
   plan_id: string
 }
 
+const PLAN_TIER: Record<string, number> = {
+  none: 0,
+  freemium: 1,
+  essential: 2,
+  classic: 3,
+  premium: 4,
+}
+
+/**
+ * Resolves the effective plan ID for a specific event from all user_plans rows.
+ *
+ * When a user upgrades, the webhook inserts a NEW row (never updates), so there can be
+ * multiple rows for the same event_id. This function always returns the highest-tier plan.
+ * Falls back to a legacy row (event_id === null) if no event-specific row exists.
+ */
+export function resolveEventPlanId(userPlans: UserPlanRecord[], eventId: string): string {
+  const eventPlans = userPlans.filter(p => p.event_id === eventId)
+  if (eventPlans.length > 0) {
+    return eventPlans.reduce((best, p) =>
+      (PLAN_TIER[p.plan_id] ?? 0) > (PLAN_TIER[best.plan_id] ?? 0) ? p : best
+    , eventPlans[0]).plan_id
+  }
+  const legacyPlan = userPlans.find(p => p.event_id === null && p.plan_id && p.plan_id !== 'none')
+  return legacyPlan?.plan_id || 'none'
+}
+
 /**
  * Checks if a specific event is locked for the given user.
  *

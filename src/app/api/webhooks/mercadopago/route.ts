@@ -121,11 +121,10 @@ export async function POST(request: Request) {
           return NextResponse.json({ error: 'Intent not found' }, { status: 404 })
         }
 
-        // Validar valor da transação
+        // Validar valor da transação — usar tolerância de R$0,01 para evitar divergências de float
         const paidAmount = paymentInfo.transaction_amount
-        if (paidAmount !== Number(intent.amount)) {
+        if (Math.abs(paidAmount - Number(intent.amount)) > 0.01) {
           console.error(`Valor pago (${paidAmount}) diverge do intent (${intent.amount}) para intent ${intentId}`)
-          // Em um cenário real poderíamos marcar como "partial_payment", mas para este B2C vamos rejeitar a ativação automática
           return NextResponse.json({ error: 'Amount mismatch' }, { status: 400 })
         }
 

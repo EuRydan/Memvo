@@ -79,6 +79,10 @@ export async function POST(request: Request) {
       }
     }
 
+    // Round to 2 decimal places before storing to avoid floating point drift
+    // (e.g. 79 * 0.9 = 71.10000000000001 in JS, which would mismatch MP's rounded value)
+    const roundedPrice = Math.round(price * 100) / 100
+
     // Cria o intent no banco de dados
     const { data: intent, error: intentError } = await supabase
       .from('payment_intents')
@@ -86,7 +90,7 @@ export async function POST(request: Request) {
         user_id: user.id,
         event_id: eventId,
         plan_id: plan,
-        amount: price,
+        amount: roundedPrice,
         status: 'pending',
         affiliate_code: appliedAffiliateCode
       })
@@ -98,7 +102,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       intentId: intent.id,
-      amount: Number(price.toFixed(2)),
+      amount: roundedPrice,
       description: PLAN_NAMES[plan as keyof typeof PLAN_NAMES] || 'Plano Memvo'
     })
 

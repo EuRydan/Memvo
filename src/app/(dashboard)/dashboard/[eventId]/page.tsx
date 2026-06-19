@@ -7,7 +7,7 @@ import { Media, Challenge } from '@/types'
 import { Camera, Sparkles, Star, Heart, Share, Download } from 'lucide-react'
 import { StoryGenerator } from '@/components/StoryGenerator'
 import { EventShareCard } from '@/components/EventShareCard'
-import { isEventLocked, UserPlanRecord, isTelaoEnabled, hasEventAccess } from '@/lib/limits'
+import { isEventLocked, UserPlanRecord, isTelaoEnabled, hasEventAccess, resolveEventPlanId } from '@/lib/limits'
 import JSZip from 'jszip'
 import { saveAs } from 'file-saver'
 
@@ -46,9 +46,7 @@ export default function EventGalleryPage({ params }: { params: Promise<{ eventId
 
         const userPlans: UserPlanRecord[] = (plansData || []) as UserPlanRecord[]
 
-        const eventPlanId = userPlans.find(p => p.event_id === eventId)?.plan_id
-          || userPlans.find(p => p.event_id === null)?.plan_id
-          || 'none'
+        const eventPlanId = resolveEventPlanId(userPlans, eventId)
         
         setPlanType(eventPlanId)
 
