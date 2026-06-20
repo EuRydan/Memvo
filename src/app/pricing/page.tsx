@@ -12,24 +12,6 @@ import { useRouter, useSearchParams } from 'next/navigation'
 
 const PLANS = [
   {
-    id: 'brasil_game',
-    name: 'Jogo do Brasil',
-    desc: 'Edição especial · Grátis hoje',
-    price: 'R$0',
-    popular: false,
-    features: [
-      { text: 'Até 50 convidados', included: true },
-      { text: '3 fotos por convidado no desafio', included: true },
-      { text: 'Até 4 desafios fotográficos', included: true },
-      { text: 'Álbum em tempo real', included: true },
-      { text: 'Download do QR Code', included: true },
-      { text: '1 vídeo no desafio da reação 🎬', included: true },
-      { text: 'Álbum Livre (Sem desafios)', included: false },
-      { text: 'Download em ZIP', included: false },
-      { text: 'Suporte prioritário', included: false },
-    ],
-  },
-  {
     id: 'freemium',
     name: 'Free',
     desc: 'Para testar o funcionamento',
@@ -215,12 +197,6 @@ function PricingContent() {
       return
     }
 
-    // Plano promocional: redireciona para onboarding especial
-    if (plan.id === 'brasil_game') {
-      router.push('/onboarding/brasil-game')
-      return
-    }
-
     // Create payment intent
     const finalVoucher = activeCoupon?.code || null
     const response = await fetch('/api/payment-intents/init', {
@@ -332,58 +308,6 @@ function PricingContent() {
               const planPrices = PLAN_PRICES as Record<string, number>
               const isUpgrade = currentPlanId && planPrices[plan.id] > (planPrices[currentPlanId] || 0)
               const displayPrice = getDisplayPrice(plan)
-
-              // ── Card especial Brasil ──
-              if (plan.id === 'brasil_game') {
-                return (
-                  <div key={plan.id} className="shrink-0 snap-center w-full max-w-[320px] md:w-80 relative flex flex-col hover:-translate-y-1 transition-transform duration-300"
-                    style={{
-                      background: 'linear-gradient(135deg, #009C3B 0%, #FFDF00 40%, #009C3B 75%, #FFDF00 100%)',
-                      backgroundSize: '300% 300%',
-                      animation: 'bg-pan 3s ease infinite',
-                      padding: '2px',
-                      borderRadius: '18px',
-                    }}
-                  >
-                    <div className="relative text-center p-8 pb-14 rounded-[15px] flex flex-col flex-1 bg-white text-gray-800/80">
-                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-xs font-bold text-white whitespace-nowrap"
-                        style={{ background: 'linear-gradient(90deg, #009C3B 0%, #007a2e 100%)' }}>
-                        🇧🇷 Edição Especial
-                      </div>
-                      <p className="font-semibold text-[#0a0a0a]">{plan.name}</p>
-                      <p className="text-[11px] text-gray-400 mt-0.5 font-medium">{plan.desc}</p>
-                      <h1 className="text-4xl font-bold mt-2 text-[#009C3B]">
-                        {displayPrice}
-                        <span className="text-sm font-normal block mt-1 text-gray-500">grátis hoje</span>
-                      </h1>
-                      <ul className="list-none flex-grow text-sm mt-8 mb-8 space-y-3 text-left text-gray-600">
-                        {plan.features.map((f, i) => (
-                          <li key={i} className="flex items-start gap-3">
-                            {f.included ? (
-                              <svg className="flex-shrink-0 mt-0.5" width="18" height="18" viewBox="0 0 18 18" fill="none">
-                                <path d="M7.162 13.5 2.887 9.225l1.07-1.069 3.205 3.207 6.882-6.882 1.069 1.07z" fill="#009C3B"/>
-                              </svg>
-                            ) : (
-                              <svg className="flex-shrink-0 mt-0.5 opacity-30" width="18" height="18" viewBox="0 0 18 18" fill="none">
-                                <path d="M13.5 5.56l-1.06-1.06-3.44 3.44-3.44-3.44-1.06 1.06 3.44 3.44-3.44 3.44 1.06 1.06 3.44-3.44 3.44 3.44 1.06-1.06-3.44-3.44 3.44-3.44z" fill="#0a0a0a"/>
-                              </svg>
-                            )}
-                            <p className={f.included ? '' : 'opacity-40 line-through'}>{f.text}</p>
-                          </li>
-                        ))}
-                      </ul>
-                      <button
-                        onClick={() => handleSelectPlan(plan)}
-                        type="button"
-                        className="text-sm w-full py-3.5 rounded-xl font-bold mt-auto transition-all active:scale-[0.98] text-white"
-                        style={{ background: 'linear-gradient(90deg, #009C3B 0%, #007a2e 100%)' }}
-                      >
-                        🇧🇷 Ativar para o Jogo
-                      </button>
-                    </div>
-                  </div>
-                )
-              }
 
               return (
               <div key={plan.id}

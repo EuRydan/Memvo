@@ -149,7 +149,6 @@ export default function DashboardPage() {
   const displayPlanName = planNames[planId] || t('mainDashboard.none')
   const draftEventId = events.find(e => e.status === 'draft' && !e.active)?.id
   const showBanner = draftEventId && planId === 'none'
-  const hasBrasilGame = userPlans.some(p => p.plan_id === 'brasil_game')
 
   if (loading) {
     return (
@@ -189,35 +188,6 @@ export default function DashboardPage() {
       {/* ── Main Content ── */}
       <main className="relative z-10 pt-10 pb-16 px-6 max-w-6xl mx-auto">
       
-        {/* Brasil Game Banner */}
-        {!hasBrasilGame && (
-          <div
-            className="mb-6 rounded-2xl p-[2px] animate-in fade-in slide-in-from-top-4"
-            style={{
-              background: 'linear-gradient(135deg, #009C3B 0%, #FFDF00 40%, #009C3B 75%, #FFDF00 100%)',
-              backgroundSize: '300% 300%',
-              animation: 'bg-pan 3s ease infinite',
-            }}
-          >
-            <div className="rounded-[14px] bg-white px-5 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <span className="text-3xl">🇧🇷</span>
-                <div>
-                  <h3 className="text-sm font-bold text-[#0a0a0a]">Brasil vs Haiti · Hoje · 21h30</h3>
-                  <p className="text-xs text-[#676f7b] mt-0.5">Crie um álbum grátis para registrar as memórias do jogo com seus amigos.</p>
-                </div>
-              </div>
-              <button
-                onClick={() => router.push('/onboarding/brasil-game')}
-                className="shrink-0 text-xs font-bold text-white px-5 py-2.5 rounded-full transition-all active:scale-95 whitespace-nowrap"
-                style={{ background: 'linear-gradient(90deg, #009C3B 0%, #007a2e 100%)' }}
-              >
-                Criar Álbum do Jogo →
-              </button>
-            </div>
-          </div>
-        )}
-
         {/* Payment Banner */}
         {showBanner && (
           <div className="mb-8 rounded-2xl bg-orange-50 dark:bg-orange-950/20 border border-orange-200 dark:border-orange-900/30 p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm animate-in fade-in slide-in-from-top-4 transition-colors duration-200">
